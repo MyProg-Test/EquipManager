@@ -70,8 +70,15 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
     
     //下拉刷新
     @IBAction func refresh(sender: UIRefreshControl?){
-        self.tableView.reloadData();
-        sender!.endRefreshing();
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0)){
+            while(!NetworkOperation.sharedInstance().downloadComplete){
+                sleep(1);
+            }
+            dispatch_async(dispatch_get_main_queue()){
+                self.tableView.reloadData();
+                sender!.endRefreshing();
+            }
+        }
     }
     
     override func didReceiveMemoryWarning() {

@@ -59,6 +59,7 @@ class DetailEquipViewController: UIViewController {
     func equipImageTap(sender:UITapGestureRecognizer){
         let equipImageView = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier("EquipImage") as!EquipImagePickerTableViewController;
         EquipFileControl.sharedInstance().downloadEquipImageFromNet(DetailEquipViewController.data_source!.equipIndex);
+        self.pleaseWait();
         self.navigationController?.pushViewController(equipImageView, animated: true);
     }
     
@@ -100,8 +101,13 @@ class DetailEquipViewController: UIViewController {
         //数据保存或上传
     }
     
+    
     func menuPressed(){
         let menuAlertController:UIAlertController = UIAlertController(title:"设备信息操作",message:"选择一项操作",preferredStyle:UIAlertControllerStyle.ActionSheet)
+        
+        menuAlertController.addAction(UIAlertAction(title: "打印信息", style: .Default, handler: { (UIAlertAction) -> Void in
+            self.printEquipInfo()
+        }))
         
         menuAlertController.addAction(UIAlertAction(title: "修改信息", style: UIAlertActionStyle.Default, handler: { (UIAlertAction) -> Void in
             self.modifyEquipInfo()
@@ -145,6 +151,30 @@ class DetailEquipViewController: UIViewController {
         
         
     }
+    
+    func printEquipInfo() {
+        self.pleaseWait();
+        dispatch_async(dispatch_get_main_queue()){
+            let viewRect = CGRectMake(0, 0, 840, 475.2);
+            let keyRect = CGRectMake(20, 20, 280, 35);
+            let valueRect = CGRectMake(320, 20, 280, 35);
+            let qrImageRect = CGRectMake(600, 60, 200, 200);
+            let barImageRect = CGRectMake(250, 300, 500, 150);
+            
+            let key:[String] = DetailEquipViewController.data_source!.xmlInfo.attrKey.objectsAtIndexes(NSIndexSet(indexesInRange: NSRange(location: 0, length: 5 ))) as! [String];
+            let dict = DetailEquipViewController.data_source!.xmlInfo.equipAttr.dictionaryWithValuesForKeys(key);
+            let qrImage = (DetailEquipViewController.data_source!.xmlInfo.equipAttr.valueForKey(EquipmentAttrKey.codeKey.rawValue as String) as! String).qrImageWithImage(self.getEquipImage());
+            let barImage = (DetailEquipViewController.data_source!.xmlInfo.equipAttr.valueForKey(EquipmentAttrKey.codeKey.rawValue as String) as! String).barCode;
+            
+            
+            let view = SwiftPrint.sharedInstance().visitingCardView(dict, key: key, image: [qrImage, barImage], viewRect: viewRect, labelRect: [keyRect, valueRect], imageRect: [qrImageRect, barImageRect])!
+            let image = SwiftPrint.sharedInstance().drawVisitingCardSet([view,view]);
+            self.clearAllNotice();
+            self.printImages(image);
+        }
+        //打印信息
+    }
+    
     func askFix(){
         //报修
     }

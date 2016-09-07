@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		08032BED1D8051A8001AD72F /* SwiftPrint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08032BEC1D8051A8001AD72F /* SwiftPrint.swift */; };
+		08032BF11D806FC1001AD72F /* SwiftNotice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08032BF01D806FC1001AD72F /* SwiftNotice.swift */; };
 		0806AAF81D7EB1AF00D93D95 /* EquipManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0806AAF71D7EB1AF00D93D95 /* EquipManagerTests.swift */; };
 		0806AB031D7EB1AF00D93D95 /* EquipManagerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0806AB021D7EB1AF00D93D95 /* EquipManagerUITests.swift */; };
 		0806AB6E1D7EB3EC00D93D95 /* libxml2.2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0806AB6D1D7EB3EC00D93D95 /* libxml2.2.tbd */; };
@@ -73,6 +75,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		08032BEC1D8051A8001AD72F /* SwiftPrint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwiftPrint.swift; path = src/Other/SwiftPrint.swift; sourceTree = "<group>"; };
+		08032BF01D806FC1001AD72F /* SwiftNotice.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwiftNotice.swift; path = src/Other/SwiftNotice.swift; sourceTree = "<group>"; };
 		0806AADF1D7EB1AF00D93D95 /* EquipManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EquipManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0806AAE91D7EB1AF00D93D95 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0806AAEE1D7EB1AF00D93D95 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../Info.plist; sourceTree = "<group>"; };
@@ -141,6 +145,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		08032BEB1D805194001AD72F /* Other */ = {
+			isa = PBXGroup;
+			children = (
+				08032BF01D806FC1001AD72F /* SwiftNotice.swift */,
+				08032BEC1D8051A8001AD72F /* SwiftPrint.swift */,
+			);
+			name = Other;
+			sourceTree = "<group>";
+		};
 		0806AAD61D7EB1AF00D93D95 = {
 			isa = PBXGroup;
 			children = (
@@ -169,6 +182,7 @@
 				0806ABA81D7EB9F800D93D95 /* EquipManager-Bridging-Header.h */,
 				0806AB491D7EB34D00D93D95 /* Equip */,
 				0806AB101D7EB2A000D93D95 /* UI */,
+				08032BEB1D805194001AD72F /* Other */,
 				0806AAE91D7EB1AF00D93D95 /* Assets.xcassets */,
 				0806ABDA1D7EBABF00D93D95 /* equipImage.png */,
 				0806ABDB1D7EBABF00D93D95 /* equipTwoCode.png */,
@@ -371,6 +385,7 @@
 				0806ABCF1D7EBA2100D93D95 /* DetailEquipViewController.swift in Sources */,
 				0806ABBE1D7EBA0600D93D95 /* FileSystem.swift in Sources */,
 				0806ABD41D7EBA2100D93D95 /* NewEquipTableViewController.swift in Sources */,
+				08032BF11D806FC1001AD72F /* SwiftNotice.swift in Sources */,
 				0806ABB61D7EBA0600D93D95 /* EquipFileControl.swift in Sources */,
 				0806ABD51D7EBA2100D93D95 /* ViewController.swift in Sources */,
 				0806ABB91D7EBA0600D93D95 /* EquipManager.swift in Sources */,
@@ -381,6 +396,7 @@
 				0806ABD31D7EBA2100D93D95 /* EquipListTableViewController.swift in Sources */,
 				0806ABB81D7EBA0600D93D95 /* EquipInfo.swift in Sources */,
 				0806ABBD1D7EBA0600D93D95 /* FileInfo.swift in Sources */,
+				08032BED1D8051A8001AD72F /* SwiftPrint.swift in Sources */,
 				0806ABCC1D7EBA2100D93D95 /* AppDelegate.swift in Sources */,
 				0806ABCD1D7EBA2100D93D95 /* DetailEquipTableViewCell.swift in Sources */,
 				0806ABD21D7EBA2100D93D95 /* EquipListTableViewCell.swift in Sources */,

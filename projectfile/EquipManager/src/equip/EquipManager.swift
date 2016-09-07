@@ -9,12 +9,14 @@
 import UIKit
 
 class EquipManager:NSObject{
+    var timer:NSTimer?;
+    
     var rootId:Int = 0{
         didSet{
             if(rootId != 0){
                 initWithLocal();
                 initWithNet();
-                NSTimer.scheduledTimerWithTimeInterval(5, target: self, selector: #selector(EquipManager.combine), userInfo: nil, repeats: true);
+                timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: #selector(EquipManager.combine), userInfo: nil, repeats: true);
             }
         }
     };
@@ -85,6 +87,11 @@ class EquipManager:NSObject{
             //删去不是new的服务器没有的节点（暂时不考虑安卓的操作和人为的网页删除）
             //进行节点操作
             EquipFileControl.sharedInstance().interactEquipWithNet();
+            
+            if(timer != nil){
+                timer?.invalidate();
+                timer = nil;
+            }
         }
     }
     

@@ -13,6 +13,7 @@ class NetworkOperation {
     internal struct NetConstant{
         static let serverURL = "weblib.ccnl.scut.edu.cn/"
         static let serverProtocol = "http://"
+        static let defaultQueue:dispatch_queue_t = dispatch_queue_create("NetworkOperation", DISPATCH_QUEUE_SERIAL);
         struct DictKey {
             struct Authenticate {
                 struct Query {
@@ -316,7 +317,7 @@ class NetworkOperation {
         return "\(message)\(timeFormatter.stringFromDate(time))";
     }
     
-    func Login(userName : NSString, passwd: NSString, queue:dispatch_queue_t = dispatch_get_main_queue(),handler:(AnyObject)->Void){
+    func Login(userName : NSString, passwd: NSString, queue:dispatch_queue_t = NetConstant.defaultQueue,handler:(AnyObject)->Void){
         dispatch_async(queue){
             var dict = [NetConstant.DictKey.Authenticate.Query.username : userName,
                         NetConstant.DictKey.Authenticate.Query.password : passwd];
@@ -346,7 +347,7 @@ class NetworkOperation {
     }
     
     // group/getResources.action  获取文件树节点信息
-    func getResources(parentID:Int,type:Int = 0,start:Int = 0,limit:Int = 1000,queue:dispatch_queue_t = dispatch_get_main_queue(),handler:(AnyObject)->Void) -> NSString{
+    func getResources(parentID:Int,type:Int = 0,start:Int = 0,limit:Int = 1000,queue:dispatch_queue_t = NetConstant.defaultQueue,handler:(AnyObject)->Void) -> NSString{
         let stamp = self.getTimeStamp(parentID);
         dispatch_async(queue){
             objc_sync_enter(self.getResourcesQueue);
@@ -370,7 +371,7 @@ class NetworkOperation {
     }
     
     //group/getResourceInfo.action  获取资源信息
-    func getResourceInfo(resourceID:Int, queue:dispatch_queue_t = dispatch_get_main_queue(), handler:(AnyObject)->Void) -> NSString{
+    func getResourceInfo(resourceID:Int, queue:dispatch_queue_t = NetConstant.defaultQueue, handler:(AnyObject)->Void) -> NSString{
         let stamp = self.getTimeStamp(resourceID);
         dispatch_async(queue){
             objc_sync_enter(self.getResourcesQueue);
@@ -394,7 +395,7 @@ class NetworkOperation {
     }
     
     //group/getSimpleResources.action  获取文件树节点简要信息
-    func getSimpleResources(parentID:Int,type:Int,start:Int,limit:Int, queue:dispatch_queue_t = dispatch_get_main_queue(), handler:(AnyObject)->Void) -> NSString{
+    func getSimpleResources(parentID:Int,type:Int,start:Int,limit:Int, queue:dispatch_queue_t = NetConstant.defaultQueue, handler:(AnyObject)->Void) -> NSString{
         let stamp = self.getTimeStamp(parentID);
         dispatch_async(queue) {
             objc_sync_enter(self.getResourcesQueue);
@@ -419,7 +420,7 @@ class NetworkOperation {
     }
     
     //group/createDir.action  新建文件夹
-    func createDir(groupID:Int,name:NSString,parentID:Int,queue:dispatch_queue_t = dispatch_get_main_queue(), handler:(AnyObject)->Void){
+    func createDir(groupID:Int,name:NSString,parentID:Int,queue:dispatch_queue_t = NetConstant.defaultQueue, handler:(AnyObject)->Void){
         dispatch_async(queue) {
             let dict = [NetConstant.DictKey.CreateDir.Query.groupId : "\(groupID)",
                         NetConstant.DictKey.CreateDir.Query.name : name,
@@ -437,7 +438,7 @@ class NetworkOperation {
     }
     
     //group/downloadResource.action  下载文件或打包下载
-    func downloadResource(id:Int, url:NSURL, queue:dispatch_queue_t = dispatch_get_main_queue(), handler:(AnyObject)->Void) -> NSString{
+    func downloadResource(id:Int, url:NSURL, queue:dispatch_queue_t = NetConstant.defaultQueue, handler:(AnyObject)->Void) -> NSString{
         let stamp = self.getTimeStamp(id);
         dispatch_async(queue){
             objc_sync_enter(self.downloadQueue);
@@ -464,13 +465,13 @@ class NetworkOperation {
     }
     
     //group/uploadResource.action   上传资源
-    func uploadResource(groupID:Int,parentID:Int,fileURL:NSURL,fileName:NSString,fileDataContentType:NSString = "multipart/form-data",documentType:NSString = "", queue:dispatch_queue_t = dispatch_get_main_queue(), handler:(AnyObject)->Void) -> NSString{
+    func uploadResource(groupID:Int,parentID:Int,fileURL:NSURL,fileName:NSString,fileDataContentType:NSString = "multipart/form-data",documentType:NSString = "", queue:dispatch_queue_t = NetConstant.defaultQueue, handler:(AnyObject)->Void) -> NSString{
         let data:NSData = NSData(contentsOfFile: fileURL.path!)!;
         return self.uploadResource(groupID, parentID: parentID, fileData: data, fileName: fileName, fileDataContentType: fileDataContentType, documentType: documentType, queue: queue, handler: handler);
     }
     
     //group/uploadResource.action   上传资源
-    func uploadResource(groupID:Int,parentID:Int,fileData:NSData,fileName:NSString,fileDataContentType:NSString = "multipart/form-data",documentType:NSString = "", queue:dispatch_queue_t = dispatch_get_main_queue(), handler:(AnyObject)->Void) -> NSString{
+    func uploadResource(groupID:Int,parentID:Int,fileData:NSData,fileName:NSString,fileDataContentType:NSString = "multipart/form-data",documentType:NSString = "", queue:dispatch_queue_t = NetConstant.defaultQueue, handler:(AnyObject)->Void) -> NSString{
         let stamp = self.getTimeStamp(parentID);
         dispatch_async(queue){
             objc_sync_enter(self.uploadQueue);
@@ -508,13 +509,13 @@ class NetworkOperation {
     }
     
     //group/uploadResourceReturnId.action   上传资源并返回ID
-    func uploadResourceReturnId(groupID:Int,parentID:Int,fileURL:NSURL,fileName:NSString,fileDataContentType:NSString = "multipart/form-data",documentType:NSString = "", queue:dispatch_queue_t = dispatch_get_main_queue(), handler:(AnyObject)->Void) -> NSString{
+    func uploadResourceReturnId(groupID:Int,parentID:Int,fileURL:NSURL,fileName:NSString,fileDataContentType:NSString = "multipart/form-data",documentType:NSString = "", queue:dispatch_queue_t = NetConstant.defaultQueue, handler:(AnyObject)->Void) -> NSString{
         let data:NSData = NSData(contentsOfFile: fileURL.path!)!;
         return self.uploadResourceReturnId(groupID, parentID: parentID, fileData: data, fileName: fileName, fileDataContentType: fileDataContentType, documentType: documentType, queue: queue, handler: handler);
     }
     
     //group/uploadResourceReturnId.action   上传资源并返回ID
-    func uploadResourceReturnId(groupID:Int,parentID:Int,fileData:NSData,fileName:NSString,fileDataContentType:NSString = "multipart/form-data",documentType:NSString = "", queue:dispatch_queue_t = dispatch_get_main_queue(), handler:(AnyObject)->Void) -> NSString{
+    func uploadResourceReturnId(groupID:Int,parentID:Int,fileData:NSData,fileName:NSString,fileDataContentType:NSString = "multipart/form-data",documentType:NSString = "", queue:dispatch_queue_t = NetConstant.defaultQueue, handler:(AnyObject)->Void) -> NSString{
         let stamp = self.getTimeStamp(parentID);
         dispatch_async(queue){
             objc_sync_enter(self.uploadQueue);
@@ -552,7 +553,7 @@ class NetworkOperation {
     }
     
     //group/copyResource.action  复制资源
-    func copyResource(groupID:Int,parentID:Int,id:Int, queue:dispatch_queue_t = dispatch_get_main_queue(), handler:(AnyObject)->Void){
+    func copyResource(groupID:Int,parentID:Int,id:Int, queue:dispatch_queue_t = NetConstant.defaultQueue, handler:(AnyObject)->Void){
         dispatch_async(queue) {
             let dict = [NetConstant.DictKey.CopyResource.Query.groupId : "\(groupID)",
                         NetConstant.DictKey.CopyResource.Query.parentId : "\(parentID)",
@@ -570,7 +571,7 @@ class NetworkOperation {
     }
     
     //group/moveResource.action  移动资源
-    func moveResource(groupID:Int,parentID:Int,id:Int, queue:dispatch_queue_t = dispatch_get_main_queue(), handler:(AnyObject)->Void){
+    func moveResource(groupID:Int,parentID:Int,id:Int, queue:dispatch_queue_t = NetConstant.defaultQueue, handler:(AnyObject)->Void){
         dispatch_async(queue) {
             let dict = [NetConstant.DictKey.MoveResource.Query.groupId : "\(groupID)",
                         NetConstant.DictKey.MoveResource.Query.parentId : "\(parentID)",
@@ -588,7 +589,7 @@ class NetworkOperation {
     }
     
     //group/modifyResource.action 修改资源文件夹
-    func modifyResource(id:Int, name:NSString, desc:NSString = "", queue:dispatch_queue_t = dispatch_get_main_queue(), handler:(AnyObject)->Void){
+    func modifyResource(id:Int, name:NSString, desc:NSString = "", queue:dispatch_queue_t = NetConstant.defaultQueue, handler:(AnyObject)->Void){
         dispatch_async(queue) {
             let dict = [NetConstant.DictKey.ModifyResource.Query.id : "\(id)",
                         NetConstant.DictKey.ModifyResource.Query.name : name as String,
@@ -605,7 +606,7 @@ class NetworkOperation {
     }
     
     //group/getThumbnail.action  缩略图
-    func getThumbnail(id:Int,width:Int = 100,height:Int = 100,queue:dispatch_queue_t = dispatch_get_main_queue(), handler:(AnyObject?)->Void) -> NSString{
+    func getThumbnail(id:Int,width:Int = 100,height:Int = 100,queue:dispatch_queue_t = NetConstant.defaultQueue, handler:(AnyObject?)->Void) -> NSString{
         let stamp = self.getTimeStamp(id);
         dispatch_async(queue) {
             objc_sync_enter(self.getThumbnailQueue);
