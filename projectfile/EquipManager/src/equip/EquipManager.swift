@@ -60,7 +60,7 @@ class EquipManager:NSObject{
                             let serverImageSet = EquipNetInfo.sharedInstance().fs.getImage(s, imageIndex: si)!;
                             var matchFlag2 = false;
                             for li in 0..<local.objectForKey(FileSystem.equipKey.imageSet)!.count{
-                                let localImageSet = EquipFileControl.sharedInstance().fs.getImage(l, imageIndex: li)!;
+                                let localImageSet = EquipFileControl.sharedInstance().fs!.getImage(l, imageIndex: li)!;
                                 if(dictionIsEqual(serverImageSet, dict2: localImageSet, key: FileSystem.imageSetKey.imageID)){
                                     matchFlag2 = true;
                                     if(!dictionIsEqual(serverImageSet, dict2: localImageSet, key: FileSystem.imageSetKey.imageName)){

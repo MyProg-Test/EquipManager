@@ -12,14 +12,18 @@ import UIKit
 class EquipFileControl {
     private static let _sharedInstance = EquipFileControl();
     let equipInfoName = "EquipInfo.info";
-    let fs:FileSystem = FileSystem();
+    var fs:FileSystem?{
+        get{
+            return readInfoFromFile();
+        }
+    }
+    //let fs:FileSystem = FileSystem();
     var count:Int{
         get{
-            if(!self.readInfoFromFile()){
+            if(fs == nil){
                 return 0;
             }
-            
-            return fs.count;
+            return fs!.count;
         }
     }
     let rootPath:NSURL;
@@ -77,14 +81,13 @@ class EquipFileControl {
     }
     
     //read file
-    func readInfoFromFile()->Bool{
+    func readInfoFromFile()->FileSystem?{
         if(!NSFileManager.defaultManager().fileExistsAtPath(self.getEquipInfoFilePath().path!)){
-            return false;
+            return nil;
         }
-        objc_sync_enter(self.fs);
-        self.fs.readFromFile(self.getEquipInfoFilePath());
-        objc_sync_exit(self.fs);
-        return true;
+        let fs = FileSystem();
+        fs.readFromFile(self.getEquipInfoFilePath());
+        return fs;
     }
     
     //write file
@@ -97,97 +100,94 @@ class EquipFileControl {
                 return false;
             }
         }
-        return self.fs.writeToFile(self.getEquipInfoFilePath());
+        return self.fs!.writeToFile(self.getEquipInfoFilePath());
     }
     
     //add equip into local file
     func addEquipInfoToFile(parentID:Int, XMLID:Int, XMLName:NSString, imageSet:NSMutableArray, path:NSString, groupID:Int,status:Int = 0)->Bool{
-        if(!self.readInfoFromFile()){
+        if(self.fs == nil){
             return false;
         }
-        self.fs.addEquip(parentID, XMLID: XMLID, XMLName: XMLName, imageSet: imageSet, path: path,groupID: groupID, status: status);
+        self.fs!.addEquip(parentID, XMLID: XMLID, XMLName: XMLName, imageSet: imageSet, path: path,groupID: groupID, status: status);
         return self.writeInfoToFile();
     }
     
     func addImageInfoToFile(index:Int, imageID:Int, imagePath:NSString, imageName:NSString, status:Int = 0)->Bool{
-        if(!self.readInfoFromFile()){
+        if(self.fs == nil){
             return false;
         }
-        if(index < self.fs.count && index >= 0){
-            self.fs.addImage(index, imageID: imageID, imagePath: imagePath, imageName: imageName, status: status);
+        if(index < self.count && index >= 0){
+            self.fs!.addImage(index, imageID: imageID, imagePath: imagePath, imageName: imageName, status: status);
             return self.writeInfoToFile();
         }
         return false;
     }
     
     func modifyImageNameInFile(equipIndex:Int, imageIndex:Int, name:NSString)->Bool{
-        if(!self.readInfoFromFile()){
+        if(self.fs == nil){
             return false;
         }
-        self.fs.modifyImageName(equipIndex, imageIndex: imageIndex, name: name);
+        self.fs!.modifyImageName(equipIndex, imageIndex: imageIndex, name: name);
         return self.writeInfoToFile();
     }
     
     func modifyEquipStatusInFile(index:Int,status:Int) -> Bool {
-        if(!self.readInfoFromFile()){
+        if(self.fs == nil){
             return false;
         }
-        self.fs.modifyEquipStatus(index, status: status);
+        self.fs!.modifyEquipStatus(index, status: status);
         return writeInfoToFile();
     }
     
     func modiftyImageStatusInFile(equipIndex:Int, imageIndex:Int, status:Int) -> Bool{
-        if(!self.readInfoFromFile()){
+        if(self.fs == nil){
             return false;
         }
-        self.fs.modifyImageStatus(equipIndex, imageIndex: imageIndex, status: status);
+        self.fs!.modifyImageStatus(equipIndex, imageIndex: imageIndex, status: status);
         return writeInfoToFile();
     }
     
     func getEquipFromFile(index:Int)->NSMutableDictionary?{
-        if(!self.readInfoFromFile()){
+        if(self.fs == nil){
             return nil;
         }
-        return self.fs.getEquip(index);
+        return self.fs!.getEquip(index);
     }
     
     func getFileSystemFromFile()->FileSystem?{
-        if(!self.readInfoFromFile()){
-            return nil;
-        }
         return self.fs;
     }
     
     func getEquipFilePathFromFile(index:Int) -> NSURL? {
-        if(!self.readInfoFromFile()){
+        if(self.fs == nil){
             return nil;
         }
-        let url:NSURL = getEquipPath().URLByAppendingPathComponent(self.fs.getEquipPath(index).path!);
+        let url:NSURL = getEquipPath().URLByAppendingPathComponent(self.fs!.getEquipPath(index).path!);
         return url;
     }
     
     func getImageFilePathFromFile(equipIndex:Int, imageIndex:Int) -> NSURL?{
-        if(!self.readInfoFromFile()){
+        if(self.fs == nil){
             return nil;
         }
-        let url:NSURL = getEquipPath().URLByAppendingPathComponent(self.fs.getImagePath(equipIndex,imageIndex: imageIndex).path!);
+        let url:NSURL = getEquipPath().URLByAppendingPathComponent(self.fs!.getImagePath(equipIndex,imageIndex: imageIndex).path!);
         return url;
     }
     
     //get Equip dictionary with key and value
     func getSpecIndex(key:NSString,value:AnyObject)->Int{
-        if(!self.readInfoFromFile()){
+        if(self.fs == nil){
             return -1;
         }
-        return self.fs.getSpecIndex(key, value: value);
+        return self.fs!.getSpecIndex(key, value: value);
     }
     
     //get EquipArray
     func getEquipArray()->NSMutableArray?{
-        if(!self.readInfoFromFile()){
+        if(self.fs == nil){
             return nil;
         }
-        return self.fs.equipArray;
+        return self.fs!.equipArray;
     }
     
     //检查设备相关路径是否存在，若不存在，则建立
@@ -208,19 +208,19 @@ class EquipFileControl {
     }
     
     func interactEquipWithNet(){
-        if(!self.readInfoFromFile()){
+        if(self.count == 0){
             return ;
         }
-        for index in 0..<fs.count {
-            let equipStatus:Int = fs.getEquipStatus(index);
+        for index in 0..<self.count {
+            let equipStatus:Int = fs!.getEquipStatus(index);
             if(!(equipStatus & FileSystem.Status.Download.rawValue > 0)){
-                NetworkOperation.sharedInstance().downloadResource(fs.getEquipXMLID(index), url: getEquipFilePathFromFile(index)!, handler: { (any) in
+                NetworkOperation.sharedInstance().downloadResource(fs!.getEquipXMLID(index), url: getEquipFilePathFromFile(index)!, handler: { (any) in
                     print(any);
                     if(NSFileManager.defaultManager().fileExistsAtPath(self.getEquipFilePathFromFile(index)!.path!)){
                         if(self.modifyEquipStatusInFile(index, status: FileSystem.Status.Download.rawValue|equipStatus)){
-                            print("\(self.fs.getEquipName(index)): download complete!");
+                            print("\(self.fs!.getEquipName(index)): download complete!");
                         }else{
-                            print("\(self.fs.getEquipName(index)): error download status change!");
+                            print("\(self.fs!.getEquipName(index)): error download status change!");
                         }
                     }else{
                         print("download error!");
@@ -239,11 +239,11 @@ class EquipFileControl {
                 
             }
             
-            for imageIndex in 0..<fs.getImageCount(index){
-                let imageStatus = fs.getImageStatus(index, imageIndex: imageIndex);
-                if(fs.isMainImage(index, imageIndex: imageIndex)){
+            for imageIndex in 0..<fs!.getImageCount(index){
+                let imageStatus = fs!.getImageStatus(index, imageIndex: imageIndex);
+                if(fs!.isMainImage(index, imageIndex: imageIndex)){
                     if(!(imageStatus & FileSystem.Status.Download.rawValue > 0)){
-                        let imageID = fs.getImageID(index, imageIndex: imageIndex);
+                        let imageID = fs!.getImageID(index, imageIndex: imageIndex);
                         NetworkOperation.sharedInstance().getThumbnail(imageID, handler: { (any) in
                             do{
                                 let url = self.getImageFilePathFromFile(index, imageIndex: imageIndex)!;
@@ -280,9 +280,12 @@ class EquipFileControl {
     }
     
     func downloadEquipImageFromNet(index:Int) {
-        for imageIndex in 0..<fs.getImageCount(index){
-            let imageID = fs.getImageID(index, imageIndex: imageIndex);
-            let imageStatus = fs.getImageStatus(index, imageIndex: imageIndex);
+        if(fs == nil){
+            return ;
+        }
+        for imageIndex in 0..<fs!.getImageCount(index){
+            let imageID = fs!.getImageID(index, imageIndex: imageIndex);
+            let imageStatus = fs!.getImageStatus(index, imageIndex: imageIndex);
             if(!NSFileManager.defaultManager().fileExistsAtPath(self.getImageFilePathFromFile(index, imageIndex: imageIndex)!.path!)){
                 NetworkOperation.sharedInstance().getThumbnail(imageID, handler: { (any) in
                     do{

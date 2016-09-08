@@ -16,6 +16,8 @@ extension UIView{
         self.layer.renderInContext(context!);
         let resultImage = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext()
+        print(self.layer.contents);
+        self.layer.contents = nil;
         return resultImage;
     }
 }
@@ -34,9 +36,13 @@ extension UIViewController{
         printController.showsPageRange = true
         printController.printingItems = images;
         printController.presentAnimated(true) { (controller, complete, error) in
-            if(!complete){
+            if(!complete && error != nil){
                 print(error);
                 self.noticeError(error!.description, autoClear: true, autoClearTime: 2);
+                return ;
+            }
+            if(!complete){
+                self.noticeInfo("取消打印", autoClear: true, autoClearTime: 2);
                 return ;
             }
             self.noticeTop("打印任务已启动", autoClear: true, autoClearTime: 2);
@@ -114,28 +120,29 @@ class SwiftPrint {
         var rtnImage:NSArray = NSArray();
         var breakFlag = false;
         var addFlag = false;
+        var viewImage:NSArray = NSArray();
+        for v in view {
+            viewImage = viewImage.arrayByAddingObject(v.visitingCardImage());
+        }
         for i in 0..<1000 {
             if breakFlag {
-                debugPrint("i \(i) break");
                 break;
             }
             addFlag = false;
             UIGraphicsBeginImageContext(rect.size);
             for r in 0..<row {
                 if breakFlag {
-                    debugPrint("r \(r) break");
                     break;
                 }
                 for c in 0..<column {
                     let index = i*row*column+r*column+c
-                    if(index >= view.count){
+                    if(index >= viewImage.count){
                         breakFlag = true;
-                        debugPrint("c \(c) break");
-                        
                         break;
                     }
-                    let tmp = view[index];
-                    tmp.visitingCardImage().drawInRect(CGRectMake(CGFloat(c) * tmp.frame.width, CGFloat(r) * tmp.frame.height, tmp.frame.width, tmp.frame.height));
+                    let tmpView = view[index];
+                    let tmpImage = viewImage[index];
+                    tmpImage.drawInRect(CGRectMake(CGFloat(c) * tmpView.frame.width, CGFloat(r) * tmpView.frame.height, tmpView.frame.width, tmpView.frame.height));
                     addFlag = true;
                     //to draw view[i*row*column+r*column+c]
                 }

@@ -23,6 +23,11 @@ class DetailEquipViewController: UIViewController {
         self.navigationController?.setToolbarHidden(false, animated: true)
         
         menuToolbar()
+        // Do any additional setup after loading the view.
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated);
         setEquipImage();
         setQRCodeImage();
         let equipTap:UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(DetailEquipViewController.equipImageTap(_:)));
@@ -31,7 +36,18 @@ class DetailEquipViewController: UIViewController {
         let qrTap:UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(DetailEquipViewController.qrCodeTap(_:)));
         QRCodeImage.userInteractionEnabled = true;
         QRCodeImage.addGestureRecognizer(qrTap);
-        // Do any additional setup after loading the view.
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated);
+        equipImage.image = nil;
+        QRCodeImage.image = nil;
+        for i in equipImage.gestureRecognizers! {
+            equipImage.removeGestureRecognizer(i);
+        }
+        for i in QRCodeImage.gestureRecognizers! {
+            QRCodeImage.removeGestureRecognizer(i);
+        }
     }
     
     override func didReceiveMemoryWarning() {

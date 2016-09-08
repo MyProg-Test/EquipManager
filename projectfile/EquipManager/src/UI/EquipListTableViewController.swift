@@ -54,6 +54,7 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        DetailEquipViewController.data_source = nil;
         
     }
     
