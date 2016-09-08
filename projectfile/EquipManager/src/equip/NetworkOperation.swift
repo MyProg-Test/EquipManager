@@ -10,11 +10,14 @@ import UIKit
 import Alamofire
 
 class NetworkOperation {
+    //网络常数
     internal struct NetConstant{
         static let serverURL = "weblib.ccnl.scut.edu.cn/"
         static let serverProtocol = "http://"
         static let defaultQueue:dispatch_queue_t = dispatch_queue_create("NetworkOperation", DISPATCH_QUEUE_SERIAL);
+        //网络接口使用的询问key和回答key
         struct DictKey {
+            //登录时使用的key
             struct Authenticate {
                 struct Query {
                     static let username     = "account"
@@ -25,11 +28,13 @@ class NetworkOperation {
                     static let memberId     = "id"
                 }
             }
+            //选择member
             struct SelectMember{
                 struct Query {
                     static let memberId     = "memberId"
                 }
             }
+            //获取资源使用的key
             struct GetResources{
                 struct Query {
                     static let parentId     = "parentId";
@@ -79,6 +84,7 @@ class NetworkOperation {
                     static let totalCount   = "totalCount";
                 }
             }
+            //获取资源信息的key
             struct GetResourceInfo{
                 struct Query {
                     static let resourceId   = "resourceId";
@@ -98,6 +104,7 @@ class NetworkOperation {
                     static let type         = "type";
                 }
             }
+            //获取简单资源使用的key
             struct GetSimpleResources{
                 struct Query {
                     static let parentId     = "parentId";
@@ -133,6 +140,7 @@ class NetworkOperation {
                     static let totalCount   = "totalCount";
                 }
             }
+            //新建文件夹使用的key
             struct CreateDir{
                 struct Query{
                     static let groupId      = "groupId";
@@ -143,6 +151,7 @@ class NetworkOperation {
                     static let id           = "id";
                 }
             }
+            //下载资源使用的key
             struct DownloadResource{
                 struct Query {
                     static let id       = "id";
@@ -151,6 +160,7 @@ class NetworkOperation {
                     
                 }
             }
+            //上传资源使用的key 
             struct UploadResource {
                 struct Query {
                     static let groupId      = "groupId";
@@ -180,6 +190,7 @@ class NetworkOperation {
                     static let total        = "total";
                 }
             }
+            //复制资源使用的key
             struct CopyResource {
                 struct Query {
                     static let groupId      = "groupId";
@@ -190,6 +201,7 @@ class NetworkOperation {
                     
                 }
             }
+            //移动资源使用的key
             struct MoveResource {
                 struct Query {
                     static let groupId      = "groupId";
@@ -200,6 +212,7 @@ class NetworkOperation {
                     
                 }
             }
+            //修改资源使用的key
             struct ModifyResource {
                 struct Query {
                     static let id           = "id";
@@ -210,6 +223,7 @@ class NetworkOperation {
                     
                 }
             }
+            //获取缩略图使用的key
             struct GetThumbnail {
                 struct Query {
                     static let id           = "id";
@@ -222,6 +236,7 @@ class NetworkOperation {
                 }
             }
         }
+        //网络端调用的application interface 
         struct API {
             static let Authenticate         = "login/authenticate.action"
             static let SelectMember         = "login/selectMember.action"
@@ -273,25 +288,25 @@ class NetworkOperation {
     let downloadQueue:NSMutableArray;
     let getThumbnailQueue:NSMutableArray;
     let uploadQueue:NSMutableArray;
-    
+    //获取资源完成
     var getResourcesComplete:Bool{
         get{
             return getResourcesQueue.count == 0;
         }
     }
-    
+    //下载完成
     var downloadComplete:Bool{
         get{
             return downloadQueue.count == 0;
         }
     }
-    
+    //缩略图完成
     var getThumbnailComplete:Bool{
         get{
             return getThumbnailQueue.count == 0;
         }
     }
-    
+    //上传完成
     var uploadComplete:Bool{
         get{
             return uploadQueue.count == 0;
@@ -305,18 +320,18 @@ class NetworkOperation {
         getThumbnailQueue = NSMutableArray();
         uploadQueue = NSMutableArray();
     }
-    
+    //单例模式
     class func sharedInstance() -> NetworkOperation {
         return _sharedInstance
     }
-    
+    //时间戳
     func getTimeStamp(message:AnyObject) -> NSString {
         let time = NSDate();
         let timeFormatter = NSDateFormatter();
         timeFormatter.dateFormat = "yyyyMMddHHmmss";
         return "\(message)\(timeFormatter.stringFromDate(time))";
     }
-    
+    //登陆
     func Login(userName : NSString, passwd: NSString, queue:dispatch_queue_t = NetConstant.defaultQueue,handler:(AnyObject)->Void){
         dispatch_async(queue){
             var dict = [NetConstant.DictKey.Authenticate.Query.username : userName,

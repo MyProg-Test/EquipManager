@@ -13,7 +13,7 @@ class EquipImageInfo {
     var historyImage    : NSMutableArray    = NSMutableArray();//history images of one equip
     var imageIndex      : Int               = -1;//选中的图片的index
     
-    
+    //根据历史图片数组初始化
     init(historyImage:NSMutableArray){
         self.historyImage = historyImage.mutableCopy() as! NSMutableArray
         // to do
@@ -61,7 +61,7 @@ class EquipImageInfo {
         }
         return UIImage(data: imageFileInfo.getFileData())!;
     }
-    
+    //判断当前名称是否符合主图片
     class func isMainImage(Name:NSString,parentId:Int)->Bool{
         return Name.hasPrefix("\(parentId)_");
     }

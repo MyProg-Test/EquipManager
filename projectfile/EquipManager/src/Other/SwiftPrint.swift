@@ -51,7 +51,7 @@ class SwiftPrint {
     var debugInfo:Bool = false;
     
     private static var _sharedInstance = SwiftPrint();
-    
+    //单例模式
     class func sharedInstance() -> SwiftPrint {
         return _sharedInstance;
     }
@@ -67,7 +67,7 @@ class SwiftPrint {
             print(message);
         }
     }
-    
+    //产生名片view
     func visitingCardView(dict:NSDictionary, key: [AnyObject], image:[UIImage], viewRect: CGRect, labelRect: [CGRect], imageRect: [CGRect]) -> UIView? {
         if dict.allKeys.count !=  key.count{
             errorPrint("字典数量(\(dict.allKeys))和键数量(\(key.count))不匹配");
@@ -108,7 +108,7 @@ class SwiftPrint {
         }
         return rtnView;
     }
-    
+    //根据view数组画名片
     func drawVisitingCardSet(view: [UIView]) -> [UIImage] {
         let rect = CGRectMake(0, 0, view[0].frame.width * CGFloat(column), view[0].frame.height * CGFloat(row));
         var rtnImage:NSArray = NSArray();

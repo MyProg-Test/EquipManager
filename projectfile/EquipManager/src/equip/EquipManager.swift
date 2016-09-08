@@ -21,27 +21,28 @@ class EquipManager:NSObject{
         }
     };
     private static var _sharedInstance:EquipManager = EquipManager(rootId: 0);
-    
+    //根据rootID初始化
     init(rootId:Int){
         super.init();
         self.rootId = rootId;
     }
-    
+    //单例模式
     class func sharedInstance(rootId:Int) -> EquipManager{
         _sharedInstance.rootId = rootId;
         return _sharedInstance;
     }
     
-    //local
+    //从本地更新
     func initWithLocal(){
     }
     
-    //net
+    //从网络端更新
     func initWithNet(){
         EquipNetInfo.sharedInstance().readFromNet(rootId);
     }
     
     //pipe
+    //将本地和服务器节点合并
     func combine(){
         if(EquipNetInfo.sharedInstance().isReadFromNetComplete){
             func dictionIsEqual(dict1:NSMutableDictionary, dict2:NSMutableDictionary, key:NSString)->Bool{
