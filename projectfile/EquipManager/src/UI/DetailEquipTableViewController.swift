@@ -38,7 +38,9 @@ class DetailEquipTableViewController: UITableViewController {
         return DetailEquipViewController.data_source!.xmlInfo.attrKey.count;
     }
     
+    //显示DetailEquipViewController.data_source(EquipInfo?)
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        
         let DetailEquipCellIdentifier = "DetailEquipCell"
         var cell:DetailEquipTableViewCell! = tableView.dequeueReusableCellWithIdentifier(DetailEquipCellIdentifier) as? DetailEquipTableViewCell;
         if(cell == nil){

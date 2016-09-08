@@ -42,7 +42,7 @@ class EquipImagePickerTableViewController: UITableViewController,UIAlertViewDele
         // chose to do
     }
     
-    //下拉刷新
+    //下拉刷新(to do)
     @IBAction func fresh(sender: UIRefreshControl) {
         self.tableView.reloadData();
         sender.endRefreshing();
@@ -68,7 +68,7 @@ class EquipImagePickerTableViewController: UITableViewController,UIAlertViewDele
         }
         return DetailEquipViewController.data_source!.imageInfo.historyImage.count;
     }
-    
+    //数据源DetailEquipViewController.data_source
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let equipImageCellIdentifier = "equipImageCell";
         var cell:EquipImageTableViewCell! = tableView.dequeueReusableCellWithIdentifier(equipImageCellIdentifier) as? EquipImageTableViewCell;

@@ -40,6 +40,7 @@ class EquipFileControl {
         self.checkForEquipAssociationFile();
     }
     
+    //返回单例模式
     class func sharedInstance()->EquipFileControl{
         return _sharedInstance;
     }
@@ -80,8 +81,8 @@ class EquipFileControl {
         return data.writeToURL(url, atomically: true);
     }
     
-    //read file
-    func readInfoFromFile()->FileSystem?{
+    //从文件中读取信息
+    func readInfoFromFile()->Bool{
         if(!NSFileManager.defaultManager().fileExistsAtPath(self.getEquipInfoFilePath().path!)){
             return nil;
         }
@@ -90,7 +91,7 @@ class EquipFileControl {
         return fs;
     }
     
-    //write file
+    //在文件中写入信息
     func writeInfoToFile()->Bool{
         if(!NSFileManager.defaultManager().fileExistsAtPath(self.getEquipInfoPath().path!)){
             do{
@@ -103,7 +104,7 @@ class EquipFileControl {
         return self.fs!.writeToFile(self.getEquipInfoFilePath());
     }
     
-    //add equip into local file
+    //添加equip信息到本地文件
     func addEquipInfoToFile(parentID:Int, XMLID:Int, XMLName:NSString, imageSet:NSMutableArray, path:NSString, groupID:Int,status:Int = 0)->Bool{
         if(self.fs == nil){
             return false;
@@ -111,7 +112,7 @@ class EquipFileControl {
         self.fs!.addEquip(parentID, XMLID: XMLID, XMLName: XMLName, imageSet: imageSet, path: path,groupID: groupID, status: status);
         return self.writeInfoToFile();
     }
-    
+    //添加图片信息到文件中
     func addImageInfoToFile(index:Int, imageID:Int, imagePath:NSString, imageName:NSString, status:Int = 0)->Bool{
         if(self.fs == nil){
             return false;
@@ -122,7 +123,7 @@ class EquipFileControl {
         }
         return false;
     }
-    
+    //在文件中修改图片名
     func modifyImageNameInFile(equipIndex:Int, imageIndex:Int, name:NSString)->Bool{
         if(self.fs == nil){
             return false;
@@ -130,7 +131,7 @@ class EquipFileControl {
         self.fs!.modifyImageName(equipIndex, imageIndex: imageIndex, name: name);
         return self.writeInfoToFile();
     }
-    
+    //在文件中修改设备状态
     func modifyEquipStatusInFile(index:Int,status:Int) -> Bool {
         if(self.fs == nil){
             return false;
@@ -138,7 +139,7 @@ class EquipFileControl {
         self.fs!.modifyEquipStatus(index, status: status);
         return writeInfoToFile();
     }
-    
+    //在文件中修改图片状态
     func modiftyImageStatusInFile(equipIndex:Int, imageIndex:Int, status:Int) -> Bool{
         if(self.fs == nil){
             return false;
@@ -146,18 +147,18 @@ class EquipFileControl {
         self.fs!.modifyImageStatus(equipIndex, imageIndex: imageIndex, status: status);
         return writeInfoToFile();
     }
-    
+    //从文件中获取设备
     func getEquipFromFile(index:Int)->NSMutableDictionary?{
         if(self.fs == nil){
             return nil;
         }
         return self.fs!.getEquip(index);
     }
-    
+    //从文件中获取文件信息
     func getFileSystemFromFile()->FileSystem?{
         return self.fs;
     }
-    
+    //获取设备文件的路径
     func getEquipFilePathFromFile(index:Int) -> NSURL? {
         if(self.fs == nil){
             return nil;
@@ -165,7 +166,7 @@ class EquipFileControl {
         let url:NSURL = getEquipPath().URLByAppendingPathComponent(self.fs!.getEquipPath(index).path!);
         return url;
     }
-    
+    //从文件中获取图片文件路径
     func getImageFilePathFromFile(equipIndex:Int, imageIndex:Int) -> NSURL?{
         if(self.fs == nil){
             return nil;
@@ -174,7 +175,7 @@ class EquipFileControl {
         return url;
     }
     
-    //get Equip dictionary with key and value
+    //根据key和value获取设备的index
     func getSpecIndex(key:NSString,value:AnyObject)->Int{
         if(self.fs == nil){
             return -1;
@@ -182,7 +183,7 @@ class EquipFileControl {
         return self.fs!.getSpecIndex(key, value: value);
     }
     
-    //get EquipArray
+    //获取设备数组
     func getEquipArray()->NSMutableArray?{
         if(self.fs == nil){
             return nil;
@@ -206,7 +207,7 @@ class EquipFileControl {
             return false;
         }
     }
-    
+    //和网络端交互设备信息
     func interactEquipWithNet(){
         if(self.count == 0){
             return ;
@@ -278,7 +279,7 @@ class EquipFileControl {
             
         }
     }
-    
+    //下载设备图片
     func downloadEquipImageFromNet(index:Int) {
         if(fs == nil){
             return ;
@@ -302,7 +303,7 @@ class EquipFileControl {
             }
         }
     }
-    
+    //检查当前路径，若不存在，则建立
     func checkForPath(url:NSURL)->Bool{
         do{
             let folder = url.URLByDeletingLastPathComponent!;

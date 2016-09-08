@@ -101,7 +101,7 @@ class XmlParser {
         element.setStringValue(value as String)
         return true
     }
-    
+    //写入文件
     func writeToFile(path:NSURL) -> Bool {
         return doc.XMLData().writeToFile(path.path!, atomically: true)
         

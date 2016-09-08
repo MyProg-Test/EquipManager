@@ -4,7 +4,7 @@
 //
 //  Created by 李呱呱 on 16/8/8.
 //  Copyright © 2016年 liguagua. All rights reserved.
-//
+//  modify(error)
 
 import UIKit
 
@@ -16,27 +16,6 @@ class DetailEquipTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
-    }
-    
-    func updateDetailAttrCell(){
-        attrKey.text = nil
-        attrValue.text = nil
-        getAttrKey()
-        getAttrValue()
-    }
-    func setAttrKey(){
-        //to do
-    }
-    func getAttrKey()->String?{
-        //to do 
-        return "test"
-    }
-    func setAttrValue(){
-        //to do
-    }
-    func getAttrValue()->String?{
-        //to do 
-        return "test"
     }
     
     override func setSelected(selected: Bool, animated: Bool) {

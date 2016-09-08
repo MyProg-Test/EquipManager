@@ -30,6 +30,7 @@ class DetailEquipViewController: UIViewController {
         super.viewWillAppear(animated);
         setEquipImage();
         setQRCodeImage();
+        //手势识别，图片点击
         let equipTap:UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(DetailEquipViewController.equipImageTap(_:)));
         equipImage.addGestureRecognizer(equipTap);
         equipImage.userInteractionEnabled = true;
@@ -55,6 +56,7 @@ class DetailEquipViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    //设置EquipImage
     func setEquipImage(){
         if(DetailEquipViewController.data_source == nil){
             equipImage.image = UIImage(named: "equipImage.png");
@@ -72,6 +74,7 @@ class DetailEquipViewController: UIViewController {
         //to do
     }
     
+    //点击设备图片
     func equipImageTap(sender:UITapGestureRecognizer){
         let equipImageView = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier("EquipImage") as!EquipImagePickerTableViewController;
         EquipFileControl.sharedInstance().downloadEquipImageFromNet(DetailEquipViewController.data_source!.equipIndex);
@@ -79,19 +82,22 @@ class DetailEquipViewController: UIViewController {
         self.navigationController?.pushViewController(equipImageView, animated: true);
     }
     
+    //点击QRCode图片
     func qrCodeTap(sender:UITapGestureRecognizer) {
         print("qrCodeTap");
     }
     
+    //获取equipImage里面显示的图片
     func getEquipImage()->UIImage?{
         return equipImage.image;
     }
     
+    //设置QRCodeImage
     func setQRCodeImage(){
         QRCodeImage.image = (DetailEquipViewController.data_source!.xmlInfo.equipAttr.valueForKey(EquipmentAttrKey.codeKey.rawValue as String) as! String).qrImage;
         //生成二维码
     }
-    
+    //获取QRCodeImage里面的图片
     func getQRCodeImage()->UIImage?{
         return QRCodeImage.image;
         //to do
@@ -168,6 +174,7 @@ class DetailEquipViewController: UIViewController {
         
     }
     
+    //打印当前设备信息
     func printEquipInfo() {
         self.pleaseWait();
         dispatch_async(dispatch_get_main_queue()){
@@ -202,15 +209,6 @@ class DetailEquipViewController: UIViewController {
     func uselessEquip(){
         //设备报废
     }
-    
-    func selectImage(gest:UIGestureRecognizer){
-        /*let CI:ChoseImage = ChoseImage();
-         CI.currentfe = self.currentfe;
-         self.navigationController?.pushViewController(CI, animated: true);
-         return;*/
-    }
-    
-    
     
     /*
      // MARK: - Navigation

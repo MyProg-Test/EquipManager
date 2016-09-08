@@ -20,6 +20,7 @@ import UIKit
 //设备信息
 class EquipInfo {
     var equipIndex:Int;
+    //xml就绪
     var xmlReady:Bool{
         get{
             return NSFileManager.defaultManager().fileExistsAtPath(xmlInfo.xmlFile.path.path!);
@@ -27,9 +28,7 @@ class EquipInfo {
     };
     var imageInfo:EquipImageInfo
     var xmlInfo:EquipXmlInfo
-    
-    //根据图片信息和xml信息初始化设备
-    
+    //根据index从equipFileControl里初始化
     init(index:Int){
         equipIndex = index;
         let xmlFileInfo:FileInfo = FileInfo();
@@ -54,7 +53,7 @@ class EquipInfo {
         self.imageInfo = EquipImageInfo(historyImage: imageFileArray);
         self.imageInfo.setDisplayedImageInfo(fileName);
     }
-    
+    //根据index从equipFileControl里更新
     func updateEquip(index:Int){
         equipIndex = index;
         let xmlFileInfo:FileInfo = FileInfo();

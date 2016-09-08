@@ -21,7 +21,8 @@ class ViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
+    
+//点击设备助手button
     @IBAction func equipInitView(sender: UIButton) {
         NetworkOperation.sharedInstance().Login(userName, passwd: passwd) { (any) in
             EquipManager.sharedInstance(self.rootId);

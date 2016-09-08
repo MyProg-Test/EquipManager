@@ -14,12 +14,13 @@ class EquipNetInfo {
     let fs:FileSystem = FileSystem();
     let readFromNetRecord = NSMutableArray();
     
+    //返回当前文件数
     var count:Int{
         get{
             return fs.count;
         }
     }
-    
+    //返回当前网络读取是否结束
     var isReadFromNetComplete:Bool{
         get{
             objc_sync_enter(NetworkOperation.sharedInstance().getResourcesQueue);
@@ -49,17 +50,17 @@ class EquipNetInfo {
     private init(){
         
     }
-    
+    //单例模式
     class func sharedInstance()->EquipNetInfo{
         return _sharedInstance;
     }
-    
+    //检查ID是否存在
     func checkForID(id:Int, handler:(Bool)->Void){
         NetworkOperation.sharedInstance().getResourceInfo(id) { (any) in
             handler(any.objectForKey(NetworkOperation.NetConstant.DictKey.GetResourceInfo.Response.displayName) != nil);
         }
     }
-    
+    //从网络端添加设备
     func addEquipFromNet(parentID:Int, parentName:NSString) -> NSString{
         let stamp = NetworkOperation.sharedInstance().getResources(parentID) { (any) in
             if let resArray = any.objectForKey(NetworkOperation.NetConstant.DictKey.GetResources.Response.resources){
@@ -109,7 +110,7 @@ class EquipNetInfo {
         return stamp;
         
     }
-    
+    //从网络端读取
     func readFromNet(rootID:Int){
         NetworkOperation.sharedInstance().getResources(rootID) { (any) in
             objc_sync_enter(self.fs.equipArray);
@@ -127,7 +128,7 @@ class EquipNetInfo {
             }
         }
     }
-    
+    //判断当前是否为图片
     func isImage(Name:NSString)->Bool{
         let ext = Name.pathExtension.lowercaseString
         let imageType = ["jpg","png"];
@@ -138,7 +139,7 @@ class EquipNetInfo {
         }
         return false;
     }
-    
+    //判断是否为xml
     func isXml(Name:NSString)->Bool{
         let ext = Name.pathExtension.lowercaseString
         let imageType = ["xml"];
