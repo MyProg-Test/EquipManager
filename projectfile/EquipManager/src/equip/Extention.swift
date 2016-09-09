@@ -54,7 +54,7 @@ extension String{
             UIGraphicsBeginImageContext(rect.size)
             
             codeImage.drawInRect(rect)
-            let avatarSize = CGSizeMake(rect.size.width * 0.25, rect.size.height * 0.25)
+            let avatarSize = CGSizeMake(rect.size.width * 0.3, rect.size.height * 0.3)
             let x = (rect.width - avatarSize.width) * 0.5
             let y = (rect.height - avatarSize.height) * 0.5
             iconImage.drawInRect(CGRectMake(x, y, avatarSize.width, avatarSize.height))

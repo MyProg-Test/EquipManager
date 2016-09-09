@@ -79,8 +79,8 @@ class SwiftPrint {
             errorPrint("字典数量(\(dict.allKeys))和键数量(\(key.count))不匹配");
             return nil;
         }
-        if(labelRect.count != 2){
-            errorPrint("标签矩形数量(\(labelRect.count))不是2个");
+        if(labelRect.count != 3){
+            errorPrint("标签矩形数量(\(labelRect.count))不是3个");
             return nil;
         }
         if image.count != imageRect.count {
@@ -91,8 +91,8 @@ class SwiftPrint {
         let rtnView:UIView = UIView(frame: viewRect);
         for i in 0..<key.count {
             let value = dict.objectForKey(key[i]);
-            let labelKey:UILabel = UILabel(frame: CGRectMake(labelRect[0].minX, CGFloat(i) * labelRect[0].maxY + labelRect[0].minY, labelRect[0].width, labelRect[0].height));
-            let labelValue:UILabel = UILabel(frame: CGRectMake(labelRect[1].minX, CGFloat(i) * labelRect[1].maxY + labelRect[0].minY, labelRect[1].width, labelRect[1].height));
+            let labelKey:UILabel = UILabel(frame: CGRectMake(labelRect[2].width + labelRect[0].minX, labelRect[2].height + CGFloat(i) * labelRect[0].maxY + labelRect[0].minY, labelRect[0].width, labelRect[0].height));
+            let labelValue:UILabel = UILabel(frame: CGRectMake(labelRect[2].width + labelRect[1].minX, labelRect[2].height + CGFloat(i) * labelRect[1].maxY + labelRect[0].minY, labelRect[1].width, labelRect[1].height));
             labelKey.text = key[i] as? String;
             labelValue.text = value as? String;
             labelKey.font = font;
@@ -105,9 +105,15 @@ class SwiftPrint {
         
         for i in 0..<image.count {
             let imageView = UIImageView(frame: imageRect[i]);
-            imageView.layer.shadowOpacity = 0.8
-            imageView.layer.shadowColor = UIColor.blackColor().CGColor
-            imageView.layer.shadowOffset = CGSize(width: 1, height: 1)
+            
+            //imageView.layer.borderColor = UIColor.blackColor().CGColor;
+            //imageView.layer.borderWidth = 1.0;
+            //imageView.layer.masksToBounds = true;
+            //imageView.layer.cornerRadius = 2.0;
+            
+            //imageView.layer.shadowOpacity = 1.0
+            //imageView.layer.shadowColor = UIColor.blackColor().CGColor
+            //imageView.layer.shadowOffset = CGSize(width: 1, height: 1)
             imageView.image = image[i];
             imageView.contentMode = .ScaleAspectFit;
             rtnView.addSubview(imageView);

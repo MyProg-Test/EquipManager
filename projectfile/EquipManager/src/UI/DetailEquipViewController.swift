@@ -179,18 +179,22 @@ class DetailEquipViewController: UIViewController {
         self.pleaseWait();
         dispatch_async(dispatch_get_main_queue()){
             let viewRect = CGRectMake(0, 0, 840, 475.2);
-            let keyRect = CGRectMake(20, 20, 280, 35);
-            let valueRect = CGRectMake(320, 20, 280, 35);
-            let qrImageRect = CGRectMake(600, 60, 200, 200);
-            let barImageRect = CGRectMake(250, 300, 500, 150);
+            let headerRect = CGRectMake(0, 0, 60, 40)
+            let keyRect = CGRectMake(0, 0, 280, 55);
+            let valueRect = CGRectMake(200, 0, 280, 55);
+            let qrImageRect = CGRectMake(520, 30, 270, 270);
+            let barImageRect = CGRectMake(300, 310, 500, 160);
+            let logoImageRect = CGRectMake(90, 310, 150, 150);
             
-            let key:[String] = DetailEquipViewController.data_source!.xmlInfo.attrKey.objectsAtIndexes(NSIndexSet(indexesInRange: NSRange(location: 0, length: 5 ))) as! [String];
+            let attrKey:[String] = DetailEquipViewController.data_source!.xmlInfo.attrKey.copy() as! [String];
+            let key:[String] = [attrKey[0], attrKey[1], attrKey[2], attrKey[4]];
             let dict = DetailEquipViewController.data_source!.xmlInfo.equipAttr.dictionaryWithValuesForKeys(key);
             let qrImage = (DetailEquipViewController.data_source!.xmlInfo.equipAttr.valueForKey(EquipmentAttrKey.codeKey.rawValue as String) as! String).qrImageWithImage(self.getEquipImage());
             let barImage = (DetailEquipViewController.data_source!.xmlInfo.equipAttr.valueForKey(EquipmentAttrKey.codeKey.rawValue as String) as! String).barCode;
+            let logoImage = UIImage(named: "equipTwoCode.png")!;
             
             
-            let view = SwiftPrint.sharedInstance().visitingCardView(dict, key: key, image: [qrImage, barImage], viewRect: viewRect, labelRect: [keyRect, valueRect], imageRect: [qrImageRect, barImageRect])!
+            let view = SwiftPrint.sharedInstance().visitingCardView(dict, key: key, image: [qrImage, barImage,logoImage], viewRect: viewRect, labelRect: [keyRect, valueRect, headerRect], imageRect: [qrImageRect, barImageRect,logoImageRect])!
             let image = SwiftPrint.sharedInstance().drawVisitingCardSet([view,view]);
             self.clearAllNotice();
             self.printImages(image);
