@@ -34,6 +34,7 @@ class EquipFileControl {
     //初始化路径
     private init(){
         docPath = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0];
+        print(docPath);
         rootPath = docPath.URLByDeletingLastPathComponent!;
         libPath = rootPath.URLByAppendingPathComponent("Library")
         tmpPath = rootPath.URLByAppendingPathComponent("tmp");
@@ -92,7 +93,7 @@ class EquipFileControl {
     }
     
     //在文件中写入信息
-    func writeInfoToFile()->Bool{
+    func writeInfoToFile(fs: FileSystem)->Bool{
         if(!NSFileManager.defaultManager().fileExistsAtPath(self.getEquipInfoPath().path!)){
             do{
                 try NSFileManager.defaultManager().createDirectoryAtPath(self.getEquipInfoPath().path!, withIntermediateDirectories: true, attributes: nil);
@@ -101,7 +102,7 @@ class EquipFileControl {
                 return false;
             }
         }
-        return self.fs!.writeToFile(self.getEquipInfoFilePath());
+        return fs.writeToFile(self.getEquipInfoFilePath());
     }
     
     //添加equip信息到本地文件
@@ -109,17 +110,19 @@ class EquipFileControl {
         if(self.fs == nil){
             return false;
         }
-        self.fs!.addEquip(parentID, XMLID: XMLID, XMLName: XMLName, imageSet: imageSet, path: path,groupID: groupID, status: status);
-        return self.writeInfoToFile();
+        let fs = self.fs;
+        fs!.addEquip(parentID, XMLID: XMLID, XMLName: XMLName, imageSet: imageSet, path: path,groupID: groupID, status: status);
+        return self.writeInfoToFile(fs!);
     }
     //添加图片信息到文件中
     func addImageInfoToFile(index:Int, imageID:Int, imagePath:NSString, imageName:NSString, status:Int = 0)->Bool{
         if(self.fs == nil){
             return false;
         }
+        let fs = self.fs;
         if(index < self.count && index >= 0){
-            self.fs!.addImage(index, imageID: imageID, imagePath: imagePath, imageName: imageName, status: status);
-            return self.writeInfoToFile();
+            fs!.addImage(index, imageID: imageID, imagePath: imagePath, imageName: imageName, status: status);
+            return self.writeInfoToFile(fs!);
         }
         return false;
     }
@@ -128,24 +131,27 @@ class EquipFileControl {
         if(self.fs == nil){
             return false;
         }
-        self.fs!.modifyImageName(equipIndex, imageIndex: imageIndex, name: name);
-        return self.writeInfoToFile();
+        let fs = self.fs;
+        fs!.modifyImageName(equipIndex, imageIndex: imageIndex, name: name);
+        return self.writeInfoToFile(fs!);
     }
     //在文件中修改设备状态
     func modifyEquipStatusInFile(index:Int,status:Int) -> Bool {
         if(self.fs == nil){
             return false;
         }
-        self.fs!.modifyEquipStatus(index, status: status);
-        return writeInfoToFile();
+        let fs = self.fs;
+        fs!.modifyEquipStatus(index, status: status);
+        return writeInfoToFile(fs!);
     }
     //在文件中修改图片状态
     func modiftyImageStatusInFile(equipIndex:Int, imageIndex:Int, status:Int) -> Bool{
         if(self.fs == nil){
             return false;
         }
-        self.fs!.modifyImageStatus(equipIndex, imageIndex: imageIndex, status: status);
-        return writeInfoToFile();
+        let fs = self.fs;
+        fs!.modifyImageStatus(equipIndex, imageIndex: imageIndex, status: status);
+        return writeInfoToFile(fs!);
     }
     //从文件中获取设备
     func getEquipFromFile(index:Int)->NSMutableDictionary?{
@@ -194,7 +200,7 @@ class EquipFileControl {
     //检查设备相关路径是否存在，若不存在，则建立
     func checkForEquipAssociationFile()->Bool{
         do{
-            if(!NSFileManager.defaultManager().fileExistsAtPath(getEquipInfoPath().path!)){
+            if(!NSFileManager.defaultManager().fileExistsAtPath(getEquipInfoFilePath().path!)){
                 try NSFileManager.defaultManager().createDirectoryAtPath(getEquipInfoPath().path!, withIntermediateDirectories: true, attributes: nil);
                 createEmptyEquipFile(getEquipInfoFilePath());
             }
@@ -209,8 +215,8 @@ class EquipFileControl {
     }
     //和网络端交互设备信息
     func interactEquipWithNet(){
-        if(self.count == 0){
-            return ;
+        if(self.fs == nil){
+            self.checkForEquipAssociationFile();
         }
         for index in 0..<self.count {
             let equipStatus:Int = fs!.getEquipStatus(index);

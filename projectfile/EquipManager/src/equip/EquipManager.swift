@@ -16,7 +16,7 @@ class EquipManager:NSObject{
             if(rootId != 0){
                 initWithLocal();
                 initWithNet();
-                timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: #selector(EquipManager.combine), userInfo: nil, repeats: true);
+                timer = NSTimer.scheduledTimerWithTimeInterval(2, target: self, selector: #selector(EquipManager.combine), userInfo: nil, repeats: true);
             }
         }
     };
@@ -64,7 +64,7 @@ class EquipManager:NSObject{
                                 let localImageSet = EquipFileControl.sharedInstance().fs!.getImage(l, imageIndex: li)!;
                                 if(dictionIsEqual(serverImageSet, dict2: localImageSet, key: FileSystem.imageSetKey.imageID)){
                                     matchFlag2 = true;
-                                    if(!dictionIsEqual(serverImageSet, dict2: localImageSet, key: FileSystem.imageSetKey.imageName)){
+                                    if(!dictionIsEqual(serverImageSet, dict2: localImageSet, key: FileSystem.imageSetKey.imageID)){
                                         EquipFileControl.sharedInstance().modifyImageNameInFile(l, imageIndex: li, name: serverImageSet.objectForKey(FileSystem.imageSetKey.imageName) as! NSString);
                                     }
                                     break;
