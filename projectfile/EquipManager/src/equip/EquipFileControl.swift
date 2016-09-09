@@ -82,7 +82,7 @@ class EquipFileControl {
     }
     
     //从文件中读取信息
-    func readInfoFromFile()->Bool{
+    func readInfoFromFile()->FileSystem?{
         if(!NSFileManager.defaultManager().fileExistsAtPath(self.getEquipInfoFilePath().path!)){
             return nil;
         }
