@@ -235,6 +235,13 @@ class NetworkOperation {
                     static let thumbUrl     = "thumbUrl"
                 }
             }
+            struct DeleteResource {
+                struct Query {
+                    static let id           = "id";
+                }
+                struct Responce {
+                }
+            }
         }
         //网络端调用的application interface 
         struct API {
@@ -283,11 +290,12 @@ class NetworkOperation {
             static let GetGroupTree         = "grouper/grouperTree.action"
         }
     }
-    
+    let deleteResourceQueue:NSMutableArray;
     let getResourcesQueue:NSMutableArray;
     let downloadQueue:NSMutableArray;
     let getThumbnailQueue:NSMutableArray;
     let uploadQueue:NSMutableArray;
+    
     //获取资源完成
     var getResourcesComplete:Bool{
         get{
@@ -313,12 +321,19 @@ class NetworkOperation {
         }
     }
     
+    var deleteResourceComplete: Bool{
+        get{
+            return deleteResourceQueue.count == 0;
+        }
+    }
+    
     private static let _sharedInstance = NetworkOperation()
     private init(){
         getResourcesQueue = NSMutableArray();
         downloadQueue = NSMutableArray();
         getThumbnailQueue = NSMutableArray();
         uploadQueue = NSMutableArray();
+        deleteResourceQueue = NSMutableArray();
     }
     //单例模式
     class func sharedInstance() -> NetworkOperation {
@@ -430,6 +445,28 @@ class NetworkOperation {
                 objc_sync_exit(self.getResourcesQueue);
             }
             
+        }
+        return stamp;
+    }
+    
+    func deleteResource(id:Int, queue:dispatch_queue_t = NetConstant.defaultQueue, handler: (AnyObject)->Void) -> NSString {
+        let stamp = self.getTimeStamp(id);
+        dispatch_async(queue){
+            objc_sync_enter(self.deleteResourceQueue);
+            self.deleteResourceQueue.addObject(stamp);
+            objc_sync_exit(self.deleteResourceQueue);
+            let dict = [NetConstant.DictKey.DeleteResource.Query.id : "\(id)"];
+            Alamofire.request(.POST, NetworkOperation.NetConstant.API.DeleteResource.asURLConvertible, parameters: dict, encoding: .URL, headers: nil).responseJSON{ (response) in
+                switch response.result{
+                case .Success(let data):
+                    handler(data)
+                case .Failure(let error):
+                    print(error);
+                }
+                objc_sync_enter(self.deleteResourceQueue);
+                self.deleteResourceQueue.removeObject(stamp);
+                objc_sync_exit(self.deleteResourceQueue);
+            }
         }
         return stamp;
     }
@@ -635,6 +672,7 @@ class NetworkOperation {
                 switch response.result{
                 case .Success(let data):
                     if let URL = data.firstObject??.objectForKey("thumbUrl") as? String{
+                        print(data);
                         print(URL.asURLConvertible);
                         imageData = NSData(contentsOfURL: NSURL(string: URL.asURLConvertible)!);
                     }

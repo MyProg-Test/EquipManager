@@ -55,6 +55,11 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         DetailEquipViewController.data_source = nil;
+        self.pleaseWait();
+        dispatch_async(dispatch_get_main_queue()){
+            self.tableView.reloadData();
+            self.clearAllNotice();
+        }
         
     }
     
