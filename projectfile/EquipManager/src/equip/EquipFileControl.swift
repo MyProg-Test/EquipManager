@@ -126,6 +126,27 @@ class EquipFileControl {
         }
         return false;
     }
+    
+    func deleteImageFromFile(equipIndex: Int, image: NSMutableDictionary) -> Bool {
+        if(self.fs == nil){
+            return false;
+        }
+        let fs = self.fs;
+        if(equipIndex < self.count && equipIndex >= 0){
+            fs!.deleteImage(equipIndex, image: image);
+            return self.writeInfoToFile(fs!);
+        }
+        return false;
+    }
+    
+    func deleteEquipFromFile(equip: NSMutableDictionary) -> Bool {
+        if(self.fs == nil){
+            return false;
+        }
+        let fs = self.fs;
+        fs!.deleteEquip(equip);
+        return self.writeInfoToFile(fs!);
+    }
     //在文件中修改图片名
     func modifyImageNameInFile(equipIndex:Int, imageIndex:Int, name:NSString)->Bool{
         if(self.fs == nil){
@@ -135,6 +156,25 @@ class EquipFileControl {
         fs!.modifyImageName(equipIndex, imageIndex: imageIndex, name: name);
         return self.writeInfoToFile(fs!);
     }
+    
+    func modifyXMLIDInFile(index: Int, id:Int) -> Bool {
+        if(self.fs == nil){
+            return false;
+        }
+        let fs = self.fs;
+        fs!.modifyXMLID(index, id: id);
+        return self.writeInfoToFile(fs!);
+    }
+    
+    func modifyParentIDInFile(index: Int, parentId: Int) -> Bool {
+        if(self.fs == nil){
+            return false;
+        }
+        let fs = self.fs;
+        fs!.modifyParentID(index, parentId: parentId);
+        return self.writeInfoToFile(fs!);
+    }
+    
     //在文件中修改设备状态
     func modifyEquipStatusInFile(index:Int,status:Int) -> Bool {
         if(self.fs == nil){
@@ -145,7 +185,7 @@ class EquipFileControl {
         return writeInfoToFile(fs!);
     }
     //在文件中修改图片状态
-    func modiftyImageStatusInFile(equipIndex:Int, imageIndex:Int, status:Int) -> Bool{
+    func modifyImageStatusInFile(equipIndex:Int, imageIndex:Int, status:Int) -> Bool{
         if(self.fs == nil){
             return false;
         }
@@ -153,33 +193,22 @@ class EquipFileControl {
         fs!.modifyImageStatus(equipIndex, imageIndex: imageIndex, status: status);
         return writeInfoToFile(fs!);
     }
-    //从文件中获取设备
-    func getEquipFromFile(index:Int)->NSMutableDictionary?{
+    
+    func modifyImageIDFromFile(equipIndex: Int, imageIndex: Int, id: Int) -> Bool {
         if(self.fs == nil){
-            return nil;
+            return false;
         }
-        return self.fs!.getEquip(index);
+        let fs = self.fs;
+        fs!.modifyImageID(equipIndex, imageIndex: imageIndex, id: id);
+        return writeInfoToFile(fs!);
     }
+    
     //从文件中获取文件信息
     func getFileSystemFromFile()->FileSystem?{
         return self.fs;
     }
-    //获取设备文件的路径
-    func getEquipFilePathFromFile(index:Int) -> NSURL? {
-        if(self.fs == nil){
-            return nil;
-        }
-        let url:NSURL = getEquipPath().URLByAppendingPathComponent(self.fs!.getEquipPath(index).path!);
-        return url;
-    }
-    //从文件中获取图片文件路径
-    func getImageFilePathFromFile(equipIndex:Int, imageIndex:Int) -> NSURL?{
-        if(self.fs == nil){
-            return nil;
-        }
-        let url:NSURL = getEquipPath().URLByAppendingPathComponent(self.fs!.getImagePath(equipIndex,imageIndex: imageIndex).path!);
-        return url;
-    }
+    
+    //MARK:-getEquip
     
     //根据key和value获取设备的index
     func getSpecIndex(key:NSString,value:AnyObject)->Int{
@@ -189,12 +218,137 @@ class EquipFileControl {
         return self.fs!.getSpecIndex(key, value: value);
     }
     
+    func getEquipStatusFromFile(index:Int) -> Int {
+        if(self.fs == nil){
+            return 0;
+        }
+        return self.fs!.getEquipStatus(index);
+    }
+    
+    //获取设备文件的路径
+    func getEquipFilePathFromFile(index:Int) -> NSURL? {
+        if(self.fs == nil){
+            return nil;
+        }
+        let url:NSURL = getEquipPath().URLByAppendingPathComponent(self.fs!.getEquipPath(index).path!);
+        return url;
+    }
+    
     //获取设备数组
     func getEquipArray()->NSMutableArray?{
         if(self.fs == nil){
             return nil;
         }
         return self.fs!.equipArray;
+    }
+    
+    //从文件中获取设备
+    func getEquipFromFile(index:Int)->NSMutableDictionary?{
+        if(self.fs == nil){
+            return nil;
+        }
+        return self.fs!.getEquip(index);
+    }
+    
+    func getEquipParentIdFromFile(index: Int) -> Int {
+        if(self.fs == nil){
+            return 0;
+        }
+        if(index >= 0 && index < self.count){
+            return fs!.getEquipParentID(index);
+        }
+        return 0;
+    }
+    
+    func getEquipGroupIdFromFile(index: Int) -> Int {
+        if(self.fs == nil){
+            return 0;
+        }
+        if index >= 0 && index < self.count{
+            return fs!.getEquipGroupID(index);
+        }
+        return 0;
+    }
+    
+    func getEquipXMLIDFromFile(index: Int) -> Int {
+        if(self.fs == nil){
+            return 0;
+        }
+        if(index >= 0 && index < self.count){
+            return fs!.getEquipXMLID(index);
+        }
+        return 0;
+    }
+    
+    func getEquipNameFromFile(index: Int) -> NSString {
+        if(self.fs == nil){
+            return "";
+        }
+        if index >= 0 && index < self.count {
+            return fs!.getEquipName(index);
+        }
+        return "";
+    }
+    
+    //MARK:- getImage
+    func isMainImageFromFile(equipIndex: Int, imageIndex: Int) -> Bool {
+        if(self.fs == nil){
+            return false;
+        }
+        return fs!.isMainImage(equipIndex, imageIndex: imageIndex);
+    }
+    func getImageStatusFromFile(equipIndex:Int, imageIndex:Int) -> Int {
+        if(self.fs == nil){
+            return 0;
+        }
+        return self.fs!.getImageStatus(equipIndex, imageIndex: imageIndex);
+    }
+    
+    func getImageIDFromFile(equipIndex: Int, imageIndex: Int) -> Int {
+        if(self.fs == nil){
+            return 0;
+        }
+        if equipIndex >= 0 && equipIndex < self.count{
+            if imageIndex >= 0 && imageIndex < self.getImageCountFromFile(equipIndex) {
+                return fs!.getImageID(equipIndex, imageIndex: imageIndex);
+            }
+        }
+        return 0;
+    }
+    
+    func getImageNameFromFile(equipIndex: Int, imageIndex: Int) -> NSString {
+        if(self.fs == nil){
+            return "";
+        }
+        if equipIndex >= 0 && equipIndex < self.count{
+            if imageIndex >= 0 && imageIndex < self.getImageCountFromFile(imageIndex) {
+                return fs!.getImageName(equipIndex, imageIndex: imageIndex);
+            }
+        }
+        return "";
+    }
+    
+    func getImageFromFile(equipIndex: Int, imageIndex: Int) -> NSMutableDictionary? {
+        if(self.fs == nil){
+            return nil;
+        }
+        return self.fs?.getImage(equipIndex, imageIndex: imageIndex);
+    }
+    
+    //从文件中获取图片文件路径
+    func getImageFilePathFromFile(equipIndex:Int, imageIndex:Int) -> NSURL?{
+        if(self.fs == nil){
+            return nil;
+        }
+        let url:NSURL = getEquipPath().URLByAppendingPathComponent(self.fs!.getImagePath(equipIndex,imageIndex: imageIndex).path!);
+        return url;
+    }
+    
+    func getImageCountFromFile(index: Int) -> Int {
+        if(self.fs == nil){
+            return 0;
+        }
+        return self.fs!.getImageCount(index);
     }
     
     //检查设备相关路径是否存在，若不存在，则建立
@@ -218,47 +372,92 @@ class EquipFileControl {
         if(self.fs == nil){
             self.checkForEquipAssociationFile();
         }
-        for index in 0..<self.count {
-            let equipStatus:Int = fs!.getEquipStatus(index);
-            if(!(equipStatus & FileSystem.Status.Download.rawValue > 0)){
-                NetworkOperation.sharedInstance().downloadResource(fs!.getEquipXMLID(index), url: getEquipFilePathFromFile(index)!, handler: { (any) in
+        let deleteEquipList: NSMutableArray = NSMutableArray();
+        for index in 0.stride(to: self.count, by: 1) {
+            if(!(self.getEquipStatusFromFile(index) & FileSystem.Status.Download.rawValue > 0)){
+                NetworkOperation.sharedInstance().downloadResource(self.getEquipXMLIDFromFile(index), url: self.getEquipFilePathFromFile(index)!){ (any) in
                     print(any);
                     if(NSFileManager.defaultManager().fileExistsAtPath(self.getEquipFilePathFromFile(index)!.path!)){
-                        if(self.modifyEquipStatusInFile(index, status: FileSystem.Status.Download.rawValue|equipStatus)){
-                            print("\(self.fs!.getEquipName(index)): download complete!");
+                        if(self.modifyEquipStatusInFile(index, status: FileSystem.Status.Download.rawValue|self.getEquipStatusFromFile(index))){
+                            print("\(self.getEquipNameFromFile(index)): download complete!");
                         }else{
-                            print("\(self.fs!.getEquipName(index)): error download status change!");
+                            print("\(self.getEquipNameFromFile(index)): error download status change!");
                         }
                     }else{
                         print("download error!");
                     }
-                })
+                }
                 //download
             }
-            if(equipStatus & FileSystem.Status.Modifty.rawValue > 0){
+            if(self.getEquipStatusFromFile(index) & FileSystem.Status.Modifty.rawValue > 0){
+                NetworkOperation.sharedInstance().deleteResource(self.getEquipXMLIDFromFile(index)){
+                    (any) in
+                    print(any);
+                    NetworkOperation.sharedInstance().uploadResourceReturnId(self.getEquipGroupIdFromFile(index), parentID: self.getEquipParentIdFromFile(index), fileURL: self.getEquipFilePathFromFile(index)!, fileName: self.getEquipNameFromFile(index)){(any) in
+                        let newFile:NSDictionary = any.objectForKey(NetworkOperation.NetConstant.DictKey.UploadResourceReturnId.Response.file) as! NSDictionary;
+                        let newid:Int = newFile.objectForKey(NetworkOperation.NetConstant.DictKey.UploadResourceReturnId.Response.FileKey.id) as! Int;
+                        let oldPath = self.getEquipFilePathFromFile(index)!;
+                        self.modifyXMLIDInFile(index, id: newid);
+                        let newPath = self.getEquipFilePathFromFile(index)!;
+                        do{
+                            try NSFileManager.defaultManager().moveItemAtPath(oldPath.path!, toPath: newPath.path!);
+                            self.modifyEquipStatusInFile(index, status: self.getEquipStatusFromFile(index) & ~FileSystem.Status.Modifty.rawValue);
+                        }catch{
+                            print(error);
+                        }
+                    }
+                }
                 //modify
             }
-            if(equipStatus & FileSystem.Status.Delete.rawValue > 0){
+            if(self.getEquipStatusFromFile(index) & FileSystem.Status.Delete.rawValue > 0){
+                NetworkOperation.sharedInstance().deleteResource(self.getEquipXMLIDFromFile(index)){ (any) in
+                    print(any);
+                    do{
+                        try NSFileManager.defaultManager().removeItemAtPath(self.getEquipFilePathFromFile(index)!.URLByDeletingLastPathComponent!.path!);
+                    }catch{
+                        print(error);
+                    }
+                }
+                deleteEquipList.addObject(self.getEquipFromFile(index)!);
                 //delete
             }
-            if(equipStatus & FileSystem.Status.New.rawValue > 0){
+            if(self.getEquipStatusFromFile(index) & FileSystem.Status.New.rawValue > 0){
+                NetworkOperation.sharedInstance().createDir(self.getEquipGroupIdFromFile(index), name: self.getEquipNameFromFile(index).stringByDeletingPathExtension, parentID: EquipManager.sharedInstance().rootId){(any) in
+                    print(any);
+                    let dirID = any.objectForKey(NetworkOperation.NetConstant.DictKey.CreateDir.Response.id) as! Int;
+                    self.modifyParentIDInFile(index, parentId: dirID);
+                    NetworkOperation.sharedInstance().uploadResourceReturnId(self.getEquipGroupIdFromFile(index), parentID: self.getEquipParentIdFromFile(index), fileURL: self.getEquipFilePathFromFile(index)!, fileName: self.getEquipNameFromFile(index)){(any) in
+                        print(any);
+                        let newFile:NSDictionary = any.objectForKey(NetworkOperation.NetConstant.DictKey.UploadResourceReturnId.Response.file)![0] as! NSDictionary;
+                        let newid:Int = newFile.objectForKey(NetworkOperation.NetConstant.DictKey.UploadResourceReturnId.Response.FileKey.id) as! Int;
+                        let oldPath = self.getEquipFilePathFromFile(index)!;
+                        self.modifyXMLIDInFile(index, id: newid);
+                        let newPath = self.getEquipFilePathFromFile(index)!;
+                        do{
+                            try NSFileManager.defaultManager().moveItemAtPath(oldPath.path!, toPath: newPath.path!);
+                            self.modifyEquipStatusInFile(index, status: self.getEquipStatusFromFile(index) & ~FileSystem.Status.New.rawValue)
+                        }catch{
+                            print(error);
+                        }
+                    }
+                }
                 //new
                 
             }
-            
-            for imageIndex in 0..<fs!.getImageCount(index){
-                let imageStatus = fs!.getImageStatus(index, imageIndex: imageIndex);
-                if(fs!.isMainImage(index, imageIndex: imageIndex)){
-                    if(!(imageStatus & FileSystem.Status.Download.rawValue > 0)){
-                        let imageID = fs!.getImageID(index, imageIndex: imageIndex);
+            let deleteImageList:NSMutableArray = NSMutableArray();
+            for imageIndex in 0.stride(to: getImageCountFromFile(index), by: 1){
+                if(self.isMainImageFromFile(index, imageIndex: imageIndex)){
+                    if(!(self.getImageStatusFromFile(index, imageIndex: imageIndex) & FileSystem.Status.Download.rawValue > 0)){
+                        let imageID = self.getImageIDFromFile(index, imageIndex: imageIndex);
                         NetworkOperation.sharedInstance().getThumbnail(imageID, handler: { (any) in
                             do{
                                 let url = self.getImageFilePathFromFile(index, imageIndex: imageIndex)!;
                                 if(!NSFileManager.defaultManager().fileExistsAtPath(url.URLByDeletingLastPathComponent!.path!)){
                                     try NSFileManager.defaultManager().createDirectoryAtPath(url.URLByDeletingLastPathComponent!.path!, withIntermediateDirectories: true, attributes: nil);
                                 }
+                                
                                 any!.writeToFile(url.path!, atomically: true);
-                                self.modiftyImageStatusInFile(index, imageIndex: imageIndex, status: imageStatus | FileSystem.Status.Download.rawValue);
+                                self.modifyImageStatusInFile(index, imageIndex: imageIndex, status: self.getImageStatusFromFile(index, imageIndex: imageIndex) | FileSystem.Status.Download.rawValue);
                             }catch{
                                 print(error);
                             }
@@ -266,23 +465,48 @@ class EquipFileControl {
                     }
                     //Main
                 }
-                if(imageStatus & FileSystem.Status.Modifty.rawValue > 0){
+                if(self.getImageStatusFromFile(index, imageIndex: imageIndex) & FileSystem.Status.Modifty.rawValue > 0){
+                    NetworkOperation.sharedInstance().modifyResource(self.getImageIDFromFile(index, imageIndex: imageIndex), name: self.getImageNameFromFile(index, imageIndex: imageIndex).stringByDeletingPathExtension){ (any) in
+                        print(any);
+                        self.modifyImageStatusInFile(index, imageIndex: imageIndex, status: self.getImageStatusFromFile(index, imageIndex: imageIndex) & ~FileSystem.Status.Modifty.rawValue);
+                    }
                     //modify
                 }
-                if(imageStatus & FileSystem.Status.Delete.rawValue > 0){
+                if(self.getImageStatusFromFile(index, imageIndex: imageIndex) & FileSystem.Status.Delete.rawValue > 0){
+                    NetworkOperation.sharedInstance().deleteResource(self.getImageIDFromFile(index, imageIndex: imageIndex)){(any) in
+                        print(any);
+                    }
+                    deleteImageList.addObject(self.getImageFromFile(index, imageIndex: imageIndex)!);
                     //delete
                 }
-                if(!(imageStatus & FileSystem.Status.Download.rawValue > 0)){
+                if(!(self.getImageStatusFromFile(index, imageIndex: imageIndex) & FileSystem.Status.Download.rawValue > 0)){
                     //download
                 }
-                if(imageStatus & FileSystem.Status.New.rawValue > 0) {
+                if(self.getImageStatusFromFile(index, imageIndex: imageIndex) & FileSystem.Status.New.rawValue > 0) {
+                    NetworkOperation.sharedInstance().uploadResourceReturnId(self.getEquipGroupIdFromFile(index), parentID: self.getEquipParentIdFromFile(index), fileURL: self.getImageFilePathFromFile(index, imageIndex: imageIndex)!, fileName: self.getImageNameFromFile(index, imageIndex: imageIndex)){(any) in
+                        let newFile:NSDictionary = any.objectForKey(NetworkOperation.NetConstant.DictKey.UploadResourceReturnId.Response.file) as! NSDictionary;
+                        let newid:Int = newFile.objectForKey(NetworkOperation.NetConstant.DictKey.UploadResourceReturnId.Response.FileKey.id) as! Int;
+                        let oldPath = self.getImageFilePathFromFile(index, imageIndex: imageIndex)!;
+                        self.modifyImageIDFromFile(index, imageIndex: imageIndex, id: newid);
+                        let newPath = self.getEquipFilePathFromFile(index)!;
+                        do{
+                            try NSFileManager.defaultManager().moveItemAtPath(oldPath.path!, toPath: newPath.path!);
+                            self.modifyEquipStatusInFile(index, status: self.getEquipStatusFromFile(index) & ~FileSystem.Status.New.rawValue)
+                        }catch{
+                            print(error);
+                        }
+                    }
                     //new
                 }
                 
                 
             }
-            
-            
+            for tmp in deleteImageList {
+                self.deleteImageFromFile(index, image: tmp as! NSMutableDictionary);
+            }
+        }
+        for tmp in deleteEquipList {
+            self.deleteEquipFromFile(tmp as! NSMutableDictionary);
         }
     }
     //下载设备图片
@@ -301,7 +525,7 @@ class EquipFileControl {
                             try NSFileManager.defaultManager().createDirectoryAtPath(url.URLByDeletingLastPathComponent!.path!, withIntermediateDirectories: true, attributes: nil);
                         }
                         any!.writeToFile(url.path!, atomically: true);
-                        self.modiftyImageStatusInFile(index, imageIndex: imageIndex, status: imageStatus | FileSystem.Status.Download.rawValue);
+                        self.modifyImageStatusInFile(index, imageIndex: imageIndex, status: imageStatus | FileSystem.Status.Download.rawValue);
                     }catch{
                         print(error);
                     }

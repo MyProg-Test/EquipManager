@@ -108,6 +108,32 @@ class FileSystem {
         }
         objc_sync_exit(self);
     }
+    
+    func deleteImage(equipIndex: Int, image: NSMutableDictionary) -> Bool {
+        objc_sync_enter(self);
+        (equipArray.objectAtIndex(equipIndex).objectForKey(FileSystem.equipKey.imageSet) as! NSMutableArray).removeObject(image);
+        objc_sync_exit(self);
+        return true;
+    }
+    
+    func deleteEquip(equip: AnyObject) -> Bool {
+        objc_sync_enter(self);
+        equipArray.removeObject(equip);
+        objc_sync_exit(self);
+        return true;
+    }
+    
+    func modifyParentID(index: Int, parentId: Int) {
+        objc_sync_enter(self);
+        self.equipArray.objectAtIndex(index).setValue(parentId, forKey: equipKey.parentID);
+        objc_sync_exit(self);
+    }
+    
+    func modifyXMLID(index: Int, id: Int) {
+        objc_sync_enter(self);
+        self.equipArray.objectAtIndex(index).setValue(id, forKey: equipKey.XMLID);
+        objc_sync_exit(self);
+    }
     //修改图片名
     func modifyImageName(equipIndex:Int, imageIndex:Int, name:NSString){
         objc_sync_enter(self);
@@ -120,6 +146,13 @@ class FileSystem {
         self.equipArray.objectAtIndex(index).setValue(status, forKey: equipKey.status);
         objc_sync_exit(self);
     }
+    
+    func modifyImageID(equipIndex: Int, imageIndex: Int, id: Int) {
+        objc_sync_enter(self);
+        self.equipArray.objectAtIndex(equipIndex).objectForKey(equipKey.imageSet)!.setValue(id, forKey: imageSetKey.imageID);
+        objc_sync_exit(self);
+    }
+    
     //修改图片状态
     func modifyImageStatus(equipIndex:Int, imageIndex:Int, status:Int){
         objc_sync_enter(self);

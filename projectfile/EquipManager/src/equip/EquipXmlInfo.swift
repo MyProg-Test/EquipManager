@@ -105,8 +105,18 @@ class EquipXmlInfo {
     }
     
     //根据设备信息初始化xml信息
-    init(equipAttr:NSMutableDictionary, xmlFile:FileInfo){
-        self.xmlFile = xmlFile
+    init(equipAttr:NSMutableDictionary){
+        func getRandomID() -> NSString {
+            let time = NSDate();
+            let timeFormatter = NSDateFormatter();
+            timeFormatter.dateFormat = "yyyyMMddHHmmss";
+            return "\(timeFormatter.stringFromDate(time))";
+        }
+        self.xmlFile = FileInfo();
+        self.xmlFile.id = getRandomID().integerValue;
+        self.xmlFile.name = "\(getRandomID()).xml";
+        self.xmlFile.parentId = 0;
+        self.xmlFile.path = EquipFileControl.sharedInstance().getEquipPath().URLByAppendingPathComponent(getRandomID() as String).URLByAppendingPathComponent(self.xmlFile.name as String);
         self.xmlParser = XmlParser()
         self.equipAttr = equipAttr
         self.attrKey = NSMutableArray();
@@ -221,6 +231,9 @@ class EquipXmlInfo {
     }
     
     private func initXmlWithEquipAttrHelper(equipmentKey:EquipmentKey, equipmentAttrKey:EquipmentAttrKey){
+        if(self.equipAttr.valueForKey(equipmentAttrKey.rawValue as String) == nil){
+            self.equipAttr.setValue("", forKey: equipmentAttrKey.rawValue as String);
+        }
         objc_sync_enter(self.attrKey);
         self.xmlParser.addElementToRoot(equipmentKey.rawValue, value: self.equipAttr.valueForKey(equipmentAttrKey.rawValue as String) as! (String))
         self.attrKey.addObject(equipmentAttrKey.rawValue as String);
@@ -229,7 +242,15 @@ class EquipXmlInfo {
     
     //将设备信息更新到文件中
     func updateToFile() -> Bool{
-        return self.xmlParser.writeToFile(self.xmlFile.path)
+        do{
+            if(!NSFileManager.defaultManager().fileExistsAtPath(self.xmlFile.path.URLByDeletingLastPathComponent!.path!)){
+                try NSFileManager.defaultManager().createDirectoryAtPath(self.xmlFile.path.URLByDeletingLastPathComponent!.path!, withIntermediateDirectories: true, attributes: nil);
+            }
+            return self.xmlParser.writeToFile(self.xmlFile.path)
+        }catch{
+            print(error);
+        }
+        return false;
     }
     
     //从文件中更新xml信息
