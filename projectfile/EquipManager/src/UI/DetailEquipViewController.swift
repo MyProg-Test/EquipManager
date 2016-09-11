@@ -128,7 +128,7 @@ class DetailEquipViewController: UIViewController {
         let menuAlertController:UIAlertController = UIAlertController(title:"设备信息操作",message:"选择一项操作",preferredStyle:UIAlertControllerStyle.ActionSheet)
         
         menuAlertController.addAction(UIAlertAction(title: "打印信息", style: .Default, handler: { (UIAlertAction) -> Void in
-            self.printEquipInfo()
+            self.printSelect()
         }))
         
         menuAlertController.addAction(UIAlertAction(title: "修改信息", style: UIAlertActionStyle.Default, handler: { (UIAlertAction) -> Void in
@@ -175,31 +175,54 @@ class DetailEquipViewController: UIViewController {
     }
     
     //打印当前设备信息
-    func printEquipInfo() {
+    func printSelect() {
+        /**/
+        //打印信息
+        let detailTableView =  self.childViewControllers[0] as! DetailEquipTableViewController;
+        detailTableView.tableView.setEditing(true, animated: true);
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: #selector(DetailEquipViewController.printStart));
+    }
+    
+    func printStart() {
+        let detailTableView =  self.childViewControllers[0] as! DetailEquipTableViewController;
         self.pleaseWait();
+        
         dispatch_async(dispatch_get_main_queue()){
             let viewRect = CGRectMake(0, 0, 840, 475.2);
             let headerRect = CGRectMake(0, 0, 60, 40)
             let keyRect = CGRectMake(0, 0, 280, 55);
             let valueRect = CGRectMake(200, 0, 280, 55);
             let qrImageRect = CGRectMake(520, 30, 270, 270);
-            let barImageRect = CGRectMake(300, 310, 500, 160);
+            let barImageRect = CGRectMake(300, 310, 510, 160);
             let logoImageRect = CGRectMake(90, 310, 150, 150);
             
-            let attrKey:[String] = DetailEquipViewController.data_source!.xmlInfo.attrKey.copy() as! [String];
-            let key:[String] = [attrKey[0], attrKey[1], attrKey[2], attrKey[4]];
-            let dict = DetailEquipViewController.data_source!.xmlInfo.equipAttr.dictionaryWithValuesForKeys(key);
+            
+            var key:NSArray = NSArray();
+            for i in 0..<detailTableView.tableView(detailTableView.tableView, numberOfRowsInSection: 0) {
+                let cell = detailTableView.tableView.cellForRowAtIndexPath(NSIndexPath(forRow: i, inSection: 0));
+                if(cell != nil){
+                    if(cell!.selected){
+                        let contentView = cell!.subviews[1];
+                        let labelKey = contentView.subviews[0] as! UILabel;
+                        key = key.arrayByAddingObject(labelKey.text!);
+                    }
+                }
+            }
+            detailTableView.setEditing(false, animated: true);
+            let dict = DetailEquipViewController.data_source!.xmlInfo.equipAttr.dictionaryWithValuesForKeys(key as! [String]);
             let qrImage = (DetailEquipViewController.data_source!.xmlInfo.equipAttr.valueForKey(EquipmentAttrKey.codeKey.rawValue as String) as! String).qrImageWithImage(self.getEquipImage());
             let barImage = (DetailEquipViewController.data_source!.xmlInfo.equipAttr.valueForKey(EquipmentAttrKey.codeKey.rawValue as String) as! String).barCode;
-            let logoImage = UIImage(named: "equipTwoCode.png")!;
+            let logoImage = UIImage(named: "logo.png")!;
             
             
-            let view = SwiftPrint.sharedInstance().visitingCardView(dict, key: key, image: [qrImage, barImage,logoImage], viewRect: viewRect, labelRect: [keyRect, valueRect, headerRect], imageRect: [qrImageRect, barImageRect,logoImageRect])!
+            let view = SwiftPrint.sharedInstance().visitingCardView(dict, key: key as [AnyObject], image: [qrImage, barImage,logoImage], viewRect: viewRect, labelRect: [keyRect, valueRect, headerRect], imageRect: [qrImageRect, barImageRect,logoImageRect])!
+            view.backgroundColor = UIColor.whiteColor();
+            UIImagePNGRepresentation(view.visitingCardImage())?.writeToFile(DetailEquipViewController.data_source!.xmlInfo.xmlFile.path.URLByDeletingLastPathComponent!.URLByAppendingPathComponent("设备标签.png").path!, atomically: true);
             let image = SwiftPrint.sharedInstance().drawVisitingCardSet([view,view]);
             self.clearAllNotice();
             self.printImages(image);
         }
-        //打印信息
+        self.navigationItem.rightBarButtonItem = nil;
     }
     
     func askFix(){

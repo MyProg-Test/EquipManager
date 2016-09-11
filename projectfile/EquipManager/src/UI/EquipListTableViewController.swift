@@ -76,6 +76,7 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
     
     //下拉刷新
     @IBAction func refresh(sender: UIRefreshControl?){
+        
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0)){
             while(!NetworkOperation.sharedInstance().downloadComplete){
                 sleep(1);

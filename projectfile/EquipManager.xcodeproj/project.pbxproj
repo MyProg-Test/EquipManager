@@ -41,6 +41,7 @@
 		0806ABD91D7EBA6B00D93D95 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0806ABD71D7EBA6B00D93D95 /* Main.storyboard */; };
 		0806ABDC1D7EBABF00D93D95 /* equipImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 0806ABDA1D7EBABF00D93D95 /* equipImage.png */; };
 		0806ABDD1D7EBABF00D93D95 /* equipTwoCode.png in Resources */ = {isa = PBXBuildFile; fileRef = 0806ABDB1D7EBABF00D93D95 /* equipTwoCode.png */; };
+		084358E91D85F4CE00B02F1A /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 084358E81D85F4CE00B02F1A /* logo.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -116,6 +117,7 @@
 		0806ABD71D7EBA6B00D93D95 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = storyboard/Main.storyboard; sourceTree = "<group>"; };
 		0806ABDA1D7EBABF00D93D95 /* equipImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = equipImage.png; path = Assets.xcassets/equipImage.png; sourceTree = "<group>"; };
 		0806ABDB1D7EBABF00D93D95 /* equipTwoCode.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = equipTwoCode.png; path = Assets.xcassets/equipTwoCode.png; sourceTree = "<group>"; };
+		084358E81D85F4CE00B02F1A /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = logo.png; path = Assets.xcassets/logo.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -184,6 +186,7 @@
 				0806AB101D7EB2A000D93D95 /* UI */,
 				08032BEB1D805194001AD72F /* Other */,
 				0806AAE91D7EB1AF00D93D95 /* Assets.xcassets */,
+				084358E81D85F4CE00B02F1A /* logo.png */,
 				0806ABDA1D7EBABF00D93D95 /* equipImage.png */,
 				0806ABDB1D7EBABF00D93D95 /* equipTwoCode.png */,
 				0806ABD61D7EBA6B00D93D95 /* LaunchScreen.storyboard */,
@@ -355,6 +358,7 @@
 			files = (
 				0806ABDD1D7EBABF00D93D95 /* equipTwoCode.png in Resources */,
 				0806ABDC1D7EBABF00D93D95 /* equipImage.png in Resources */,
+				084358E91D85F4CE00B02F1A /* logo.png in Resources */,
 				0806ABD91D7EBA6B00D93D95 /* Main.storyboard in Resources */,
 				0806ABA41D7EB93000D93D95 /* Assets.xcassets in Resources */,
 				0806ABD81D7EBA6B00D93D95 /* LaunchScreen.storyboard in Resources */,

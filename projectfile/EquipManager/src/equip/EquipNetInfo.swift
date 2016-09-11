@@ -64,7 +64,7 @@ class EquipNetInfo {
     func addEquipFromNet(parentID:Int, parentName:NSString) -> NSString{
         let stamp = NetworkOperation.sharedInstance().getResources(parentID) { (any) in
             if let resArray = any.objectForKey(NetworkOperation.NetConstant.DictKey.GetResources.Response.resources){
-                let tmpArray = resArray as! NSMutableArray;
+                let tmpArray = resArray as! NSArray;
                 let imageSet:NSMutableArray = NSMutableArray();
                 for i in 0..<tmpArray.count{
                     let fileName = tmpArray.objectAtIndex(i).objectForKey(NetworkOperation.NetConstant.DictKey.GetResources.Response.ResourcesKey.displayName) as! NSString;

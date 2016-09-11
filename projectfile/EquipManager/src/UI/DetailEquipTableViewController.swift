@@ -53,6 +53,12 @@ class DetailEquipTableViewController: UITableViewController {
         return cell
     }
     
+    override func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle {
+        return UITableViewCellEditingStyle.init(rawValue: UITableViewCellEditingStyle.Insert.rawValue | UITableViewCellEditingStyle.Delete.rawValue)!;
+    }
+    
+    
+    
     
     /*
      // Override to support conditional editing of the table view.

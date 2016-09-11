@@ -97,7 +97,7 @@ class NewEquipTableViewController: UITableViewController {
     
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cellIdentifier = "newEquip\(indexPath.row)";
+        let cellIdentifier = "newEquip";
         let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier);
         let contentView = cell!.subviews[0];
         for label in contentView.subviews {
