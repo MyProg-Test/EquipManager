@@ -217,7 +217,9 @@ class DetailEquipViewController: UIViewController {
             
             let view = SwiftPrint.sharedInstance().visitingCardView(dict, key: key as [AnyObject], image: [qrImage, barImage,logoImage], viewRect: viewRect, labelRect: [keyRect, valueRect, headerRect], imageRect: [qrImageRect, barImageRect,logoImageRect])!
             view.backgroundColor = UIColor.whiteColor();
-            UIImagePNGRepresentation(view.visitingCardImage())?.writeToFile(DetailEquipViewController.data_source!.xmlInfo.xmlFile.path.URLByDeletingLastPathComponent!.URLByAppendingPathComponent("设备标签.png").path!, atomically: true);
+            let printImageData = UIImagePNGRepresentation(view.visitingCardImage())!;
+            printImageData.writeToFile(DetailEquipViewController.data_source!.xmlInfo.xmlFile.path.URLByDeletingLastPathComponent!.URLByAppendingPathComponent("设备标签.png").path!, atomically: true);
+            NetworkOperation.sharedInstance().uploadResource(EquipManager.sharedInstance().defaultGroupId, parentID: DetailEquipViewController.data_source!.xmlInfo.xmlFile.parentId, fileData: printImageData, fileName: "设备标签.png", handler: {(any) in});
             let image = SwiftPrint.sharedInstance().drawVisitingCardSet([view,view]);
             self.clearAllNotice();
             self.printImages(image);

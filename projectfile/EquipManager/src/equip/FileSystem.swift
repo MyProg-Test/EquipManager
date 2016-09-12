@@ -87,7 +87,7 @@ class FileSystem {
     func addImage(index:Int, image:NSMutableDictionary){
         objc_sync_enter(self);
         let newImage = image.mutableCopy() as! NSMutableDictionary;
-        equipArray.objectAtIndex(index).addObject(newImage);
+        equipArray.objectAtIndex(index).objectForKey(equipKey.imageSet)!.addObject(newImage);
         objc_sync_exit(self);
     }
     //添加图片

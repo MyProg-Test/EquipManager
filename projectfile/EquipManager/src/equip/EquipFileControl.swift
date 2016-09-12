@@ -428,7 +428,7 @@ class EquipFileControl {
                     self.modifyParentIDInFile(index, parentId: dirID);
                     NetworkOperation.sharedInstance().uploadResourceReturnId(self.getEquipGroupIdFromFile(index), parentID: self.getEquipParentIdFromFile(index), fileURL: self.getEquipFilePathFromFile(index)!, fileName: self.getEquipNameFromFile(index)){(any) in
                         print(any);
-                        let newFile:NSDictionary = any.objectForKey(NetworkOperation.NetConstant.DictKey.UploadResourceReturnId.Response.file)![0] as! NSDictionary;
+                        let newFile:NSDictionary = any.objectForKey(NetworkOperation.NetConstant.DictKey.UploadResourceReturnId.Response.file)!.firstObject as! NSDictionary;
                         let newid:Int = newFile.objectForKey(NetworkOperation.NetConstant.DictKey.UploadResourceReturnId.Response.FileKey.id) as! Int;
                         let oldPath = self.getEquipFilePathFromFile(index)!;
                         self.modifyXMLIDInFile(index, id: newid);
