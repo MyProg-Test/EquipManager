@@ -16,17 +16,6 @@ class EquipImagePickerTableViewController: UITableViewController,UIAlertViewDele
         self.navigationController?.setToolbarHidden(false, animated: true)
         tableView.estimatedRowHeight = tableView.rowHeight
         tableView.separatorStyle  = .SingleLine
-        
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)){
-            while(!NetworkOperation.sharedInstance().getThumbnailComplete){
-                sleep(1)
-            }
-            dispatch_async(dispatch_get_main_queue()){
-                self.clearAllNotice();
-                self.tableView.reloadData();
-            }
-        }
-        
         menuToolbar()
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(title: "编辑", style: .Done, target: self, action: #selector(EquipImagePickerTableViewController.editImageCell))

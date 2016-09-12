@@ -34,6 +34,7 @@
 		0806ABDC1D7EBABF00D93D95 /* equipImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 0806ABDA1D7EBABF00D93D95 /* equipImage.png */; };
 		0806ABDD1D7EBABF00D93D95 /* equipTwoCode.png in Resources */ = {isa = PBXBuildFile; fileRef = 0806ABDB1D7EBABF00D93D95 /* equipTwoCode.png */; };
 		084358E91D85F4CE00B02F1A /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 084358E81D85F4CE00B02F1A /* logo.png */; };
+		08EB2BE91D86D91B007F335C /* FileInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08EB2BE81D86D91B007F335C /* FileInfo.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -102,6 +103,7 @@
 		0806ABDA1D7EBABF00D93D95 /* equipImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = equipImage.png; path = Assets.xcassets/equipImage.png; sourceTree = "<group>"; };
 		0806ABDB1D7EBABF00D93D95 /* equipTwoCode.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = equipTwoCode.png; path = Assets.xcassets/equipTwoCode.png; sourceTree = "<group>"; };
 		084358E81D85F4CE00B02F1A /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = logo.png; path = Assets.xcassets/logo.png; sourceTree = "<group>"; };
+		08EB2BE81D86D91B007F335C /* FileInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FileInfo.swift; path = src/equip/FileInfo.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -218,12 +220,11 @@
 		0806AB491D7EB34D00D93D95 /* Equip */ = {
 			isa = PBXGroup;
 			children = (
+				08EB2BE51D86CCA7007F335C /* Service */,
 				08EB2BE41D86CC16007F335C /* Data */,
 				0806ABAF1D7EBA0600D93D95 /* Extention.swift */,
 				0806ABB21D7EBA0600D93D95 /* GDataXMLNode.h */,
 				0806ABB31D7EBA0600D93D95 /* GDataXMLNode.m */,
-				0806ABB41D7EBA0600D93D95 /* NetworkOperation.swift */,
-				0806ABB51D7EBA0600D93D95 /* XmlParser.swift */,
 			);
 			name = Equip;
 			sourceTree = "<group>";
@@ -231,8 +232,18 @@
 		08EB2BE41D86CC16007F335C /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				08EB2BE81D86D91B007F335C /* FileInfo.swift */,
 			);
 			name = Data;
+			sourceTree = "<group>";
+		};
+		08EB2BE51D86CCA7007F335C /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				0806ABB51D7EBA0600D93D95 /* XmlParser.swift */,
+				0806ABB41D7EBA0600D93D95 /* NetworkOperation.swift */,
+			);
+			name = Service;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -373,6 +384,7 @@
 				0806ABCF1D7EBA2100D93D95 /* DetailEquipViewController.swift in Sources */,
 				0806ABD41D7EBA2100D93D95 /* NewEquipTableViewController.swift in Sources */,
 				08032BF11D806FC1001AD72F /* SwiftNotice.swift in Sources */,
+				08EB2BE91D86D91B007F335C /* FileInfo.swift in Sources */,
 				0806ABD51D7EBA2100D93D95 /* ViewController.swift in Sources */,
 				0806ABBC1D7EBA0600D93D95 /* Extention.swift in Sources */,
 				0806ABC01D7EBA0600D93D95 /* NetworkOperation.swift in Sources */,

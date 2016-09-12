@@ -102,7 +102,7 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return EquipFileControl.sharedInstance().count;
+        return 1;
     }
     
     
@@ -120,16 +120,6 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
         if(cell == nil){
             cell = EquipListTableViewCell(style: .Default, reuseIdentifier: equipListCellIdentifier);
         }
-        //cell数据设置
-        cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
-        let equip = EquipInfo(index: indexPath.row);
-        cell.equipName.text = equip.xmlInfo.equipAttr.valueForKey(EquipmentAttrKey.nameKey.rawValue as String) as? String;
-        cell.equipNumber.text = equip.xmlInfo.equipAttr.valueForKey(EquipmentAttrKey.codeKey.rawValue as String) as? String;
-        if(equip.imageInfo.getDisplayedImageInfo() == nil){
-            cell.thumbnail!.image = UIImage(named: "equipImage.png");
-        }else{
-            cell.thumbnail?.image = UIImage(data: (equip.imageInfo.getDisplayedImageInfo()!.getFileData()));
-        }
         return cell
         
     }
@@ -137,8 +127,7 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
     //Select
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let detailEquipView = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier("DetailEquip") as! DetailEquipViewController;
-        DetailEquipViewController.data_source = EquipInfo(index: indexPath.row);
-        self.navigationController?.pushViewController(detailEquipView, animated: true);
+        
     }
     
     //Deselect
@@ -218,8 +207,6 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
     //以下actionSheet里面的函数最后可写成闭包加入到上面的hander里面
     //添加设备
     func newEquip(){
-        let newEquipView = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier("newEquip");
-        self.navigationController?.pushViewController(newEquipView, animated: true);
         //出现newEquip的VC
     }
     //扫描二维码

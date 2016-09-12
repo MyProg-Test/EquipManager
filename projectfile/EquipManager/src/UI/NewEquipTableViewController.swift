@@ -9,12 +9,6 @@
 import UIKit
 
 class NewEquipTableViewController: UITableViewController {
-    
-    let keyArray = [EquipmentAttrKey.nameKey.rawValue,
-                    EquipmentAttrKey.codeKey.rawValue,
-                    EquipmentAttrKey.managerKey.rawValue,
-                    EquipmentAttrKey.managerPhoneKey.rawValue,
-                    EquipmentAttrKey.locationKey.rawValue];
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,25 +29,6 @@ class NewEquipTableViewController: UITableViewController {
     }
     
     func saveEquip(sender:AnyObject) {
-        let dict:NSMutableDictionary = NSMutableDictionary();
-        for i in 0..<keyArray.count {
-            let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: i, inSection: 0))!;
-            let contentView = cell.subviews[0];
-            var labelKey:UILabel?;
-            var textValue:UITextField?;
-            for s in contentView.subviews {
-                if s.isKindOfClass(UILabel){
-                    labelKey = s as? UILabel;
-                }
-                if s.isKindOfClass(UITextField) {
-                    textValue = s as? UITextField;
-                }
-            }
-            dict.setValue(textValue!.text!, forKey: labelKey!.text!);
-        }
-        let equip = EquipXmlInfo(equipAttr: dict);
-        equip.updateToFile();
-        EquipFileControl.sharedInstance().addEquipInfoToFile(0, XMLID: equip.xmlFile.id, XMLName: equip.xmlFile.name, imageSet: NSMutableArray(), path: "\(equip.xmlFile.id)", groupID: EquipManager.sharedInstance().defaultGroupId, status: FileSystem.Status.New.rawValue);
         print("saveEquip");
         self.backPressed();
     }
