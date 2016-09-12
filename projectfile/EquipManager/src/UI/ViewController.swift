@@ -9,8 +9,11 @@
 import UIKit
 
 class ViewController: UIViewController {
-    let userName = "lifh";
-    let passwd = "lifh";
+    
+    @IBOutlet weak var userName: UITextField!;
+    @IBOutlet weak var passwd: UITextField!;
+    //let userName = "lifh";
+    //let passwd = "lifh";
     let equipName = "我的设备";
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,7 +28,7 @@ class ViewController: UIViewController {
     //点击设备助手button
     @IBAction func equipInitView(sender: UIButton) {
         self.pleaseWait();
-        NetworkOperation.sharedInstance().Login(userName, passwd: passwd) { (any) in
+        NetworkOperation.sharedInstance().Login(userName.text!, passwd: passwd.text!) { (any) in
             NetworkOperation.sharedInstance().Status(){(any) in
                 EquipManager.sharedInstance().defaultGroupId = any.objectForKey(NetworkOperation.NetConstant.DictKey.Status.Response.personGroupId) as! Int;
                 NetworkOperation.sharedInstance().getResources(-EquipManager.sharedInstance().defaultGroupId){ (any) in
