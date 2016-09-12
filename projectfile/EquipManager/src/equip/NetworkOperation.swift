@@ -239,7 +239,24 @@ class NetworkOperation {
                 struct Query {
                     static let id           = "id";
                 }
-                struct Responce {
+                struct Response {
+                }
+            }
+            struct Status {
+                struct Query {}
+                struct Response {
+                    static let status       = "status";
+                    static let isAdmin      = "isAdmin";
+                    static let isApplicationAdmin   = "isApplicationAdmin";
+                    static let isProjectManager = "isProjectManager";
+                    static let addGroup     = "addGroup";
+                    static let memberId     = "memberId";
+                    static let largeAttachId    = "largeAttachId";
+                    static let personGroupId    = "personGroupId";
+                    static let memberName   = "memberName";
+                    static let name         = "name";
+                    static let account      = "account";
+                    static let memberIp     = "memberIp";
                 }
             }
         }
@@ -371,6 +388,21 @@ class NetworkOperation {
                     
                 case .Failure(let error):
                     print(error)
+                }
+            }
+        }
+    }
+    
+    func Status(queue: dispatch_queue_t = NetConstant.defaultQueue, handler: (AnyObject)->Void) {
+        dispatch_async(queue){
+            Alamofire.request(.POST, NetConstant.API.Status.asURLConvertible, parameters: nil, encoding: .URL, headers: nil).responseJSON{
+                (response) in
+                switch response.result{
+                case .Success(let data):
+                    let responseDict:NSMutableDictionary = data as! NSMutableDictionary;
+                    handler(responseDict);
+                case .Failure(let error):
+                    print(error);
                 }
             }
         }
