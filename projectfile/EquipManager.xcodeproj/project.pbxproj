@@ -33,8 +33,13 @@
 		0806ABD91D7EBA6B00D93D95 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0806ABD71D7EBA6B00D93D95 /* Main.storyboard */; };
 		0806ABDC1D7EBABF00D93D95 /* equipImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 0806ABDA1D7EBABF00D93D95 /* equipImage.png */; };
 		0806ABDD1D7EBABF00D93D95 /* equipTwoCode.png in Resources */ = {isa = PBXBuildFile; fileRef = 0806ABDB1D7EBABF00D93D95 /* equipTwoCode.png */; };
+		0812A64E1D8851BD00B39F85 /* XmlInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0812A64D1D8851BD00B39F85 /* XmlInfo.swift */; };
+		0812A6501D88556200B39F85 /* MySafeMutableMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0812A64F1D88556200B39F85 /* MySafeMutableMethod.swift */; };
+		083A071F1D88900400BC7122 /* GCDGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 083A071C1D88900400BC7122 /* GCDGroup.swift */; };
+		083A07201D88900400BC7122 /* GCDSemaphore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 083A071D1D88900400BC7122 /* GCDSemaphore.swift */; };
+		083A07211D88900400BC7122 /* GCDThread.swift in Sources */ = {isa = PBXBuildFile; fileRef = 083A071E1D88900400BC7122 /* GCDThread.swift */; };
 		084358E91D85F4CE00B02F1A /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 084358E81D85F4CE00B02F1A /* logo.png */; };
-		08EB2BE91D86D91B007F335C /* FileInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08EB2BE81D86D91B007F335C /* FileInfo.swift */; };
+		08EB2BE91D86D91B007F335C /* ItemInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08EB2BE81D86D91B007F335C /* ItemInfo.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -102,8 +107,13 @@
 		0806ABD71D7EBA6B00D93D95 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = storyboard/Main.storyboard; sourceTree = "<group>"; };
 		0806ABDA1D7EBABF00D93D95 /* equipImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = equipImage.png; path = Assets.xcassets/equipImage.png; sourceTree = "<group>"; };
 		0806ABDB1D7EBABF00D93D95 /* equipTwoCode.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = equipTwoCode.png; path = Assets.xcassets/equipTwoCode.png; sourceTree = "<group>"; };
+		0812A64D1D8851BD00B39F85 /* XmlInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = XmlInfo.swift; path = src/equip/XmlInfo.swift; sourceTree = "<group>"; };
+		0812A64F1D88556200B39F85 /* MySafeMutableMethod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MySafeMutableMethod.swift; path = src/equip/MySafeMutableMethod.swift; sourceTree = "<group>"; };
+		083A071C1D88900400BC7122 /* GCDGroup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GCDGroup.swift; path = src/equip/GCDGroup.swift; sourceTree = "<group>"; };
+		083A071D1D88900400BC7122 /* GCDSemaphore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GCDSemaphore.swift; path = src/equip/GCDSemaphore.swift; sourceTree = "<group>"; };
+		083A071E1D88900400BC7122 /* GCDThread.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GCDThread.swift; path = src/equip/GCDThread.swift; sourceTree = "<group>"; };
 		084358E81D85F4CE00B02F1A /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = logo.png; path = Assets.xcassets/logo.png; sourceTree = "<group>"; };
-		08EB2BE81D86D91B007F335C /* FileInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FileInfo.swift; path = src/equip/FileInfo.swift; sourceTree = "<group>"; };
+		08EB2BE81D86D91B007F335C /* ItemInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ItemInfo.swift; path = src/equip/ItemInfo.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -232,7 +242,12 @@
 		08EB2BE41D86CC16007F335C /* Data */ = {
 			isa = PBXGroup;
 			children = (
-				08EB2BE81D86D91B007F335C /* FileInfo.swift */,
+				083A071C1D88900400BC7122 /* GCDGroup.swift */,
+				083A071D1D88900400BC7122 /* GCDSemaphore.swift */,
+				083A071E1D88900400BC7122 /* GCDThread.swift */,
+				0812A64F1D88556200B39F85 /* MySafeMutableMethod.swift */,
+				08EB2BE81D86D91B007F335C /* ItemInfo.swift */,
+				0812A64D1D8851BD00B39F85 /* XmlInfo.swift */,
 			);
 			name = Data;
 			sourceTree = "<group>";
@@ -382,19 +397,24 @@
 			buildActionMask = 2147483647;
 			files = (
 				0806ABCF1D7EBA2100D93D95 /* DetailEquipViewController.swift in Sources */,
+				0812A64E1D8851BD00B39F85 /* XmlInfo.swift in Sources */,
 				0806ABD41D7EBA2100D93D95 /* NewEquipTableViewController.swift in Sources */,
 				08032BF11D806FC1001AD72F /* SwiftNotice.swift in Sources */,
-				08EB2BE91D86D91B007F335C /* FileInfo.swift in Sources */,
+				08EB2BE91D86D91B007F335C /* ItemInfo.swift in Sources */,
 				0806ABD51D7EBA2100D93D95 /* ViewController.swift in Sources */,
 				0806ABBC1D7EBA0600D93D95 /* Extention.swift in Sources */,
 				0806ABC01D7EBA0600D93D95 /* NetworkOperation.swift in Sources */,
 				0806ABD11D7EBA2100D93D95 /* EquipImageTableViewCell.swift in Sources */,
+				083A07201D88900400BC7122 /* GCDSemaphore.swift in Sources */,
 				0806ABD31D7EBA2100D93D95 /* EquipListTableViewController.swift in Sources */,
 				08032BED1D8051A8001AD72F /* SwiftPrint.swift in Sources */,
 				0806ABCC1D7EBA2100D93D95 /* AppDelegate.swift in Sources */,
+				083A071F1D88900400BC7122 /* GCDGroup.swift in Sources */,
+				083A07211D88900400BC7122 /* GCDThread.swift in Sources */,
 				0806ABCD1D7EBA2100D93D95 /* DetailEquipTableViewCell.swift in Sources */,
 				0806ABD21D7EBA2100D93D95 /* EquipListTableViewCell.swift in Sources */,
 				0806ABC11D7EBA0600D93D95 /* XmlParser.swift in Sources */,
+				0812A6501D88556200B39F85 /* MySafeMutableMethod.swift in Sources */,
 				0806ABCE1D7EBA2100D93D95 /* DetailEquipTableViewController.swift in Sources */,
 				0806ABBF1D7EBA0600D93D95 /* GDataXMLNode.m in Sources */,
 				0806ABD01D7EBA2100D93D95 /* EquipImagePickerTableViewController.swift in Sources */,
