@@ -9,7 +9,7 @@
 import UIKit
 
 class MySafeMutableMethod<T> {
-    var subject: T?;
+    var subject: T;
     var debugInfo:Bool{
         didSet{
             writeLock.debugInfo = debugInfo;
@@ -25,7 +25,8 @@ class MySafeMutableMethod<T> {
     private var readerCount = 0;
     private var writerCount = 0;
     
-    init(){
+    init(subject: T){
+        self.subject = subject;
         writeLock = GCDSemaphore(count: 1);
         readLock = GCDSemaphore(count: 1);
         mutexReader = GCDSemaphore(count: 1);

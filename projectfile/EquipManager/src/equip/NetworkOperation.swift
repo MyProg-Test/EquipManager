@@ -10,11 +10,11 @@ import UIKit
 import Alamofire
 
 class NetworkOperation {
+    let thread: GCDThread = GCDThread(label: "NetworkOperation", attr: DISPATCH_QUEUE_SERIAL)
     //网络常数
     internal struct NetConstant{
         static let serverURL = "weblib.ccnl.scut.edu.cn/"
         static let serverProtocol = "http://"
-        static let defaultQueue:dispatch_queue_t = dispatch_queue_create("NetworkOperation", DISPATCH_QUEUE_SERIAL);
         //网络接口使用的询问key和回答key
         struct DictKey {
             //登录时使用的key
@@ -160,7 +160,7 @@ class NetworkOperation {
                     
                 }
             }
-            //上传资源使用的key 
+            //上传资源使用的key
             struct UploadResource {
                 struct Query {
                     static let groupId      = "groupId";
@@ -260,7 +260,7 @@ class NetworkOperation {
                 }
             }
         }
-        //网络端调用的application interface 
+        //网络端调用的application interface
         struct API {
             static let Authenticate         = "login/authenticate.action"
             static let SelectMember         = "login/selectMember.action"
@@ -364,11 +364,15 @@ class NetworkOperation {
         return "\(message)\(timeFormatter.stringFromDate(time))";
     }
     //登陆
-    func Login(userName : NSString, passwd: NSString, queue:dispatch_queue_t = NetConstant.defaultQueue,handler:(AnyObject)->Void){
-        dispatch_async(queue){
+    func Login(userName : NSString, passwd: NSString, handler:(AnyObject)->Void){
+        thread.async(){
             var dict = [NetConstant.DictKey.Authenticate.Query.username : userName,
-                        NetConstant.DictKey.Authenticate.Query.password : passwd];
-            Alamofire.request(.POST, NetworkOperation.NetConstant.API.Authenticate.asURLConvertible, parameters: dict, encoding: .URL, headers: nil).responseJSON{ (response) in
+                NetConstant.DictKey.Authenticate.Query.password : passwd];
+            let request = Alamofire.request(.POST, NetworkOperation.NetConstant.API.Authenticate.asURLConvertible, parameters: dict, encoding: .URL, headers: nil);
+            request.progress({ (a, b, c) in
+                print(a,b,c);
+            })
+            request.responseJSON{ (response) in
                 switch response.result{
                 case .Success(let data):
                     let responseDict:NSMutableDictionary = data as! NSMutableDictionary;
@@ -393,8 +397,8 @@ class NetworkOperation {
         }
     }
     
-    func Status(queue: dispatch_queue_t = NetConstant.defaultQueue, handler: (AnyObject)->Void) {
-        dispatch_async(queue){
+    func Status(handler: (AnyObject)->Void) {
+        thread.async{
             Alamofire.request(.POST, NetConstant.API.Status.asURLConvertible, parameters: nil, encoding: .URL, headers: nil).responseJSON{
                 (response) in
                 switch response.result{
@@ -409,9 +413,9 @@ class NetworkOperation {
     }
     
     // group/getResources.action  获取文件树节点信息
-    func getResources(parentID:Int,type:Int = 0,start:Int = 0,limit:Int = 1000,queue:dispatch_queue_t = NetConstant.defaultQueue,handler:(AnyObject)->Void) -> NSString{
+    func getResources(parentID:Int,type:Int = 0,start:Int = 0,limit:Int = 1000, handler:(AnyObject)->Void) -> NSString{
         let stamp = self.getTimeStamp(parentID);
-        dispatch_async(queue){
+        thread.async{
             objc_sync_enter(self.getResourcesQueue);
             self.getResourcesQueue.addObject(stamp);
             objc_sync_exit(self.getResourcesQueue);
@@ -433,9 +437,9 @@ class NetworkOperation {
     }
     
     //group/getResourceInfo.action  获取资源信息
-    func getResourceInfo(resourceID:Int, queue:dispatch_queue_t = NetConstant.defaultQueue, handler:(AnyObject)->Void) -> NSString{
+    func getResourceInfo(resourceID:Int, handler:(AnyObject)->Void) -> NSString{
         let stamp = self.getTimeStamp(resourceID);
-        dispatch_async(queue){
+        thread.async{
             objc_sync_enter(self.getResourcesQueue);
             self.getResourcesQueue.addObject(stamp);
             objc_sync_exit(self.getResourcesQueue);
@@ -457,9 +461,9 @@ class NetworkOperation {
     }
     
     //group/getSimpleResources.action  获取文件树节点简要信息
-    func getSimpleResources(parentID:Int,type:Int,start:Int,limit:Int, queue:dispatch_queue_t = NetConstant.defaultQueue, handler:(AnyObject)->Void) -> NSString{
+    func getSimpleResources(parentID:Int,type:Int,start:Int,limit:Int, handler:(AnyObject)->Void) -> NSString{
         let stamp = self.getTimeStamp(parentID);
-        dispatch_async(queue) {
+        thread.async {
             objc_sync_enter(self.getResourcesQueue);
             self.getResourcesQueue.addObject(stamp);
             objc_sync_exit(self.getResourcesQueue);
@@ -481,9 +485,9 @@ class NetworkOperation {
         return stamp;
     }
     
-    func deleteResource(id:Int, queue:dispatch_queue_t = NetConstant.defaultQueue, handler: (AnyObject)->Void) -> NSString {
+    func deleteResource(id:Int, handler: (AnyObject)->Void) -> NSString {
         let stamp = self.getTimeStamp(id);
-        dispatch_async(queue){
+        thread.async{
             objc_sync_enter(self.deleteResourceQueue);
             self.deleteResourceQueue.addObject(stamp);
             objc_sync_exit(self.deleteResourceQueue);
@@ -504,11 +508,11 @@ class NetworkOperation {
     }
     
     //group/createDir.action  新建文件夹
-    func createDir(groupID:Int,name:NSString,parentID:Int,queue:dispatch_queue_t = NetConstant.defaultQueue, handler:(AnyObject)->Void){
-        dispatch_async(queue) {
+    func createDir(groupID:Int,name:NSString,parentID:Int, handler:(AnyObject)->Void){
+        thread.async {
             let dict = [NetConstant.DictKey.CreateDir.Query.groupId : "\(groupID)",
-                        NetConstant.DictKey.CreateDir.Query.name : name,
-                        NetConstant.DictKey.CreateDir.Query.parentId : "\(parentID)"];
+                NetConstant.DictKey.CreateDir.Query.name : name,
+                NetConstant.DictKey.CreateDir.Query.parentId : "\(parentID)"];
             Alamofire.request(.POST, NetworkOperation.NetConstant.API.CreateDIR.asURLConvertible, parameters: dict, encoding: .URL, headers: nil).responseJSON { (response) in
                 switch response.result{
                 case .Success(let data):
@@ -522,9 +526,9 @@ class NetworkOperation {
     }
     
     //group/downloadResource.action  下载文件或打包下载
-    func downloadResource(id:Int, url:NSURL, queue:dispatch_queue_t = NetConstant.defaultQueue, handler:(AnyObject)->Void) -> NSString{
+    func downloadResource(id:Int, url:NSURL, handler:(AnyObject)->Void) -> NSString{
         let stamp = self.getTimeStamp(id);
-        dispatch_async(queue){
+        thread.async{
             objc_sync_enter(self.downloadQueue);
             self.downloadQueue.addObject(stamp);
             objc_sync_exit(self.downloadQueue);
@@ -549,43 +553,43 @@ class NetworkOperation {
     }
     
     //group/uploadResource.action   上传资源
-    func uploadResource(groupID:Int,parentID:Int,fileURL:NSURL,fileName:NSString,fileDataContentType:NSString = "multipart/form-data",documentType:NSString = "", queue:dispatch_queue_t = NetConstant.defaultQueue, handler:(AnyObject)->Void) -> NSString{
+    func uploadResource(groupID:Int,parentID:Int,fileURL:NSURL,fileName:NSString,fileDataContentType:NSString = "multipart/form-data",documentType:NSString = "", handler:(AnyObject)->Void) -> NSString{
         let data:NSData = NSData(contentsOfFile: fileURL.path!)!;
-        return self.uploadResource(groupID, parentID: parentID, fileData: data, fileName: fileName, fileDataContentType: fileDataContentType, documentType: documentType, queue: queue, handler: handler);
+        return self.uploadResource(groupID, parentID: parentID, fileData: data, fileName: fileName, fileDataContentType: fileDataContentType, documentType: documentType, handler: handler);
     }
     
     //group/uploadResource.action   上传资源
-    func uploadResource(groupID:Int,parentID:Int,fileData:NSData,fileName:NSString,fileDataContentType:NSString = "multipart/form-data",documentType:NSString = "", queue:dispatch_queue_t = NetConstant.defaultQueue, handler:(AnyObject)->Void) -> NSString{
+    func uploadResource(groupID:Int,parentID:Int,fileData:NSData,fileName:NSString,fileDataContentType:NSString = "multipart/form-data",documentType:NSString = "", handler:(AnyObject)->Void) -> NSString{
         let stamp = self.getTimeStamp(parentID);
-        dispatch_async(queue){
+        thread.async{
             objc_sync_enter(self.uploadQueue);
             self.uploadQueue.addObject(stamp);
             objc_sync_exit(self.uploadQueue);
             let dict = [NetConstant.DictKey.UploadResource.Query.groupId : "\(groupID)",
-                        NetConstant.DictKey.UploadResource.Query.parentId : "\(parentID)"];
+                NetConstant.DictKey.UploadResource.Query.parentId : "\(parentID)"];
             Alamofire.upload(.POST, NetConstant.API.Upload.asURLConvertible, multipartFormData: { multipartFormData in
                 multipartFormData.appendBodyPart(data: fileData, name: NetConstant.DictKey.UploadResource.Query.fileData, fileName: fileName as String, mimeType: fileDataContentType as String);
                 for (key,value) in dict{
                     multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key);
                 }
                 },
-                             encodingCompletion: { encodingResult in
-                                switch encodingResult {
-                                case .Success(let upload, _, _):
-                                    upload.responseJSON { response in
-                                        switch response.result{
-                                        case .Success(let data):
-                                            handler(data);
-                                        case .Failure(let error):
-                                            print(error);
-                                        }
-                                        objc_sync_enter(self.uploadQueue);
-                                        self.uploadQueue.removeObject(stamp);
-                                        objc_sync_exit(self.uploadQueue);
-                                    }
-                                case .Failure(let encodingError):
-                                    print(encodingError)
-                                }
+                encodingCompletion: { encodingResult in
+                    switch encodingResult {
+                    case .Success(let upload, _, _):
+                        upload.responseJSON { response in
+                            switch response.result{
+                            case .Success(let data):
+                                handler(data);
+                            case .Failure(let error):
+                                print(error);
+                            }
+                            objc_sync_enter(self.uploadQueue);
+                            self.uploadQueue.removeObject(stamp);
+                            objc_sync_exit(self.uploadQueue);
+                        }
+                    case .Failure(let encodingError):
+                        print(encodingError)
+                    }
                 }
             )
         }
@@ -593,43 +597,43 @@ class NetworkOperation {
     }
     
     //group/uploadResourceReturnId.action   上传资源并返回ID
-    func uploadResourceReturnId(groupID:Int,parentID:Int,fileURL:NSURL,fileName:NSString,fileDataContentType:NSString = "multipart/form-data",documentType:NSString = "", queue:dispatch_queue_t = NetConstant.defaultQueue, handler:(AnyObject)->Void) -> NSString{
+    func uploadResourceReturnId(groupID:Int,parentID:Int,fileURL:NSURL,fileName:NSString,fileDataContentType:NSString = "multipart/form-data",documentType:NSString = "", handler:(AnyObject)->Void) -> NSString{
         let data:NSData = NSData(contentsOfFile: fileURL.path!)!;
-        return self.uploadResourceReturnId(groupID, parentID: parentID, fileData: data, fileName: fileName, fileDataContentType: fileDataContentType, documentType: documentType, queue: queue, handler: handler);
+        return self.uploadResourceReturnId(groupID, parentID: parentID, fileData: data, fileName: fileName, fileDataContentType: fileDataContentType, documentType: documentType, handler: handler);
     }
     
     //group/uploadResourceReturnId.action   上传资源并返回ID
-    func uploadResourceReturnId(groupID:Int,parentID:Int,fileData:NSData,fileName:NSString,fileDataContentType:NSString = "multipart/form-data",documentType:NSString = "", queue:dispatch_queue_t = NetConstant.defaultQueue, handler:(AnyObject)->Void) -> NSString{
+    func uploadResourceReturnId(groupID:Int,parentID:Int,fileData:NSData,fileName:NSString,fileDataContentType:NSString = "multipart/form-data",documentType:NSString = "", handler:(AnyObject)->Void) -> NSString{
         let stamp = self.getTimeStamp(parentID);
-        dispatch_async(queue){
+        thread.async{
             objc_sync_enter(self.uploadQueue);
             self.uploadQueue.addObject(stamp);
             objc_sync_exit(self.uploadQueue);
             let dict = [NetConstant.DictKey.UploadResourceReturnId.Query.groupId : "\(groupID)",
-                        NetConstant.DictKey.UploadResourceReturnId.Query.parentId : "\(parentID)"];
+                NetConstant.DictKey.UploadResourceReturnId.Query.parentId : "\(parentID)"];
             Alamofire.upload(.POST, NetConstant.API.UploadReturnId.asURLConvertible, multipartFormData: { multipartFormData in
                 multipartFormData.appendBodyPart(data: fileData, name: NetConstant.DictKey.UploadResourceReturnId.Query.fileData, fileName: fileName as String, mimeType: fileDataContentType as String);
                 for (key,value) in dict{
                     multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key);
                 }
                 },
-                             encodingCompletion: { encodingResult in
-                                switch encodingResult {
-                                case .Success(let upload, _, _):
-                                    upload.responseJSON { response in
-                                        switch response.result{
-                                        case .Success(let data):
-                                            handler(data);
-                                        case .Failure(let error):
-                                            print(error);
-                                        }
-                                        objc_sync_enter(self.uploadQueue);
-                                        self.uploadQueue.removeObject(stamp);
-                                        objc_sync_exit(self.uploadQueue);
-                                    }
-                                case .Failure(let encodingError):
-                                    print(encodingError)
-                                }
+                encodingCompletion: { encodingResult in
+                    switch encodingResult {
+                    case .Success(let upload, _, _):
+                        upload.responseJSON { response in
+                            switch response.result{
+                            case .Success(let data):
+                                handler(data);
+                            case .Failure(let error):
+                                print(error);
+                            }
+                            objc_sync_enter(self.uploadQueue);
+                            self.uploadQueue.removeObject(stamp);
+                            objc_sync_exit(self.uploadQueue);
+                        }
+                    case .Failure(let encodingError):
+                        print(encodingError)
+                    }
                 }
             )
         }
@@ -637,11 +641,11 @@ class NetworkOperation {
     }
     
     //group/copyResource.action  复制资源
-    func copyResource(groupID:Int,parentID:Int,id:Int, queue:dispatch_queue_t = NetConstant.defaultQueue, handler:(AnyObject)->Void){
-        dispatch_async(queue) {
+    func copyResource(groupID:Int,parentID:Int,id:Int, handler:(AnyObject)->Void){
+        thread.async {
             let dict = [NetConstant.DictKey.CopyResource.Query.groupId : "\(groupID)",
-                        NetConstant.DictKey.CopyResource.Query.parentId : "\(parentID)",
-                        NetConstant.DictKey.CopyResource.Query.id : "\(id)"];
+                NetConstant.DictKey.CopyResource.Query.parentId : "\(parentID)",
+                NetConstant.DictKey.CopyResource.Query.id : "\(id)"];
             Alamofire.request(.POST, NetConstant.API.CopyResource.asURLConvertible, parameters: dict, encoding: .URL, headers: nil).responseJSON(completionHandler: { (response) in
                 switch response.result{
                 case .Success(let data):
@@ -655,11 +659,11 @@ class NetworkOperation {
     }
     
     //group/moveResource.action  移动资源
-    func moveResource(groupID:Int,parentID:Int,id:Int, queue:dispatch_queue_t = NetConstant.defaultQueue, handler:(AnyObject)->Void){
-        dispatch_async(queue) {
+    func moveResource(groupID:Int,parentID:Int,id:Int, handler:(AnyObject)->Void){
+        thread.async {
             let dict = [NetConstant.DictKey.MoveResource.Query.groupId : "\(groupID)",
-                        NetConstant.DictKey.MoveResource.Query.parentId : "\(parentID)",
-                        NetConstant.DictKey.MoveResource.Query.id : "\(id)"];
+                NetConstant.DictKey.MoveResource.Query.parentId : "\(parentID)",
+                NetConstant.DictKey.MoveResource.Query.id : "\(id)"];
             Alamofire.request(.POST, NetConstant.API.MoveResource.asURLConvertible, parameters: dict, encoding: .URL, headers: nil).responseJSON(completionHandler: { (response) in
                 switch response.result{
                 case .Success(let data):
@@ -673,11 +677,11 @@ class NetworkOperation {
     }
     
     //group/modifyResource.action 修改资源文件夹
-    func modifyResource(id:Int, name:NSString, desc:NSString = "", queue:dispatch_queue_t = NetConstant.defaultQueue, handler:(AnyObject)->Void){
-        dispatch_async(queue) {
+    func modifyResource(id:Int, name:NSString, desc:NSString = "", handler:(AnyObject)->Void){
+        thread.async{
             let dict = [NetConstant.DictKey.ModifyResource.Query.id : "\(id)",
-                        NetConstant.DictKey.ModifyResource.Query.name : name as String,
-                        NetConstant.DictKey.ModifyResource.Query.desc : desc];
+                NetConstant.DictKey.ModifyResource.Query.name : name as String,
+                NetConstant.DictKey.ModifyResource.Query.desc : desc];
             Alamofire.request(.POST, NetConstant.API.ModifyResource.asURLConvertible, parameters: dict, encoding: .URL, headers: nil).responseJSON(completionHandler: { (response) in
                 switch response.result{
                 case .Success(let data):
@@ -690,9 +694,9 @@ class NetworkOperation {
     }
     
     //group/getThumbnail.action  缩略图
-    func getThumbnail(id:Int,width:Int = 100,height:Int = 100,queue:dispatch_queue_t = NetConstant.defaultQueue, handler:(AnyObject?)->Void) -> NSString{
+    func getThumbnail(id:Int,width:Int = 100,height:Int = 100, handler:(AnyObject?)->Void) -> NSString{
         let stamp = self.getTimeStamp(id);
-        dispatch_async(queue) {
+        thread.async {
             objc_sync_enter(self.getThumbnailQueue);
             self.getThumbnailQueue.addObject(stamp);
             objc_sync_exit(self.getThumbnailQueue);

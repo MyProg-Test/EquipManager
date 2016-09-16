@@ -88,18 +88,26 @@ enum EquipmentKey:String {
 };
 
 class XmlInfo: ItemInfo {
-    var parser: XmlParser?;
-    let attrKey:NSMutableArray;
-    var equipAttr:NSMutableDictionary;
+    var parser: XmlParser{
+        get{
+            return XmlParser(data: self.data);
+        }
+    };
+    let attrKey:MySafeMutableMethod<NSMutableArray>;
+    var equipAttr:MySafeMutableMethod<NSMutableDictionary>;
     
     override init(name: String, id: Int, parentId: Int, parentPath: String) {
+        attrKey = MySafeMutableMethod< NSMutableArray >(subject: NSMutableArray());
+        equipAttr = MySafeMutableMethod<NSMutableDictionary>(subject: NSMutableDictionary());
         super.init(name: name, id: id, parentId: parentId, parentPath: parentPath);
-        self.parser = XmlParser(data: self.data);
-        equipAttr
+        initEquipAttrWithXml();
     }
     
     func valueForKey(key: EquipmentAttrKey) -> AnyObject! {
-        return equipAttr;
+        equipAttr.readRequest();
+        let rtn = equipAttr.subject.objectForKey(key.rawValue);
+        equipAttr.readEnd();
+        return rtn;
     }
     
     private func initEquipAttrWithXml(){
@@ -151,17 +159,19 @@ class XmlInfo: ItemInfo {
     }
     
     private func initEquipAttrWithXmlHelper(equipmentKey:EquipmentKey, equipmentAttrKey:EquipmentAttrKey){
-        objc_sync_enter(self.attrKey);
-        self.equipAttr.setValue(self.xmlParser.getElementFromRoot(equipmentKey.rawValue), forKey: equipmentAttrKey.rawValue as String);
-        self.attrKey.addObject(equipmentAttrKey.rawValue as String);
-        objc_sync_exit(self.attrKey);
+        equipAttr.writeRequest();
+        self.equipAttr.subject.setValue(self.parser.getElementFromRoot(equipmentKey.rawValue), forKey: equipmentAttrKey.rawValue as String);
+        equipAttr.writeEnd();
+        attrKey.writeRequest();
+        self.attrKey.subject.addObject(equipmentAttrKey.rawValue as String);
+        attrKey.writeEnd();
     }
     
     // 根据equipAttr初始化xml
     //9.5
     private func initXmlWithEquipAttr(equipAttr:NSMutableDictionary){
         let rootElement:GDataXMLElement = GDataXMLElement.elementWithName(EquipmentKey.rootKey.rawValue as String)
-        self.xmlParser.setRootElement(rootElement)
+        self.parser.setRootElement(rootElement)
         
         initXmlWithEquipAttrHelper(.nameKey, equipmentAttrKey:.nameKey)
         initXmlWithEquipAttrHelper(.codeKey, equipmentAttrKey:.codeKey)
@@ -208,38 +218,41 @@ class XmlInfo: ItemInfo {
     }
     
     private func initXmlWithEquipAttrHelper(equipmentKey:EquipmentKey, equipmentAttrKey:EquipmentAttrKey){
-        if(self.equipAttr.valueForKey(equipmentAttrKey.rawValue as String) == nil){
-            self.equipAttr.setValue("", forKey: equipmentAttrKey.rawValue as String);
+        equipAttr.readRequest();
+        let tmp = self.equipAttr.subject.valueForKey(equipmentAttrKey.rawValue);
+        equipAttr.readEnd();
+        if( tmp == nil){
+            equipAttr.writeRequest();
+            self.equipAttr.subject.setValue("", forKey: equipmentAttrKey.rawValue as String);
+            equipAttr.writeEnd();
         }
-        objc_sync_enter(self.attrKey);
-        self.xmlParser.addElementToRoot(equipmentKey.rawValue, value: self.equipAttr.valueForKey(equipmentAttrKey.rawValue as String) as! (String))
-        self.attrKey.addObject(equipmentAttrKey.rawValue as String);
-        objc_sync_exit(self.attrKey);
+        equipAttr.readRequest();
+        self.parser.addElementToRoot(equipmentKey.rawValue, value: self.equipAttr.subject.valueForKey(equipmentAttrKey.rawValue as String) as! (String));
+        equipAttr.readEnd();
+        attrKey.writeRequest();
+        self.attrKey.subject.addObject(equipmentAttrKey.rawValue as String);
+        attrKey.writeEnd()
     }
     
     //将设备信息更新到文件中
     func updateToFile() -> Bool{
         do{
-            if(!NSFileManager.defaultManager().fileExistsAtPath(self.xmlFile.path.URLByDeletingLastPathComponent!.path!)){
-                try NSFileManager.defaultManager().createDirectoryAtPath(self.xmlFile.path.URLByDeletingLastPathComponent!.path!, withIntermediateDirectories: true, attributes: nil);
+            if(!NSFileManager.defaultManager().fileExistsAtPath(NSURL(fileURLWithPath: self.path).URLByDeletingLastPathComponent!.path!)){
+                try NSFileManager.defaultManager().createDirectoryAtPath(NSURL(fileURLWithPath: self.path).URLByDeletingLastPathComponent!.path!, withIntermediateDirectories: true, attributes: nil);
             }
-            return self.xmlParser.writeToFile(self.xmlFile.path)
+            return self.parser.writeToFile(NSURL(fileURLWithPath: self.path));
         }catch{
             print(error);
         }
         return false;
     }
     
-    //从文件中更新xml信息
-    func updateFromFile(){
-        self.xmlParser = XmlParser(data: self.xmlFile.getFileData())
-        self.equipAttr = NSMutableDictionary()
-        initEquipAttrWithXml()
-    }
-    
     //修改xml
-    func modifyXml(equipmentKey:EquipmentKey, equipmentAttrKey:EquipmentAttrKey, value:NSString) {
-        self.xmlParser.setElementOfRoot(equipmentKey.rawValue as String, value: value)
-        self.equipAttr.setValue(value, forKey: equipmentAttrKey.rawValue as String)
+    func modifyXml(equipmentKey:EquipmentKey, equipmentAttrKey:EquipmentAttrKey, value:NSString) -> Bool {
+        self.parser.setElementOfRoot(equipmentKey.rawValue as String, value: value);
+        equipAttr.writeRequest();
+        self.equipAttr.subject.setValue(value, forKey: equipmentAttrKey.rawValue as String);
+        equipAttr.writeEnd();
+        return updateToFile();
     }
 }
