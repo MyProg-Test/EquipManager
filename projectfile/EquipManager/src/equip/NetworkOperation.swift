@@ -14,7 +14,7 @@ class NetworkOperation {
     internal struct NetConstant{
         static let serverURL = "weblib.ccnl.scut.edu.cn/"
         static let serverProtocol = "http://"
-        static let defaultQueue:dispatch_queue_t = dispatch_queue_create("NetworkOperation", DISPATCH_QUEUE_SERIAL);
+        static let defaultQueue:DispatchQueue = DispatchQueue(label: "NetworkOperation", attributes: .concurrent);
         //网络接口使用的询问key和回答key
         struct DictKey {
             //登录时使用的key
@@ -160,7 +160,7 @@ class NetworkOperation {
                     
                 }
             }
-            //上传资源使用的key 
+            //上传资源使用的key
             struct UploadResource {
                 struct Query {
                     static let groupId      = "groupId";
@@ -260,7 +260,7 @@ class NetworkOperation {
                 }
             }
         }
-        //网络端调用的application interface 
+        //网络端调用的application interface
         struct API {
             static let Authenticate         = "login/authenticate.action"
             static let SelectMember         = "login/selectMember.action"
@@ -307,437 +307,240 @@ class NetworkOperation {
             static let GetGroupTree         = "grouper/grouperTree.action"
         }
     }
-    let deleteResourceQueue:NSMutableArray;
-    let getResourcesQueue:NSMutableArray;
-    let downloadQueue:NSMutableArray;
-    let getThumbnailQueue:NSMutableArray;
-    let uploadQueue:NSMutableArray;
     
-    //获取资源完成
-    var getResourcesComplete:Bool{
-        get{
-            return getResourcesQueue.count == 0;
-        }
-    }
-    //下载完成
-    var downloadComplete:Bool{
-        get{
-            return downloadQueue.count == 0;
-        }
-    }
-    //缩略图完成
-    var getThumbnailComplete:Bool{
-        get{
-            return getThumbnailQueue.count == 0;
-        }
-    }
-    //上传完成
-    var uploadComplete:Bool{
-        get{
-            return uploadQueue.count == 0;
-        }
-    }
-    
-    var deleteResourceComplete: Bool{
-        get{
-            return deleteResourceQueue.count == 0;
-        }
-    }
-    
-    private static let _sharedInstance = NetworkOperation()
-    private init(){
-        getResourcesQueue = NSMutableArray();
-        downloadQueue = NSMutableArray();
-        getThumbnailQueue = NSMutableArray();
-        uploadQueue = NSMutableArray();
-        deleteResourceQueue = NSMutableArray();
+    fileprivate static let _sharedInstance = NetworkOperation()
+    fileprivate init(){
     }
     //单例模式
     class func sharedInstance() -> NetworkOperation {
         return _sharedInstance
     }
-    //时间戳
-    func getTimeStamp(message:AnyObject) -> NSString {
-        let time = NSDate();
-        let timeFormatter = NSDateFormatter();
-        timeFormatter.dateFormat = "yyyyMMddHHmmss";
-        return "\(message)\(timeFormatter.stringFromDate(time))";
-    }
-    //登陆
-    func Login(userName : NSString, passwd: NSString, queue:dispatch_queue_t = NetConstant.defaultQueue,handler:(AnyObject)->Void){
-        dispatch_async(queue){
-            var dict = [NetConstant.DictKey.Authenticate.Query.username : userName,
-                        NetConstant.DictKey.Authenticate.Query.password : passwd];
-            Alamofire.request(.POST, NetworkOperation.NetConstant.API.Authenticate.asURLConvertible, parameters: dict, encoding: .URL, headers: nil).responseJSON{ (response) in
+    
+    func postRequest(url: String,dict: [String: Any], queue: DispatchQueue, handler: @escaping (AnyObject) -> Void) -> DispatchSemaphore {
+        let sema: DispatchSemaphore = DispatchSemaphore(value: 0);
+        queue.async{
+            let request = Alamofire.request(url, method: .post, parameters: dict, headers: nil);
+            request.responseJSON{(response) in
                 switch response.result{
-                case .Success(let data):
-                    let responseDict:NSMutableDictionary = data as! NSMutableDictionary;
-                    if let memberID = responseDict.objectForKey(NetConstant.DictKey.Authenticate.Response.members)?.firstObject??.objectForKey(NetConstant.DictKey.Authenticate.Response.memberId){
-                        dict = [NetConstant.DictKey.SelectMember.Query.memberId : "\(memberID)"];
-                        Alamofire.request(.POST, NetworkOperation.NetConstant.API.SelectMember.asURLConvertible, parameters: dict, encoding: .URL, headers: nil).responseJSON{ (response) in
+                case .success(let data):
+                    handler(data as AnyObject);
+                case .failure(let error):
+                    print(error);
+                }
+                sema.signal();
+            }
+        }
+        return sema;
+    }
+    
+    func download(url: String, dict: [String: Any], fileURL: URL, queue: DispatchQueue, handler: @escaping (AnyObject) -> Void) -> DispatchSemaphore {
+        let sema: DispatchSemaphore = DispatchSemaphore(value: 0);
+        queue.async {
+            let downloadURL = "\(url)?id=\(dict["id"]!)";
+            let fileData = try! Data(contentsOf: URL(string: downloadURL)!);
+            if !(FileManager.default.fileExists(atPath: fileURL.deletingLastPathComponent().path)){
+                try! FileManager.default.createDirectory(atPath: fileURL.deletingLastPathComponent().path, withIntermediateDirectories: true, attributes: nil);
+            }
+            (fileData as NSData).write(toFile: fileURL.path, atomically: true);
+            handler(fileData as AnyObject);
+            sema.signal();
+            /*_ = Alamofire.download(url, method: .post, parameters: dict, encoding: JSONEncoding.default, headers: nil, to: { (tmpURL, response) -> (destinationURL: URL, options: DownloadRequest.DownloadOptions) in
+                print(response.statusCode,"sadnhquwhej");
+                return (fileURL, [.createIntermediateDirectories, .removePreviousFile]);
+            }).responseJSON{
+                (response) in
+                switch response.result{
+                case .success(let data):
+                    if let responseDict: NSDictionary = data as? NSDictionary{
+                        print(dict);
+                        handler(responseDict);
+                    }
+                case .failure(let error):
+                    print(error);
+                }
+                sema.signal();
+            }*/
+        }
+        return sema;
+    }
+    
+    func upload(dict: [String: Any], fileDict: [String: Data], fileName: String, mimeType: String, url: String, queue: DispatchQueue, handler: @escaping (AnyObject) -> Void) -> DispatchSemaphore {
+        let sema = DispatchSemaphore(value: 0);
+        queue.async {
+            Alamofire.upload(multipartFormData: {
+                (multipartFormData) in
+                for (key, value) in dict{
+                    multipartFormData.append((value as! String).data(using: .utf8)!, withName: key);
+                }
+                multipartFormData.append(fileDict.first!.value, withName: fileDict.first!.key, fileName: fileName, mimeType: mimeType)
+                
+                
+                }, to: url, method: .post, headers: nil, encodingCompletion: {
+                    (encodingResult) in
+                    switch encodingResult{
+                    case .success(request: let request, streamingFromDisk: _, streamFileURL: _):
+                        request.responseJSON{ response in
                             switch response.result{
-                            case .Success(let data):
-                                print("Login Success");
-                                handler(data);
-                                
-                            case .Failure(let error):
+                            case .success(let data):
+                                handler(data as AnyObject);
+                            case .failure(let error):
                                 print(error)
                             }
+                            sema.signal();
                         }
+                    case .failure(let error):
+                        print(error);
                     }
-                    
-                case .Failure(let error):
-                    print(error)
+            })
+        }
+        return sema;
+    }
+    
+    //登陆
+    func Login(_ userName : String, passwd: String, queue:DispatchQueue = NetConstant.defaultQueue,handler:@escaping (AnyObject)->Void){
+        var dict = [NetConstant.DictKey.Authenticate.Query.username : userName,
+                    NetConstant.DictKey.Authenticate.Query.password : passwd];
+        _ = self.postRequest(url: NetworkOperation.NetConstant.API.Authenticate.asURLConvertible, dict: dict, queue: queue){
+            (responseDict) in
+            if let memberID = ((responseDict.object(forKey: NetConstant.DictKey.Authenticate.Response.members) as! NSArray)[0] as AnyObject).object(forKey: NetConstant.DictKey.Authenticate.Response.memberId){
+                dict = [NetConstant.DictKey.SelectMember.Query.memberId : "\(memberID)"];
+                _ = self.postRequest(url: NetworkOperation.NetConstant.API.SelectMember.asURLConvertible, dict: dict, queue: queue){ (responseDict) in
+                    print(responseDict);
+                    handler(responseDict);
                 }
             }
         }
     }
     
-    func Status(queue: dispatch_queue_t = NetConstant.defaultQueue, handler: (AnyObject)->Void) {
-        dispatch_async(queue){
-            Alamofire.request(.POST, NetConstant.API.Status.asURLConvertible, parameters: nil, encoding: .URL, headers: nil).responseJSON{
-                (response) in
-                switch response.result{
-                case .Success(let data):
-                    let responseDict:NSMutableDictionary = data as! NSMutableDictionary;
-                    handler(responseDict);
-                case .Failure(let error):
-                    print(error);
-                }
-            }
+    func Status(_ queue: DispatchQueue = NetConstant.defaultQueue, handler: @escaping (AnyObject)->Void) -> DispatchSemaphore {
+        let rtn = self.postRequest(url: NetworkOperation.NetConstant.API.Status.asURLConvertible, dict: [:], queue: queue){
+            (responseDict) in
+            handler(responseDict);
         }
+        return rtn;
     }
     
     // group/getResources.action  获取文件树节点信息
-    func getResources(parentID:Int,type:Int = 0,start:Int = 0,limit:Int = 1000,queue:dispatch_queue_t = NetConstant.defaultQueue,handler:(AnyObject)->Void) -> NSString{
-        let stamp = self.getTimeStamp(parentID);
-        dispatch_async(queue){
-            objc_sync_enter(self.getResourcesQueue);
-            self.getResourcesQueue.addObject(stamp);
-            objc_sync_exit(self.getResourcesQueue);
-            let dict = [NetConstant.DictKey.GetResources.Query.parentId : parentID];
-            Alamofire.request(.POST, NetworkOperation.NetConstant.API.GetResources.asURLConvertible, parameters: dict, encoding: .URL, headers: nil).responseJSON{ (response) in
-                switch response.result{
-                case .Success(let data):
-                    let responseDict:NSMutableDictionary = data as! NSMutableDictionary;
-                    handler(responseDict)
-                case .Failure(let error):
-                    print(error)
-                }
-                objc_sync_enter(self.getResourcesQueue);
-                self.getResourcesQueue.removeObject(stamp);
-                objc_sync_exit(self.getResourcesQueue);
-            }
-        }
-        return stamp;
+    func getResources(_ parentID:Int,type:Int = 0,start:Int = 0,limit:Int = 1000,queue:DispatchQueue = NetConstant.defaultQueue,handler:@escaping (AnyObject)->Void) -> DispatchSemaphore{
+        let dict = [NetConstant.DictKey.GetResources.Query.parentId : parentID];
+        return self.postRequest(url: NetworkOperation.NetConstant.API.GetResources.asURLConvertible, dict: dict, queue: queue,handler: handler);
     }
     
     //group/getResourceInfo.action  获取资源信息
-    func getResourceInfo(resourceID:Int, queue:dispatch_queue_t = NetConstant.defaultQueue, handler:(AnyObject)->Void) -> NSString{
-        let stamp = self.getTimeStamp(resourceID);
-        dispatch_async(queue){
-            objc_sync_enter(self.getResourcesQueue);
-            self.getResourcesQueue.addObject(stamp);
-            objc_sync_exit(self.getResourcesQueue);
-            let dict = [NetConstant.DictKey.GetResourceInfo.Query.resourceId : resourceID];
-            Alamofire.request(.POST, NetworkOperation.NetConstant.API.GetResourceInfo.asURLConvertible, parameters: dict, encoding: .URL, headers: nil).responseJSON{ (response) in
-                switch response.result{
-                case .Success(let data):
-                    let responseDict:NSMutableDictionary = data as! NSMutableDictionary;
-                    handler(responseDict)
-                case .Failure(let error):
-                    print(error)
-                }
-                objc_sync_enter(self.getResourcesQueue);
-                self.getResourcesQueue.removeObject(stamp);
-                objc_sync_exit(self.getResourcesQueue);
-            }
+    func getResourceInfo(_ resourceID:Int, queue:DispatchQueue = NetConstant.defaultQueue, handler:@escaping (AnyObject)->Void) -> DispatchSemaphore{
+        let dict = [NetConstant.DictKey.GetResourceInfo.Query.resourceId : resourceID];
+        return self.postRequest(url: NetworkOperation.NetConstant.API.GetResourceInfo.asURLConvertible, dict: dict, queue: queue){ (responseDict) in
+            handler(responseDict)
         }
-        return stamp;
     }
     
     //group/getSimpleResources.action  获取文件树节点简要信息
-    func getSimpleResources(parentID:Int,type:Int,start:Int,limit:Int, queue:dispatch_queue_t = NetConstant.defaultQueue, handler:(AnyObject)->Void) -> NSString{
-        let stamp = self.getTimeStamp(parentID);
-        dispatch_async(queue) {
-            objc_sync_enter(self.getResourcesQueue);
-            self.getResourcesQueue.addObject(stamp);
-            objc_sync_exit(self.getResourcesQueue);
-            let dict = [NetConstant.DictKey.GetSimpleResources.Query.parentId : parentID];
-            Alamofire.request(.POST, NetworkOperation.NetConstant.API.GetSimpleResources.asURLConvertible, parameters: dict, encoding: .URL, headers: nil).responseJSON { (response) in
-                switch response.result{
-                case .Success(let data):
-                    let responseDict:NSMutableDictionary = data as! NSMutableDictionary;
-                    handler(responseDict);
-                case .Failure(let error):
-                    print(error);
-                }
-                objc_sync_enter(self.getResourcesQueue);
-                self.getResourcesQueue.removeObject(stamp);
-                objc_sync_exit(self.getResourcesQueue);
-            }
-            
+    func getSimpleResources(_ parentID:Int,type:Int,start:Int,limit:Int, queue:DispatchQueue = NetConstant.defaultQueue, handler:@escaping (AnyObject)->Void) -> DispatchSemaphore{
+        let dict = [NetConstant.DictKey.GetSimpleResources.Query.parentId : parentID];
+        
+        return self.postRequest(url: NetworkOperation.NetConstant.API.GetSimpleResources.asURLConvertible, dict: dict, queue: queue){
+            (responseDict) in
+            handler(responseDict);
         }
-        return stamp;
     }
     
-    func deleteResource(id:Int, queue:dispatch_queue_t = NetConstant.defaultQueue, handler: (AnyObject)->Void) -> NSString {
-        let stamp = self.getTimeStamp(id);
-        dispatch_async(queue){
-            objc_sync_enter(self.deleteResourceQueue);
-            self.deleteResourceQueue.addObject(stamp);
-            objc_sync_exit(self.deleteResourceQueue);
-            let dict = [NetConstant.DictKey.DeleteResource.Query.id : "\(id)"];
-            Alamofire.request(.POST, NetworkOperation.NetConstant.API.DeleteResource.asURLConvertible, parameters: dict, encoding: .URL, headers: nil).responseJSON{ (response) in
-                switch response.result{
-                case .Success(let data):
-                    handler(data)
-                case .Failure(let error):
-                    print(error);
-                }
-                objc_sync_enter(self.deleteResourceQueue);
-                self.deleteResourceQueue.removeObject(stamp);
-                objc_sync_exit(self.deleteResourceQueue);
-            }
+    func deleteResource(_ id:Int, queue:DispatchQueue = NetConstant.defaultQueue, handler: @escaping (AnyObject)->Void) -> DispatchSemaphore {
+        let dict = [NetConstant.DictKey.DeleteResource.Query.id : "\(id)"];
+        return self.postRequest(url: NetworkOperation.NetConstant.API.DeleteResource.asURLConvertible, dict: dict, queue: queue){
+            (responseDict) in
+            handler(responseDict);
         }
-        return stamp;
     }
     
     //group/createDir.action  新建文件夹
-    func createDir(groupID:Int,name:NSString,parentID:Int,queue:dispatch_queue_t = NetConstant.defaultQueue, handler:(AnyObject)->Void){
-        dispatch_async(queue) {
-            let dict = [NetConstant.DictKey.CreateDir.Query.groupId : "\(groupID)",
-                        NetConstant.DictKey.CreateDir.Query.name : name,
-                        NetConstant.DictKey.CreateDir.Query.parentId : "\(parentID)"];
-            Alamofire.request(.POST, NetworkOperation.NetConstant.API.CreateDIR.asURLConvertible, parameters: dict, encoding: .URL, headers: nil).responseJSON { (response) in
-                switch response.result{
-                case .Success(let data):
-                    handler(data);
-                case .Failure(let error):
-                    print(error);
-                }
-            }
-            
+    func createDir(_ groupID:Int,name:String,parentID:Int,queue:DispatchQueue = NetConstant.defaultQueue, handler:@escaping (AnyObject)->Void) -> DispatchSemaphore{
+        let dict = [NetConstant.DictKey.CreateDir.Query.groupId : "\(groupID)",
+            NetConstant.DictKey.CreateDir.Query.name : name,
+            NetConstant.DictKey.CreateDir.Query.parentId : "\(parentID)"] as [String : Any];
+        return self.postRequest(url: NetworkOperation.NetConstant.API.CreateDIR.asURLConvertible, dict: dict, queue: queue){
+            (responseDict) in
+            handler(responseDict);
         }
     }
     
     //group/downloadResource.action  下载文件或打包下载
-    func downloadResource(id:Int, url:NSURL, queue:dispatch_queue_t = NetConstant.defaultQueue, handler:(AnyObject)->Void) -> NSString{
-        let stamp = self.getTimeStamp(id);
-        dispatch_async(queue){
-            objc_sync_enter(self.downloadQueue);
-            self.downloadQueue.addObject(stamp);
-            objc_sync_exit(self.downloadQueue);
-            let dict = [NetConstant.DictKey.DownloadResource.Query.id : "\(id)"];
-            Alamofire.download(.POST, NetConstant.API.Download.asURLConvertible, parameters: dict, encoding: .URL, headers: nil, destination: { (tempurl, response) -> NSURL in
-                handler(response);
-                if(!NSFileManager.defaultManager().fileExistsAtPath(url.URLByDeletingLastPathComponent!.path!)){
-                    try! NSFileManager.defaultManager().createDirectoryAtPath(url.URLByDeletingLastPathComponent!.path!, withIntermediateDirectories: true, attributes: nil);
-                }
-                let fileName:NSString = url.lastPathComponent!;
-                print(fileName);
-                return url.URLByDeletingLastPathComponent!.URLByAppendingPathComponent(fileName as String);
-            }).responseData { (response) in
-                print(response);
-                objc_sync_enter(self.downloadQueue);
-                self.downloadQueue.removeObject(stamp);
-                objc_sync_exit(self.downloadQueue);
-                
-            }
-        }
-        return stamp;
+    func downloadResource(_ id:Int, url:URL, queue:DispatchQueue = NetConstant.defaultQueue, handler:@escaping (AnyObject)->Void) -> DispatchSemaphore{
+        let dict = [NetConstant.DictKey.DownloadResource.Query.id : "\(id)"];
+        
+        return self.download(url: NetworkOperation.NetConstant.API.Download.asURLConvertible, dict: dict, fileURL: url, queue: queue, handler: { (responseDict) in
+            handler(responseDict);
+        })
     }
     
     //group/uploadResource.action   上传资源
-    func uploadResource(groupID:Int,parentID:Int,fileURL:NSURL,fileName:NSString,fileDataContentType:NSString = "multipart/form-data",documentType:NSString = "", queue:dispatch_queue_t = NetConstant.defaultQueue, handler:(AnyObject)->Void) -> NSString{
-        let data:NSData = NSData(contentsOfFile: fileURL.path!)!;
+    func uploadResource(_ groupID:Int,parentID:Int,fileURL:URL,fileName:String,fileDataContentType:String = "multipart/form-data",documentType:String = "", queue:DispatchQueue = NetConstant.defaultQueue, handler:@escaping (AnyObject)->Void) -> DispatchSemaphore{
+        let data:Data = try! Data(contentsOf: URL(fileURLWithPath: fileURL.path));
         return self.uploadResource(groupID, parentID: parentID, fileData: data, fileName: fileName, fileDataContentType: fileDataContentType, documentType: documentType, queue: queue, handler: handler);
     }
     
     //group/uploadResource.action   上传资源
-    func uploadResource(groupID:Int,parentID:Int,fileData:NSData,fileName:NSString,fileDataContentType:NSString = "multipart/form-data",documentType:NSString = "", queue:dispatch_queue_t = NetConstant.defaultQueue, handler:(AnyObject)->Void) -> NSString{
-        let stamp = self.getTimeStamp(parentID);
-        dispatch_async(queue){
-            objc_sync_enter(self.uploadQueue);
-            self.uploadQueue.addObject(stamp);
-            objc_sync_exit(self.uploadQueue);
-            let dict = [NetConstant.DictKey.UploadResource.Query.groupId : "\(groupID)",
-                        NetConstant.DictKey.UploadResource.Query.parentId : "\(parentID)"];
-            Alamofire.upload(.POST, NetConstant.API.Upload.asURLConvertible, multipartFormData: { multipartFormData in
-                multipartFormData.appendBodyPart(data: fileData, name: NetConstant.DictKey.UploadResource.Query.fileData, fileName: fileName as String, mimeType: fileDataContentType as String);
-                for (key,value) in dict{
-                    multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key);
-                }
-                },
-                             encodingCompletion: { encodingResult in
-                                switch encodingResult {
-                                case .Success(let upload, _, _):
-                                    upload.responseJSON { response in
-                                        switch response.result{
-                                        case .Success(let data):
-                                            handler(data);
-                                        case .Failure(let error):
-                                            print(error);
-                                        }
-                                        objc_sync_enter(self.uploadQueue);
-                                        self.uploadQueue.removeObject(stamp);
-                                        objc_sync_exit(self.uploadQueue);
-                                    }
-                                case .Failure(let encodingError):
-                                    print(encodingError)
-                                }
-                }
-            )
-        }
-        return stamp;
+    func uploadResource(_ groupID:Int,parentID:Int,fileData:Data,fileName:String,fileDataContentType:String = "multipart/form-data",documentType:String = "", queue:DispatchQueue = NetConstant.defaultQueue, handler:@escaping (AnyObject)->Void) -> DispatchSemaphore{
+        let dict = [NetConstant.DictKey.UploadResource.Query.groupId : "\(groupID)",
+            NetConstant.DictKey.UploadResource.Query.parentId : "\(parentID)"];
+        let fileDict = [NetConstant.DictKey.UploadResource.Query.fileData: fileData];
+        return self.upload(dict: dict, fileDict: fileDict, fileName: fileName, mimeType: fileDataContentType, url: NetworkOperation.NetConstant.API.Upload.asURLConvertible, queue: queue, handler: handler);
+        
     }
     
     //group/uploadResourceReturnId.action   上传资源并返回ID
-    func uploadResourceReturnId(groupID:Int,parentID:Int,fileURL:NSURL,fileName:NSString,fileDataContentType:NSString = "multipart/form-data",documentType:NSString = "", queue:dispatch_queue_t = NetConstant.defaultQueue, handler:(AnyObject)->Void) -> NSString{
-        let data:NSData = NSData(contentsOfFile: fileURL.path!)!;
+    func uploadResourceReturnId(_ groupID:Int,parentID:Int,fileURL:URL,fileName:String,fileDataContentType:String = "multipart/form-data",documentType:String = "", queue:DispatchQueue = NetConstant.defaultQueue, handler:@escaping (AnyObject)->Void) -> DispatchSemaphore{
+        let data:Data = try! Data(contentsOf: URL(fileURLWithPath: fileURL.path));
         return self.uploadResourceReturnId(groupID, parentID: parentID, fileData: data, fileName: fileName, fileDataContentType: fileDataContentType, documentType: documentType, queue: queue, handler: handler);
     }
     
     //group/uploadResourceReturnId.action   上传资源并返回ID
-    func uploadResourceReturnId(groupID:Int,parentID:Int,fileData:NSData,fileName:NSString,fileDataContentType:NSString = "multipart/form-data",documentType:NSString = "", queue:dispatch_queue_t = NetConstant.defaultQueue, handler:(AnyObject)->Void) -> NSString{
-        let stamp = self.getTimeStamp(parentID);
-        dispatch_async(queue){
-            objc_sync_enter(self.uploadQueue);
-            self.uploadQueue.addObject(stamp);
-            objc_sync_exit(self.uploadQueue);
-            let dict = [NetConstant.DictKey.UploadResourceReturnId.Query.groupId : "\(groupID)",
-                        NetConstant.DictKey.UploadResourceReturnId.Query.parentId : "\(parentID)"];
-            Alamofire.upload(.POST, NetConstant.API.UploadReturnId.asURLConvertible, multipartFormData: { multipartFormData in
-                multipartFormData.appendBodyPart(data: fileData, name: NetConstant.DictKey.UploadResourceReturnId.Query.fileData, fileName: fileName as String, mimeType: fileDataContentType as String);
-                for (key,value) in dict{
-                    multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key);
-                }
-                },
-                             encodingCompletion: { encodingResult in
-                                switch encodingResult {
-                                case .Success(let upload, _, _):
-                                    upload.responseJSON { response in
-                                        switch response.result{
-                                        case .Success(let data):
-                                            handler(data);
-                                        case .Failure(let error):
-                                            print(error);
-                                        }
-                                        objc_sync_enter(self.uploadQueue);
-                                        self.uploadQueue.removeObject(stamp);
-                                        objc_sync_exit(self.uploadQueue);
-                                    }
-                                case .Failure(let encodingError):
-                                    print(encodingError)
-                                }
-                }
-            )
-        }
-        return stamp;
+    func uploadResourceReturnId(_ groupID:Int,parentID:Int,fileData:Data,fileName:String,fileDataContentType:String = "multipart/form-data",documentType:String = "", queue:DispatchQueue = NetConstant.defaultQueue, handler:@escaping (AnyObject)->Void) -> DispatchSemaphore{
+        
+        let dict = [NetConstant.DictKey.UploadResourceReturnId.Query.groupId : "\(groupID)",
+            NetConstant.DictKey.UploadResourceReturnId.Query.parentId : "\(parentID)"];
+        let fileDict = [NetConstant.DictKey.UploadResourceReturnId.Query.fileData : fileData];
+        return self.upload(dict: dict, fileDict: fileDict, fileName: fileName, mimeType: fileDataContentType, url: NetConstant.API.UploadReturnId.asURLConvertible, queue: queue, handler: handler);
     }
     
     //group/copyResource.action  复制资源
-    func copyResource(groupID:Int,parentID:Int,id:Int, queue:dispatch_queue_t = NetConstant.defaultQueue, handler:(AnyObject)->Void){
-        dispatch_async(queue) {
-            let dict = [NetConstant.DictKey.CopyResource.Query.groupId : "\(groupID)",
-                        NetConstant.DictKey.CopyResource.Query.parentId : "\(parentID)",
-                        NetConstant.DictKey.CopyResource.Query.id : "\(id)"];
-            Alamofire.request(.POST, NetConstant.API.CopyResource.asURLConvertible, parameters: dict, encoding: .URL, headers: nil).responseJSON(completionHandler: { (response) in
-                switch response.result{
-                case .Success(let data):
-                    handler(data);
-                case .Failure(let error):
-                    print(error);
-                }
-            })
-            
-        }
+    func copyResource(_ groupID:Int,parentID:Int,id:Int, queue:DispatchQueue = NetConstant.defaultQueue, handler:@escaping (AnyObject)->Void) -> DispatchSemaphore{
+        let dict = [NetConstant.DictKey.CopyResource.Query.groupId : "\(groupID)",
+            NetConstant.DictKey.CopyResource.Query.parentId : "\(parentID)",
+            NetConstant.DictKey.CopyResource.Query.id : "\(id)"];
+        return self.postRequest(url: NetConstant.API.CopyResource.asURLConvertible, dict: dict, queue: queue, handler: handler);
     }
     
     //group/moveResource.action  移动资源
-    func moveResource(groupID:Int,parentID:Int,id:Int, queue:dispatch_queue_t = NetConstant.defaultQueue, handler:(AnyObject)->Void){
-        dispatch_async(queue) {
-            let dict = [NetConstant.DictKey.MoveResource.Query.groupId : "\(groupID)",
-                        NetConstant.DictKey.MoveResource.Query.parentId : "\(parentID)",
-                        NetConstant.DictKey.MoveResource.Query.id : "\(id)"];
-            Alamofire.request(.POST, NetConstant.API.MoveResource.asURLConvertible, parameters: dict, encoding: .URL, headers: nil).responseJSON(completionHandler: { (response) in
-                switch response.result{
-                case .Success(let data):
-                    handler(data);
-                case .Failure(let error):
-                    print(error);
-                }
-            })
-            
-        }
+    func moveResource(_ groupID:Int,parentID:Int,id:Int, queue:DispatchQueue = NetConstant.defaultQueue, handler:@escaping (AnyObject)->Void) -> DispatchSemaphore{
+        let dict = [NetConstant.DictKey.MoveResource.Query.groupId : "\(groupID)",
+            NetConstant.DictKey.MoveResource.Query.parentId : "\(parentID)",
+            NetConstant.DictKey.MoveResource.Query.id : "\(id)"];
+        return self.postRequest(url: NetConstant.API.MoveResource.asURLConvertible, dict: dict, queue: queue, handler: handler);
     }
     
     //group/modifyResource.action 修改资源文件夹
-    func modifyResource(id:Int, name:NSString, desc:NSString = "", queue:dispatch_queue_t = NetConstant.defaultQueue, handler:(AnyObject)->Void){
-        dispatch_async(queue) {
-            let dict = [NetConstant.DictKey.ModifyResource.Query.id : "\(id)",
-                        NetConstant.DictKey.ModifyResource.Query.name : name as String,
-                        NetConstant.DictKey.ModifyResource.Query.desc : desc];
-            Alamofire.request(.POST, NetConstant.API.ModifyResource.asURLConvertible, parameters: dict, encoding: .URL, headers: nil).responseJSON(completionHandler: { (response) in
-                switch response.result{
-                case .Success(let data):
-                    handler(data);
-                case .Failure(let error):
-                    print(error);
-                }
-            })
-        }
+    func modifyResource(_ id:Int, name:String, desc:String = "", queue:DispatchQueue = NetConstant.defaultQueue, handler:@escaping (AnyObject)->Void) -> DispatchSemaphore{
+        let dict = [NetConstant.DictKey.ModifyResource.Query.id : "\(id)",
+            NetConstant.DictKey.ModifyResource.Query.name : "\(name)",
+            NetConstant.DictKey.ModifyResource.Query.desc : "\(desc)"];
+        return self.postRequest(url: NetConstant.API.ModifyResource.asURLConvertible, dict: dict, queue: queue, handler: handler);
     }
     
     //group/getThumbnail.action  缩略图
-    func getThumbnail(id:Int,width:Int = 100,height:Int = 100,queue:dispatch_queue_t = NetConstant.defaultQueue, handler:(AnyObject?)->Void) -> NSString{
-        let stamp = self.getTimeStamp(id);
-        dispatch_async(queue) {
-            objc_sync_enter(self.getThumbnailQueue);
-            self.getThumbnailQueue.addObject(stamp);
-            objc_sync_exit(self.getThumbnailQueue);
-            let dict = [NetConstant.DictKey.GetThumbnail.Query.id : "\(id)",
-                        NetConstant.DictKey.GetThumbnail.Query.width : "\(width)",
-                        NetConstant.DictKey.GetThumbnail.Query.height : "\(height)"];
-            Alamofire.request(.POST, NetConstant.API.GetThumbnail.asURLConvertible, parameters: dict, encoding: .URL, headers: nil).responseJSON(completionHandler: { (response) in
-                var imageData:NSData? = nil;
-                switch response.result{
-                case .Success(let data):
-                    if let URL = data.firstObject??.objectForKey("thumbUrl") as? String{
-                        print(data);
-                        print(URL.asURLConvertible);
-                        imageData = NSData(contentsOfURL: NSURL(string: URL.asURLConvertible)!);
-                    }
-                case .Failure(let error):
-                    print(error)
-                }
-                handler(imageData);
-                objc_sync_enter(self.getThumbnailQueue);
-                self.getThumbnailQueue.removeObject(stamp);
-                objc_sync_exit(self.getThumbnailQueue);
-            })
+    func getThumbnail(_ id:Int,width:Int = 100,height:Int = 100,queue:DispatchQueue = NetConstant.defaultQueue, handler:@escaping (AnyObject?)->Void) -> DispatchSemaphore{
+        
+        let dict = [NetConstant.DictKey.GetThumbnail.Query.id : "\(id)",
+            NetConstant.DictKey.GetThumbnail.Query.width : "\(width)",
+            NetConstant.DictKey.GetThumbnail.Query.height : "\(height)"];
+        return self.postRequest(url: NetConstant.API.GetThumbnail.asURLConvertible, dict: dict, queue: queue){
+            (any) in
+            if let url = ((any as! NSArray)[0] as AnyObject).object(forKey: NetConstant.DictKey.GetThumbnail.Response.thumbUrl) as? String{
+                print(url);
+                let data = try? Data(contentsOf: URL(string: url.asURLConvertible)!);
+                handler(data as AnyObject?);
+            }
         }
-        return stamp;
     }
     
     
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

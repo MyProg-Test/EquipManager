@@ -8,30 +8,30 @@
 
 import UIKit
 enum Type {
-    case PNG;
-    case JPG;
-    case JPGE;
-    case GIF;
-    case XML;
-    case UNKNOWN;
+    case png;
+    case jpg;
+    case jpge;
+    case gif;
+    case xml;
+    case unknown;
 }
 
 enum SizeUnit : Int{
-    case B  = 1;
-    case KB = 2;
-    case MB = 3;
-    case GB = 4;
+    case b  = 1;
+    case kb = 2;
+    case mb = 3;
+    case gb = 4;
 }
 //文件信息
 class FileInfo {
     //文件名
-    var name            : NSString
+    var name            : String
     //文件id
     var id              : Int
     //文件parentID
     var parentId        : Int
     //文件本地路径
-    var path            : NSURL
+    var path            : URL
     //文件类型
     var type            : Type
     //文件大小
@@ -44,17 +44,17 @@ class FileInfo {
         name = ""
         id = -1
         parentId = -1
-        path = NSURL()
-        size = 0
-        sizeUnit = .B
-        type = .UNKNOWN;
+        path = NSURL() as URL;
+        size = 0;
+        sizeUnit = .b
+        type = .unknown;
     }
     
     //获取文件数据
-    func getFileData() -> NSData {
-        if(NSFileManager.defaultManager().fileExistsAtPath(self.path.path!)){
-            return NSData(contentsOfFile: self.path.path!)!
+    func getFileData() -> Data {
+        if(FileManager.default.fileExists(atPath: self.path.path)){
+            return (try! Data(contentsOf: URL(fileURLWithPath: self.path.path)))
         }
-        return NSData();
+        return Data();
     }
 }

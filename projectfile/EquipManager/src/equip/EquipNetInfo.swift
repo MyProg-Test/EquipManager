@@ -10,9 +10,8 @@ import UIKit
 
 class EquipNetInfo {
     
-    private static let _sharedInstance = EquipNetInfo();
+    fileprivate static let _sharedInstance = EquipNetInfo();
     let fs:FileSystem = FileSystem();
-    let readFromNetRecord = NSMutableArray();
     
     //返回当前文件数
     var count:Int{
@@ -20,34 +19,8 @@ class EquipNetInfo {
             return fs.count;
         }
     }
-    //返回当前网络读取是否结束
-    var isReadFromNetComplete:Bool{
-        get{
-            objc_sync_enter(NetworkOperation.sharedInstance().getResourcesQueue);
-            if(NetworkOperation.sharedInstance().getResourcesComplete){
-                objc_sync_exit(NetworkOperation.sharedInstance().getResourcesQueue);
-                return true;
-            }
-            let array = NSMutableArray();
-            for queue in readFromNetRecord {
-                if(NetworkOperation.sharedInstance().getResourcesQueue.containsObject(queue)){
-                    objc_sync_exit(NetworkOperation.sharedInstance().getResourcesQueue);
-                    objc_sync_enter(readFromNetRecord);
-                    readFromNetRecord.removeObjectsInArray(array as [AnyObject]);
-                    objc_sync_exit(readFromNetRecord);
-                    return false;
-                }else{
-                    array.addObject(queue);
-                }
-            }
-            readFromNetRecord.removeAllObjects();
-            objc_sync_exit(NetworkOperation.sharedInstance().getResourcesQueue);
-            return true;
-        }
-    }
     
-    
-    private init(){
+    fileprivate init(){
         
     }
     //单例模式
@@ -55,50 +28,50 @@ class EquipNetInfo {
         return _sharedInstance;
     }
     //检查ID是否存在
-    func checkForID(id:Int, handler:(Bool)->Void){
-        NetworkOperation.sharedInstance().getResourceInfo(id) { (any) in
-            handler(any.objectForKey(NetworkOperation.NetConstant.DictKey.GetResourceInfo.Response.displayName) != nil);
+    func checkForID(_ id:Int, handler:@escaping (Bool)->Void){
+        _ = NetworkOperation.sharedInstance().getResourceInfo(id) { (any) in
+            handler(any.object(forKey: NetworkOperation.NetConstant.DictKey.GetResourceInfo.Response.displayName) != nil);
         }
     }
     //从网络端添加设备
-    func addEquipFromNet(parentID:Int, parentName:NSString) -> NSString{
-        let stamp = NetworkOperation.sharedInstance().getResources(parentID) { (any) in
-            if let resArray = any.objectForKey(NetworkOperation.NetConstant.DictKey.GetResources.Response.resources){
+    func addEquipFromNet(_ parentID:Int, parentName:String) -> DispatchSemaphore{
+        let rtn = NetworkOperation.sharedInstance().getResources(parentID) { (any) in
+            if let resArray = any.object(forKey: NetworkOperation.NetConstant.DictKey.GetResources.Response.resources){
                 let tmpArray = resArray as! NSArray;
                 let imageSet:NSMutableArray = NSMutableArray();
                 for i in 0..<tmpArray.count{
-                    let fileName = tmpArray.objectAtIndex(i).objectForKey(NetworkOperation.NetConstant.DictKey.GetResources.Response.ResourcesKey.displayName) as! NSString;
+                    let fileName = (tmpArray.object(at: i) as AnyObject).object(forKey: NetworkOperation.NetConstant.DictKey.GetResources.Response.ResourcesKey.displayName) as! String;
                     if(self.isImage(fileName)){
-                        let imageID:Int = tmpArray.objectAtIndex(i).objectForKey(NetworkOperation.NetConstant.DictKey.GetResources.Response.ResourcesKey.id) as! Int;
-                        let imageName:NSString = fileName;
+                        let imageID:Int = (tmpArray.object(at: i) as AnyObject).object(forKey: NetworkOperation.NetConstant.DictKey.GetResources.Response.ResourcesKey.id) as! Int;
+                        let imageName:String = fileName;
                         let image:NSMutableDictionary = NSMutableDictionary();
                         image.setValue(imageID, forKey: FileSystem.imageSetKey.imageID);
                         image.setValue(imageName, forKey: FileSystem.imageSetKey.imageName);
-                        image.setValue("\(parentName)/" as NSString, forKey: FileSystem.imageSetKey.imagePath);
+                        image.setValue(parentName, forKey: FileSystem.imageSetKey.imagePath);
                         image.setValue(0, forKey: FileSystem.imageSetKey.status);
-                        imageSet.addObject(image);
+                        imageSet.add(image);
                     }
                     if(self.isXml(fileName)){
-                        let XMLID:Int = tmpArray.objectAtIndex(i).objectForKey(NetworkOperation.NetConstant.DictKey.GetResources.Response.ResourcesKey.id) as! Int;
-                        let groupID:Int = tmpArray.objectAtIndex(i).objectForKey(NetworkOperation.NetConstant.DictKey.GetResources.Response.ResourcesKey.groupId) as! Int;
-                        self.fs.addEquip(parentID, XMLID: XMLID, XMLName: fileName, imageSet: NSMutableArray(), path: "\(parentName)/" as NSString, groupID: groupID);
+                        let XMLID:Int = (tmpArray.object(at: i) as AnyObject).object(forKey: NetworkOperation.NetConstant.DictKey.GetResources.Response.ResourcesKey.id) as! Int;
+                        let groupID:Int = (tmpArray.object(at: i) as AnyObject).object(forKey: NetworkOperation.NetConstant.DictKey.GetResources.Response.ResourcesKey.groupId) as! Int;
+                        self.fs.addEquip(parentID, XMLID: XMLID, XMLName: fileName, imageSet: NSMutableArray(), path: parentName, groupID: groupID);
                         
                     }
                 }
                 objc_sync_enter(self.fs);
-                let index = self.fs.getSpecIndex(FileSystem.equipKey.parentID, value: parentID);
+                let index = self.fs.getSpecIndex(FileSystem.equipKey.parentID, value: parentID as AnyObject);
                 self.fs.addImageArray(index, imageArray: imageSet);
                 objc_sync_exit(self.fs);
                 //debug-------------------------------
                 if(index != -1){
                     //print(self.fs.writeToFile(EquipFileControl.sharedInstance().getEquipInfoFilePath()));
                     print(index)
-                    print(self.fs.getEquipPath(index).path!);
-                    for i in 0..<self.fs.getEquip(index)!.valueForKey(FileSystem.equipKey.imageSet)!.count{
+                    print(self.fs.getEquipPath(index).path);
+                    for i in 0..<(self.fs.getEquip(index)!.value(forKey: FileSystem.equipKey.imageSet)! as AnyObject).count{
                         if(EquipImageInfo.isMainImage(self.fs.getImageName(index, imageIndex: i), parentId: parentID)){
-                            print("\(self.fs.getImagePath(index, imageIndex: i).path!)----")
+                            print("\(self.fs.getImagePath(index, imageIndex: i).path)----")
                         }else{
-                            print(self.fs.getImagePath(index, imageIndex: i).path!);
+                            print(self.fs.getImagePath(index, imageIndex: i).path);
                         }
                     }
                 }
@@ -107,30 +80,37 @@ class EquipNetInfo {
                 
             }
         }
-        return stamp;
+        return rtn;
         
     }
     //从网络端读取
-    func readFromNet(rootID:Int){
-        NetworkOperation.sharedInstance().getResources(rootID) { (any) in
-            objc_sync_enter(self.fs.equipArray);
-            self.fs.equipArray.removeAllObjects();
-            objc_sync_exit(self.fs.equipArray);
-            if let folderResArray = any.objectForKey(NetworkOperation.NetConstant.DictKey.GetResources.Response.resources){
-                for i in 0..<folderResArray.count{
-                    let folderRes:NSDictionary = folderResArray.objectAtIndex(i) as! NSDictionary;
-                    let id = folderRes.objectForKey(NetworkOperation.NetConstant.DictKey.GetResources.Response.ResourcesKey.id) as! Int;
-                    let parentName = folderRes.objectForKey(NetworkOperation.NetConstant.DictKey.GetResources.Response.ResourcesKey.displayName) as! NSString
-                    objc_sync_enter(self.readFromNetRecord)
-                    self.readFromNetRecord.addObject(self.addEquipFromNet(id, parentName: parentName));
-                    objc_sync_exit(self.readFromNetRecord);
+    func readFromNet(_ rootID:Int){
+        var waitList = Array<DispatchSemaphore>();
+        let wait = NetworkOperation.sharedInstance().getResources(rootID) { (any) in
+            if let folderResArray = any.object(forKey: NetworkOperation.NetConstant.DictKey.GetResources.Response.resources){
+                for i in 0..<(folderResArray as AnyObject).count{
+                    let folderRes:NSDictionary = (folderResArray as AnyObject).object(at: i) as! NSDictionary;
+                    let id = folderRes.object(forKey: NetworkOperation.NetConstant.DictKey.GetResources.Response.ResourcesKey.id) as! Int;
+                    let parentName = folderRes.object(forKey: NetworkOperation.NetConstant.DictKey.GetResources.Response.ResourcesKey.displayName) as! String
+                    waitList.append(self.addEquipFromNet(id, parentName: parentName));
                 }
             }
         }
+        let group: DispatchGroup = DispatchGroup();
+        NetworkOperation.NetConstant.defaultQueue.async(group: group){
+            wait.wait();
+            print("readWaitEnd");
+            for i in waitList{
+                i.wait();
+                print("\(i) waitEND");
+            }
+        }
+        group.wait();
     }
+    
     //判断当前是否为图片
-    func isImage(Name:NSString)->Bool{
-        let ext = Name.pathExtension.lowercaseString
+    func isImage(_ Name:String)->Bool{
+        let ext = (Name as NSString).pathExtension.lowercased()
         let imageType = ["jpg","png"];
         for i in 0..<imageType.count{
             if(ext.hasSuffix(imageType[i])){
@@ -140,8 +120,8 @@ class EquipNetInfo {
         return false;
     }
     //判断是否为xml
-    func isXml(Name:NSString)->Bool{
-        let ext = Name.pathExtension.lowercaseString
+    func isXml(_ Name:String)->Bool{
+        let ext = (Name as NSString).pathExtension.lowercased()
         let imageType = ["xml"];
         for i in 0..<imageType.count{
             if(ext.hasSuffix(imageType[i])){
@@ -149,5 +129,5 @@ class EquipNetInfo {
             }
         }
         return false;
-    }    
+    }
 }

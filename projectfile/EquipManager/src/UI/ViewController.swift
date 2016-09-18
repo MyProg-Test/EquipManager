@@ -17,6 +17,8 @@ class ViewController: UIViewController {
     let equipName = "我的设备";
     override func viewDidLoad() {
         super.viewDidLoad()
+        userName.text = "lifh";
+        passwd.text = "lifh";
         // Do any additional setup after loading the view, typically from a nib.
     }
     
@@ -26,20 +28,24 @@ class ViewController: UIViewController {
     }
     
     //点击设备助手button
-    @IBAction func equipInitView(sender: UIButton) {
+    @IBAction func equipInitView(_ sender: UIButton) {
         self.pleaseWait();
         NetworkOperation.sharedInstance().Login(userName.text!, passwd: passwd.text!) { (any) in
-            NetworkOperation.sharedInstance().Status(){(any) in
-                EquipManager.sharedInstance().defaultGroupId = any.objectForKey(NetworkOperation.NetConstant.DictKey.Status.Response.personGroupId) as! Int;
-                NetworkOperation.sharedInstance().getResources(-EquipManager.sharedInstance().defaultGroupId){ (any) in
-                    let res = any.objectForKey(NetworkOperation.NetConstant.DictKey.GetResources.Response.resources) as! NSArray;
+            _ = NetworkOperation.sharedInstance().Status(){(any) in
+                EquipManager.sharedInstance().defaultGroupId = any.object(forKey: NetworkOperation.NetConstant.DictKey.Status.Response.personGroupId) as! Int;
+                _ = NetworkOperation.sharedInstance().getResources(-EquipManager.sharedInstance().defaultGroupId){ (any) in
+                    let res = any.object(forKey: NetworkOperation.NetConstant.DictKey.GetResources.Response.resources) as! NSArray;
                     for tmp in res{
-                        let name = tmp.objectForKey(NetworkOperation.NetConstant.DictKey.GetResources.Response.ResourcesKey.displayName) as! String;
+                        let name = (tmp as AnyObject).object(forKey: NetworkOperation.NetConstant.DictKey.GetResources.Response.ResourcesKey.displayName) as! String;
                         if(name.hasPrefix(self.equipName)){
-                            let id = tmp.objectForKey(NetworkOperation.NetConstant.DictKey.GetResources.Response.ResourcesKey.id) as! Int;
-                            EquipManager.sharedInstance(id);
-                            let equipListView = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier("EquipList") as! EquipListTableViewController;
-                            self.navigationController?.pushViewController(equipListView, animated: true);
+                            let id = (tmp as AnyObject).object(forKey: NetworkOperation.NetConstant.DictKey.GetResources.Response.ResourcesKey.id) as! Int;
+                            DispatchQueue.global().async {
+                                _ = EquipManager.sharedInstance(id);
+                                DispatchQueue.main.async {
+                                    let equipListView = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "EquipList") as! EquipListTableViewController;
+                                    self.navigationController?.pushViewController(equipListView, animated: true);
+                                }
+                            }
                             break;
                         }
                     }

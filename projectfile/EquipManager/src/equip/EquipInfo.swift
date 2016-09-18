@@ -23,7 +23,7 @@ class EquipInfo {
     //xml就绪
     var xmlReady:Bool{
         get{
-            return NSFileManager.defaultManager().fileExistsAtPath(xmlInfo.xmlFile.path.path!);
+            return FileManager.default.fileExists(atPath: xmlInfo.xmlFile.path.path);
         }
     };
     var imageInfo:EquipImageInfo
@@ -38,23 +38,23 @@ class EquipInfo {
         xmlFileInfo.path = EquipFileControl.sharedInstance().getEquipFilePathFromFile(equipIndex)!;
         self.xmlInfo = EquipXmlInfo(xmlFile: xmlFileInfo);
         let imageFileArray:NSMutableArray = NSMutableArray();
-        var fileName:NSString = "";
+        var fileName:String = "";
         for i in 0..<EquipFileControl.sharedInstance().getFileSystemFromFile()!.getImageCount(equipIndex){
             let imageFileInfo:FileInfo = FileInfo();
             imageFileInfo.id = EquipFileControl.sharedInstance().getFileSystemFromFile()!.getImageID(equipIndex, imageIndex: i);
             imageFileInfo.name = EquipFileControl.sharedInstance().getFileSystemFromFile()!.getImageName(equipIndex, imageIndex: i);
             imageFileInfo.parentId = xmlFileInfo.parentId;
             imageFileInfo.path = EquipFileControl.sharedInstance().getImageFilePathFromFile(equipIndex, imageIndex: i)!;
-            imageFileArray.addObject(imageFileInfo);
+            imageFileArray.add(imageFileInfo);
             if(EquipFileControl.sharedInstance().getFileSystemFromFile()!.isMainImage(equipIndex, imageIndex: i)){
                 fileName = imageFileInfo.name;
             }
         }
         self.imageInfo = EquipImageInfo(historyImage: imageFileArray);
-        self.imageInfo.setDisplayedImageInfo(fileName);
+        _ = self.imageInfo.setDisplayedImageInfo(fileName);
     }
     //根据index从equipFileControl里更新
-    func updateEquip(index:Int){
+    func updateEquip(_ index:Int){
         equipIndex = index;
         let xmlFileInfo:FileInfo = FileInfo();
         xmlFileInfo.id = EquipFileControl.sharedInstance().getFileSystemFromFile()!.getEquipXMLID(equipIndex);
@@ -63,29 +63,29 @@ class EquipInfo {
         xmlFileInfo.path = EquipFileControl.sharedInstance().getEquipFilePathFromFile(equipIndex)!;
         self.xmlInfo = EquipXmlInfo(xmlFile: xmlFileInfo);
         let imageFileArray:NSMutableArray = NSMutableArray();
-        var fileName:NSString = "";
+        var fileName:String = "";
         for i in 0..<EquipFileControl.sharedInstance().getFileSystemFromFile()!.getImageCount(equipIndex){
             let imageFileInfo:FileInfo = FileInfo();
             imageFileInfo.id = EquipFileControl.sharedInstance().getFileSystemFromFile()!.getImageID(equipIndex, imageIndex: i);
             imageFileInfo.name = EquipFileControl.sharedInstance().getFileSystemFromFile()!.getImageName(equipIndex, imageIndex: i);
             imageFileInfo.parentId = xmlFileInfo.parentId;
             imageFileInfo.path = EquipFileControl.sharedInstance().getImageFilePathFromFile(equipIndex, imageIndex: i)!;
-            imageFileArray.addObject(imageFileInfo);
+            imageFileArray.add(imageFileInfo);
             if(EquipFileControl.sharedInstance().getFileSystemFromFile()!.isMainImage(equipIndex, imageIndex: i)){
                 fileName = imageFileInfo.name;
             }
         }
         self.imageInfo = EquipImageInfo(historyImage: imageFileArray);
-        self.imageInfo.setDisplayedImageInfo(fileName);
+        _ = self.imageInfo.setDisplayedImageInfo(fileName);
     }
     
     //修改设备xml的信息
-    func modifyEquipXmlInfo(equipmentKey:EquipmentKey, equipmentAttrKey:EquipmentAttrKey, value:NSString){
+    func modifyEquipXmlInfo(_ equipmentKey:EquipmentKey, equipmentAttrKey:EquipmentAttrKey, value:String){
         self.xmlInfo.modifyXml(equipmentKey, equipmentAttrKey: equipmentAttrKey, value: value)
     }
     
     //设置当前要显示的图片
-    func setDisplayedImage(name:NSString) -> Bool {
+    func setDisplayedImage(_ name:String) -> Bool {
         return self.imageInfo.setDisplayedImageInfo(name);
     }
     

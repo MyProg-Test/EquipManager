@@ -15,13 +15,10 @@ class EquipImagePickerTableViewController: UITableViewController,UIAlertViewDele
         self.navigationItem.setHidesBackButton(true, animated: false)
         self.navigationController?.setToolbarHidden(false, animated: true)
         tableView.estimatedRowHeight = tableView.rowHeight
-        tableView.separatorStyle  = .SingleLine
+        tableView.separatorStyle  = .singleLine
         
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)){
-            while(!NetworkOperation.sharedInstance().getThumbnailComplete){
-                sleep(1)
-            }
-            dispatch_async(dispatch_get_main_queue()){
+        DispatchQueue.global(qos: .default).async{
+            DispatchQueue.main.async{
                 self.clearAllNotice();
                 self.tableView.reloadData();
             }
@@ -29,7 +26,7 @@ class EquipImagePickerTableViewController: UITableViewController,UIAlertViewDele
         
         menuToolbar()
         
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(title: "编辑", style: .Done, target: self, action: #selector(EquipImagePickerTableViewController.editImageCell))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(title: "编辑", style: .done, target: self, action: #selector(EquipImagePickerTableViewController.editImageCell))
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
         
@@ -38,12 +35,12 @@ class EquipImagePickerTableViewController: UITableViewController,UIAlertViewDele
     }
     
     //长按
-    func longPressed(sender:UILongPressGestureRecognizer){
+    func longPressed(_ sender:UILongPressGestureRecognizer){
         // chose to do
     }
     
     //下拉刷新(to do)
-    @IBAction func fresh(sender: UIRefreshControl) {
+    @IBAction func fresh(_ sender: UIRefreshControl) {
         self.tableView.reloadData();
         sender.endRefreshing();
     }
@@ -56,12 +53,12 @@ class EquipImagePickerTableViewController: UITableViewController,UIAlertViewDele
     
     // MARK: - Table view data source
     
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 1
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         if(DetailEquipViewController.data_source == nil){
             return 0
@@ -69,55 +66,55 @@ class EquipImagePickerTableViewController: UITableViewController,UIAlertViewDele
         return DetailEquipViewController.data_source!.imageInfo.historyImage.count;
     }
     //数据源DetailEquipViewController.data_source
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let equipImageCellIdentifier = "equipImageCell";
-        var cell:EquipImageTableViewCell! = tableView.dequeueReusableCellWithIdentifier(equipImageCellIdentifier) as? EquipImageTableViewCell;
+        var cell:EquipImageTableViewCell! = tableView.dequeueReusableCell(withIdentifier: equipImageCellIdentifier) as? EquipImageTableViewCell;
         if(cell == nil){
-            cell = EquipImageTableViewCell(style: .Default, reuseIdentifier: equipImageCellIdentifier);
+            cell = EquipImageTableViewCell(style: .default, reuseIdentifier: equipImageCellIdentifier);
         }
-        cell.imageInCell.image = DetailEquipViewController.data_source!.imageInfo.getImage(indexPath.row);
-        cell.imageNameInCell.text = EquipFileControl.sharedInstance().getFileSystemFromFile()!.getImageName(DetailEquipViewController.data_source!.equipIndex, imageIndex: indexPath.row) as String;
+        cell.imageInCell.image = DetailEquipViewController.data_source!.imageInfo.getImage((indexPath as NSIndexPath).row);
+        cell.imageNameInCell.text = EquipFileControl.sharedInstance().getFileSystemFromFile()!.getImageName(DetailEquipViewController.data_source!.equipIndex, imageIndex: (indexPath as NSIndexPath).row) as String;
         return cell
     }
     
     
     
     func menuToolbar(){
-        let backButton = UIBarButtonItem(image: UIImage.init(named:"back"), style: .Plain, target: self, action: #selector(EquipImagePickerTableViewController.backPressed))
-        let flexItem = UIBarButtonItem.init(barButtonSystemItem: .FlexibleSpace, target: nil, action: nil)
-        let homeItem = UIBarButtonItem(image: UIImage.init(named: "home"), style: .Plain, target: self, action: #selector(EquipImagePickerTableViewController.homePressed))
-        let menuItem = UIBarButtonItem(image: UIImage.init(named: "new"), style: .Plain, target: self, action: #selector(EquipImagePickerTableViewController.menuPressed))
+        let backButton = UIBarButtonItem(image: UIImage.init(named:"back"), style: .plain, target: self, action: #selector(EquipImagePickerTableViewController.backPressed))
+        let flexItem = UIBarButtonItem.init(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let homeItem = UIBarButtonItem(image: UIImage.init(named: "home"), style: .plain, target: self, action: #selector(EquipImagePickerTableViewController.homePressed))
+        let menuItem = UIBarButtonItem(image: UIImage.init(named: "new"), style: .plain, target: self, action: #selector(EquipImagePickerTableViewController.menuPressed))
         let items = [backButton, flexItem, homeItem, flexItem, flexItem, flexItem, menuItem]
         self.setToolbarItems(items, animated: true)
     }
     
     func backPressed(){
-        self.navigationController?.popViewControllerAnimated(true)
+        _ = self.navigationController?.popViewController(animated: true)
     }
     
     func homePressed(){
-        self.navigationController?.popToRootViewControllerAnimated(true)
+        _ = self.navigationController?.popToRootViewController(animated: true)
     }
     
     func menuPressed(){
-        let imageAlertController:UIAlertController = UIAlertController(title: "图片操作", message: "选择一项操作", preferredStyle: UIAlertControllerStyle.ActionSheet)
+        let imageAlertController:UIAlertController = UIAlertController(title: "图片操作", message: "选择一项操作", preferredStyle: UIAlertControllerStyle.actionSheet)
         
-        imageAlertController.addAction(UIAlertAction(title: "上传图片", style: UIAlertActionStyle.Default, handler: {(UIAlertAction)-> Void in self.uploadImage()}))
+        imageAlertController.addAction(UIAlertAction(title: "上传图片", style: UIAlertActionStyle.default, handler: {(UIAlertAction)-> Void in self.uploadImage()}))
         
-        imageAlertController.addAction(UIAlertAction(title: "取消", style: UIAlertActionStyle.Cancel, handler: { (UIAlertAction) -> Void in
+        imageAlertController.addAction(UIAlertAction(title: "取消", style: UIAlertActionStyle.cancel, handler: { (UIAlertAction) -> Void in
             NSLog("cancel")
         }))
         
     }
     
     func uploadImage(){
-        let uploadImageAlertController:UIAlertController = UIAlertController(title: "上传图片", message: "选择图片来源", preferredStyle: UIAlertControllerStyle.ActionSheet)
+        let uploadImageAlertController:UIAlertController = UIAlertController(title: "上传图片", message: "选择图片来源", preferredStyle: UIAlertControllerStyle.actionSheet)
         
-        uploadImageAlertController.addAction(UIAlertAction(title: "本地照片", style: UIAlertActionStyle.Default, handler: {(UIAlertAction)-> Void in self.imagePickerFromLocal()}))
+        uploadImageAlertController.addAction(UIAlertAction(title: "本地照片", style: UIAlertActionStyle.default, handler: {(UIAlertAction)-> Void in self.imagePickerFromLocal()}))
         
-        uploadImageAlertController.addAction(UIAlertAction(title: "拍照上传", style: UIAlertActionStyle.Default, handler: {(UIAlertAction)-> Void in self.imagePickerFromCamera()}))
+        uploadImageAlertController.addAction(UIAlertAction(title: "拍照上传", style: UIAlertActionStyle.default, handler: {(UIAlertAction)-> Void in self.imagePickerFromCamera()}))
         
-        uploadImageAlertController.addAction(UIAlertAction(title: "取消", style: UIAlertActionStyle.Cancel, handler: { (UIAlertAction) -> Void in
+        uploadImageAlertController.addAction(UIAlertAction(title: "取消", style: UIAlertActionStyle.cancel, handler: { (UIAlertAction) -> Void in
             NSLog("cancel")
         }))
     }
@@ -136,7 +133,7 @@ class EquipImagePickerTableViewController: UITableViewController,UIAlertViewDele
     
     
     // Override to support conditional editing of the table view.
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         // Return false if you do not want the specified item to be editable.
         return true
     }

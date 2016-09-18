@@ -24,11 +24,11 @@ class EquipImageInfo {
         if(imageIndex < 0){
             return nil;
         }
-        return historyImage.objectAtIndex(self.imageIndex) as? FileInfo
+        return historyImage.object(at: self.imageIndex) as? FileInfo
     }
     
     //设置要显示的图片的index
-    func setDisplayedImageInfo(name:NSString) -> Bool {
+    func setDisplayedImageInfo(_ name:String) -> Bool {
         let index   : Int   = getIndexofImageFromName(name);
         if (index == -1) {
             return false;
@@ -38,13 +38,13 @@ class EquipImageInfo {
     }
     
     //根据名字获取图片的index
-    func getIndexofImageFromName(name:NSString) -> Int {
+    func getIndexofImageFromName(_ name:String) -> Int {
         var index = 0;
         for imageFileInfo in historyImage{
-            if(!imageFileInfo.isKindOfClass(FileInfo)){
+            if(!(imageFileInfo is FileInfo)){
                 return -1
             }
-            if((imageFileInfo as! FileInfo).name.isEqualToString(name as String)){
+            if((imageFileInfo as! FileInfo).name.isEqual(name as String)){
                 return index;
             }
             index += 1;
@@ -53,16 +53,16 @@ class EquipImageInfo {
     }
     
     //根据index获取图片的文件内容
-    func getImage(index:Int) -> UIImage {
-        let imageFileInfo   : FileInfo = historyImage.objectAtIndex(index) as! FileInfo;
+    func getImage(_ index:Int) -> UIImage {
+        let imageFileInfo   : FileInfo = historyImage.object(at: index) as! FileInfo;
         let data = imageFileInfo.getFileData();
-        if(data.isEqualToData(NSData())){
+        if(data as Data == Data()){
             return UIImage(named: "equipImage.png")!
         }
-        return UIImage(data: imageFileInfo.getFileData())!;
+        return UIImage(data: imageFileInfo.getFileData() as Data)!;
     }
     //判断当前名称是否符合主图片
-    class func isMainImage(Name:NSString,parentId:Int)->Bool{
+    class func isMainImage(_ Name:String,parentId:Int)->Bool{
         return Name.hasPrefix("\(parentId)_");
     }
     

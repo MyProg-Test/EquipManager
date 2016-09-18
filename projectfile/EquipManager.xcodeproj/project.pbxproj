@@ -9,12 +9,8 @@
 /* Begin PBXBuildFile section */
 		08032BED1D8051A8001AD72F /* SwiftPrint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08032BEC1D8051A8001AD72F /* SwiftPrint.swift */; };
 		08032BF11D806FC1001AD72F /* SwiftNotice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08032BF01D806FC1001AD72F /* SwiftNotice.swift */; };
-		0806AAF81D7EB1AF00D93D95 /* EquipManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0806AAF71D7EB1AF00D93D95 /* EquipManagerTests.swift */; };
-		0806AB031D7EB1AF00D93D95 /* EquipManagerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0806AB021D7EB1AF00D93D95 /* EquipManagerUITests.swift */; };
 		0806AB6E1D7EB3EC00D93D95 /* libxml2.2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0806AB6D1D7EB3EC00D93D95 /* libxml2.2.tbd */; };
 		0806ABA41D7EB93000D93D95 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0806AAE91D7EB1AF00D93D95 /* Assets.xcassets */; };
-		0806ABA61D7EB9EA00D93D95 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0806ABA51D7EB9EA00D93D95 /* Alamofire.framework */; };
-		0806ABA71D7EB9EA00D93D95 /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0806ABA51D7EB9EA00D93D95 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0806ABB61D7EBA0600D93D95 /* EquipFileControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0806ABA91D7EBA0600D93D95 /* EquipFileControl.swift */; };
 		0806ABB71D7EBA0600D93D95 /* EquipImageInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0806ABAA1D7EBA0600D93D95 /* EquipImageInfo.swift */; };
 		0806ABB81D7EBA0600D93D95 /* EquipInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0806ABAB1D7EBA0600D93D95 /* EquipInfo.swift */; };
@@ -42,33 +38,18 @@
 		0806ABDC1D7EBABF00D93D95 /* equipImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 0806ABDA1D7EBABF00D93D95 /* equipImage.png */; };
 		0806ABDD1D7EBABF00D93D95 /* equipTwoCode.png in Resources */ = {isa = PBXBuildFile; fileRef = 0806ABDB1D7EBABF00D93D95 /* equipTwoCode.png */; };
 		084358E91D85F4CE00B02F1A /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 084358E81D85F4CE00B02F1A /* logo.png */; };
+		08B789821D8C6A4D009E0292 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08B789811D8C6A4D009E0292 /* Alamofire.framework */; };
+		08B789831D8C6A4D009E0292 /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 08B789811D8C6A4D009E0292 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		0806AAF41D7EB1AF00D93D95 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0806AAD71D7EB1AF00D93D95 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 0806AADE1D7EB1AF00D93D95;
-			remoteInfo = EquipManager;
-		};
-		0806AAFF1D7EB1AF00D93D95 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0806AAD71D7EB1AF00D93D95 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 0806AADE1D7EB1AF00D93D95;
-			remoteInfo = EquipManager;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXCopyFilesBuildPhase section */
-		0806ABA31D7EB88500D93D95 /* Embed Frameworks */ = {
+		08B789841D8C6A4D009E0292 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				0806ABA71D7EB9EA00D93D95 /* Alamofire.framework in Embed Frameworks */,
+				08B789831D8C6A4D009E0292 /* Alamofire.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -81,14 +62,7 @@
 		0806AADF1D7EB1AF00D93D95 /* EquipManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EquipManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0806AAE91D7EB1AF00D93D95 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0806AAEE1D7EB1AF00D93D95 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../Info.plist; sourceTree = "<group>"; };
-		0806AAF31D7EB1AF00D93D95 /* EquipManagerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EquipManagerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		0806AAF71D7EB1AF00D93D95 /* EquipManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EquipManagerTests.swift; sourceTree = "<group>"; };
-		0806AAF91D7EB1AF00D93D95 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		0806AAFE1D7EB1AF00D93D95 /* EquipManagerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EquipManagerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		0806AB021D7EB1AF00D93D95 /* EquipManagerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EquipManagerUITests.swift; sourceTree = "<group>"; };
-		0806AB041D7EB1AF00D93D95 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0806AB6D1D7EB3EC00D93D95 /* libxml2.2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.2.tbd; path = usr/lib/libxml2.2.tbd; sourceTree = SDKROOT; };
-		0806ABA51D7EB9EA00D93D95 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = EquipManager/library/Alamofire.framework; sourceTree = "<group>"; };
 		0806ABA81D7EB9F800D93D95 /* EquipManager-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "EquipManager-Bridging-Header.h"; path = "src/bridge-header/EquipManager-Bridging-Header.h"; sourceTree = "<group>"; };
 		0806ABA91D7EBA0600D93D95 /* EquipFileControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EquipFileControl.swift; path = EquipManager/src/equip/EquipFileControl.swift; sourceTree = SOURCE_ROOT; };
 		0806ABAA1D7EBA0600D93D95 /* EquipImageInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EquipImageInfo.swift; path = EquipManager/src/equip/EquipImageInfo.swift; sourceTree = SOURCE_ROOT; };
@@ -118,6 +92,7 @@
 		0806ABDA1D7EBABF00D93D95 /* equipImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = equipImage.png; path = Assets.xcassets/equipImage.png; sourceTree = "<group>"; };
 		0806ABDB1D7EBABF00D93D95 /* equipTwoCode.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = equipTwoCode.png; path = Assets.xcassets/equipTwoCode.png; sourceTree = "<group>"; };
 		084358E81D85F4CE00B02F1A /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = logo.png; path = Assets.xcassets/logo.png; sourceTree = "<group>"; };
+		08B789811D8C6A4D009E0292 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = EquipManager/library/Alamofire.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -126,21 +101,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0806AB6E1D7EB3EC00D93D95 /* libxml2.2.tbd in Frameworks */,
-				0806ABA61D7EB9EA00D93D95 /* Alamofire.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		0806AAF01D7EB1AF00D93D95 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		0806AAFB1D7EB1AF00D93D95 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
+				08B789821D8C6A4D009E0292 /* Alamofire.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -159,11 +120,9 @@
 		0806AAD61D7EB1AF00D93D95 = {
 			isa = PBXGroup;
 			children = (
-				0806ABA51D7EB9EA00D93D95 /* Alamofire.framework */,
+				08B789811D8C6A4D009E0292 /* Alamofire.framework */,
 				0806AB6D1D7EB3EC00D93D95 /* libxml2.2.tbd */,
 				0806AAE11D7EB1AF00D93D95 /* EquipManager */,
-				0806AAF61D7EB1AF00D93D95 /* EquipManagerTests */,
-				0806AB011D7EB1AF00D93D95 /* EquipManagerUITests */,
 				0806AAE01D7EB1AF00D93D95 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -172,8 +131,6 @@
 			isa = PBXGroup;
 			children = (
 				0806AADF1D7EB1AF00D93D95 /* EquipManager.app */,
-				0806AAF31D7EB1AF00D93D95 /* EquipManagerTests.xctest */,
-				0806AAFE1D7EB1AF00D93D95 /* EquipManagerUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -194,24 +151,6 @@
 				0806AAEE1D7EB1AF00D93D95 /* Info.plist */,
 			);
 			path = EquipManager;
-			sourceTree = "<group>";
-		};
-		0806AAF61D7EB1AF00D93D95 /* EquipManagerTests */ = {
-			isa = PBXGroup;
-			children = (
-				0806AAF71D7EB1AF00D93D95 /* EquipManagerTests.swift */,
-				0806AAF91D7EB1AF00D93D95 /* Info.plist */,
-			);
-			path = EquipManagerTests;
-			sourceTree = "<group>";
-		};
-		0806AB011D7EB1AF00D93D95 /* EquipManagerUITests */ = {
-			isa = PBXGroup;
-			children = (
-				0806AB021D7EB1AF00D93D95 /* EquipManagerUITests.swift */,
-				0806AB041D7EB1AF00D93D95 /* Info.plist */,
-			);
-			path = EquipManagerUITests;
 			sourceTree = "<group>";
 		};
 		0806AB101D7EB2A000D93D95 /* UI */ = {
@@ -261,7 +200,7 @@
 				0806AADB1D7EB1AF00D93D95 /* Sources */,
 				0806AADC1D7EB1AF00D93D95 /* Frameworks */,
 				0806AADD1D7EB1AF00D93D95 /* Resources */,
-				0806ABA31D7EB88500D93D95 /* Embed Frameworks */,
+				08B789841D8C6A4D009E0292 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -271,42 +210,6 @@
 			productName = EquipManager;
 			productReference = 0806AADF1D7EB1AF00D93D95 /* EquipManager.app */;
 			productType = "com.apple.product-type.application";
-		};
-		0806AAF21D7EB1AF00D93D95 /* EquipManagerTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 0806AB0A1D7EB1AF00D93D95 /* Build configuration list for PBXNativeTarget "EquipManagerTests" */;
-			buildPhases = (
-				0806AAEF1D7EB1AF00D93D95 /* Sources */,
-				0806AAF01D7EB1AF00D93D95 /* Frameworks */,
-				0806AAF11D7EB1AF00D93D95 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				0806AAF51D7EB1AF00D93D95 /* PBXTargetDependency */,
-			);
-			name = EquipManagerTests;
-			productName = EquipManagerTests;
-			productReference = 0806AAF31D7EB1AF00D93D95 /* EquipManagerTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		0806AAFD1D7EB1AF00D93D95 /* EquipManagerUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 0806AB0D1D7EB1AF00D93D95 /* Build configuration list for PBXNativeTarget "EquipManagerUITests" */;
-			buildPhases = (
-				0806AAFA1D7EB1AF00D93D95 /* Sources */,
-				0806AAFB1D7EB1AF00D93D95 /* Frameworks */,
-				0806AAFC1D7EB1AF00D93D95 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				0806AB001D7EB1AF00D93D95 /* PBXTargetDependency */,
-			);
-			name = EquipManagerUITests;
-			productName = EquipManagerUITests;
-			productReference = 0806AAFE1D7EB1AF00D93D95 /* EquipManagerUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
@@ -320,14 +223,7 @@
 				TargetAttributes = {
 					0806AADE1D7EB1AF00D93D95 = {
 						CreatedOnToolsVersion = 7.3.1;
-					};
-					0806AAF21D7EB1AF00D93D95 = {
-						CreatedOnToolsVersion = 7.3.1;
-						TestTargetID = 0806AADE1D7EB1AF00D93D95;
-					};
-					0806AAFD1D7EB1AF00D93D95 = {
-						CreatedOnToolsVersion = 7.3.1;
-						TestTargetID = 0806AADE1D7EB1AF00D93D95;
+						LastSwiftMigration = 0800;
 					};
 				};
 			};
@@ -345,8 +241,6 @@
 			projectRoot = "";
 			targets = (
 				0806AADE1D7EB1AF00D93D95 /* EquipManager */,
-				0806AAF21D7EB1AF00D93D95 /* EquipManagerTests */,
-				0806AAFD1D7EB1AF00D93D95 /* EquipManagerUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -362,20 +256,6 @@
 				0806ABD91D7EBA6B00D93D95 /* Main.storyboard in Resources */,
 				0806ABA41D7EB93000D93D95 /* Assets.xcassets in Resources */,
 				0806ABD81D7EBA6B00D93D95 /* LaunchScreen.storyboard in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		0806AAF11D7EB1AF00D93D95 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		0806AAFC1D7EB1AF00D93D95 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -413,36 +293,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		0806AAEF1D7EB1AF00D93D95 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				0806AAF81D7EB1AF00D93D95 /* EquipManagerTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		0806AAFA1D7EB1AF00D93D95 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				0806AB031D7EB1AF00D93D95 /* EquipManagerUITests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		0806AAF51D7EB1AF00D93D95 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 0806AADE1D7EB1AF00D93D95 /* EquipManager */;
-			targetProxy = 0806AAF41D7EB1AF00D93D95 /* PBXContainerItemProxy */;
-		};
-		0806AB001D7EB1AF00D93D95 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 0806AADE1D7EB1AF00D93D95 /* EquipManager */;
-			targetProxy = 0806AAFF1D7EB1AF00D93D95 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		0806AB051D7EB1AF00D93D95 /* Debug */ = {
@@ -546,6 +397,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/EquipManager/src/bridge-header/EquipManager-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -566,52 +418,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = test.EquipManager;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/EquipManager/src/bridge-header/EquipManager-Bridging-Header.h";
-			};
-			name = Release;
-		};
-		0806AB0B1D7EB1AF00D93D95 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				INFOPLIST_FILE = EquipManagerTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = test.EquipManagerTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/EquipManager.app/EquipManager";
-			};
-			name = Debug;
-		};
-		0806AB0C1D7EB1AF00D93D95 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				INFOPLIST_FILE = EquipManagerTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = test.EquipManagerTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/EquipManager.app/EquipManager";
-			};
-			name = Release;
-		};
-		0806AB0E1D7EB1AF00D93D95 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				INFOPLIST_FILE = EquipManagerUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = test.EquipManagerUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_TARGET_NAME = EquipManager;
-			};
-			name = Debug;
-		};
-		0806AB0F1D7EB1AF00D93D95 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				INFOPLIST_FILE = EquipManagerUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = test.EquipManagerUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_TARGET_NAME = EquipManager;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -632,24 +439,6 @@
 			buildConfigurations = (
 				0806AB081D7EB1AF00D93D95 /* Debug */,
 				0806AB091D7EB1AF00D93D95 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		0806AB0A1D7EB1AF00D93D95 /* Build configuration list for PBXNativeTarget "EquipManagerTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				0806AB0B1D7EB1AF00D93D95 /* Debug */,
-				0806AB0C1D7EB1AF00D93D95 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		0806AB0D1D7EB1AF00D93D95 /* Build configuration list for PBXNativeTarget "EquipManagerUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				0806AB0E1D7EB1AF00D93D95 /* Debug */,
-				0806AB0F1D7EB1AF00D93D95 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

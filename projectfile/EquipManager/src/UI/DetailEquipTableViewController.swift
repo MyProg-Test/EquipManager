@@ -12,7 +12,7 @@ class DetailEquipTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.estimatedRowHeight = tableView.rowHeight
-        tableView.separatorStyle = .SingleLine
+        tableView.separatorStyle = .singleLine
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -28,33 +28,33 @@ class DetailEquipTableViewController: UITableViewController {
     
     // MARK: - Table view data source
     
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 1
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         return DetailEquipViewController.data_source!.xmlInfo.attrKey.count;
     }
     
     //显示DetailEquipViewController.data_source(EquipInfo?)
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let DetailEquipCellIdentifier = "DetailEquipCell"
-        var cell:DetailEquipTableViewCell! = tableView.dequeueReusableCellWithIdentifier(DetailEquipCellIdentifier) as? DetailEquipTableViewCell;
+        var cell:DetailEquipTableViewCell! = tableView.dequeueReusableCell(withIdentifier: DetailEquipCellIdentifier) as? DetailEquipTableViewCell;
         if(cell == nil){
-            cell = DetailEquipTableViewCell(style: .Default, reuseIdentifier: DetailEquipCellIdentifier);
+            cell = DetailEquipTableViewCell(style: .default, reuseIdentifier: DetailEquipCellIdentifier);
         }
-        cell.attrKey.text = DetailEquipViewController.data_source!.xmlInfo.attrKey[indexPath.row] as? String;
-        cell.attrValue.text = DetailEquipViewController.data_source!.xmlInfo.equipAttr.valueForKey(cell.attrKey.text!) as? String;
+        cell.attrKey.text = DetailEquipViewController.data_source!.xmlInfo.attrKey[(indexPath as NSIndexPath).row] as? String;
+        cell.attrValue.text = DetailEquipViewController.data_source!.xmlInfo.equipAttr.value(forKey: cell.attrKey.text!) as? String;
         // Configure the cell...
         
         return cell
     }
     
-    override func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle {
-        return UITableViewCellEditingStyle.init(rawValue: UITableViewCellEditingStyle.Insert.rawValue | UITableViewCellEditingStyle.Delete.rawValue)!;
+    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+        return UITableViewCellEditingStyle.init(rawValue: UITableViewCellEditingStyle.insert.rawValue | UITableViewCellEditingStyle.delete.rawValue)!;
     }
     
     

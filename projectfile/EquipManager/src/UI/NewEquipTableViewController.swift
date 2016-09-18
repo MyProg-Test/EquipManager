@@ -20,7 +20,7 @@ class NewEquipTableViewController: UITableViewController {
         super.viewDidLoad()
 
         self.navigationItem.setHidesBackButton(true, animated: false);
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "保存", style: .Plain, target: self, action: #selector(NewEquipTableViewController.saveEquip(_:)));
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "保存", style: .plain, target: self, action: #selector(NewEquipTableViewController.saveEquip(_:)));
         menuToolbar()
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -34,60 +34,60 @@ class NewEquipTableViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    func saveEquip(sender:AnyObject) {
+    func saveEquip(_ sender:AnyObject) {
         let dict:NSMutableDictionary = NSMutableDictionary();
         for i in 0..<keyArray.count {
-            let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: i, inSection: 0))!;
+            let cell = tableView.cellForRow(at: IndexPath(row: i, section: 0))!;
             let contentView = cell.subviews[0];
             var labelKey:UILabel?;
             var textValue:UITextField?;
             for s in contentView.subviews {
-                if s.isKindOfClass(UILabel){
+                if s.isKind(of: UILabel.self){
                     labelKey = s as? UILabel;
                 }
-                if s.isKindOfClass(UITextField) {
+                if s.isKind(of: UITextField.self) {
                     textValue = s as? UITextField;
                 }
             }
             dict.setValue(textValue!.text!, forKey: labelKey!.text!);
         }
         let equip = EquipXmlInfo(equipAttr: dict);
-        equip.updateToFile();
-        EquipFileControl.sharedInstance().addEquipInfoToFile(0, XMLID: equip.xmlFile.id, XMLName: equip.xmlFile.name, imageSet: NSMutableArray(), path: "\(equip.xmlFile.id)", groupID: EquipManager.sharedInstance().defaultGroupId, status: FileSystem.Status.New.rawValue);
+        let _ = equip.updateToFile();
+        let _ = EquipFileControl.sharedInstance().addEquipInfoToFile(0, XMLID: equip.xmlFile.id, XMLName: equip.xmlFile.name as String, imageSet: NSMutableArray(), path: "\(equip.xmlFile.id)", groupID: EquipManager.sharedInstance().defaultGroupId, status: FileSystem.Status.new.rawValue);
         print("saveEquip");
         self.backPressed();
     }
 
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 1
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         return keyArray.count;
     }
 
     func menuToolbar(){
-        let backButton = UIBarButtonItem(image: UIImage.init(named:"back"), style: .Plain, target: self, action: #selector(EquipListTableViewController.backPressed))
-        let flexItem = UIBarButtonItem.init(barButtonSystemItem: .FlexibleSpace, target: nil, action: nil)
-        let homeItem = UIBarButtonItem(image: UIImage.init(named: "home"), style: .Plain, target: self, action: #selector(EquipListTableViewController.homePressed))
-        let menuItem = UIBarButtonItem(image: UIImage.init(named: "new"), style: .Plain, target: self, action: #selector(EquipListTableViewController.menuPressed))
+        let backButton = UIBarButtonItem(image: UIImage.init(named:"back"), style: .plain, target: self, action: #selector(EquipListTableViewController.backPressed))
+        let flexItem = UIBarButtonItem.init(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let homeItem = UIBarButtonItem(image: UIImage.init(named: "home"), style: .plain, target: self, action: #selector(EquipListTableViewController.homePressed))
+        let menuItem = UIBarButtonItem(image: UIImage.init(named: "new"), style: .plain, target: self, action: #selector(EquipListTableViewController.menuPressed))
         let items = [backButton, flexItem, homeItem, flexItem, flexItem, flexItem, menuItem]
         self.setToolbarItems(items, animated: true)
     }
     
     func backPressed(){
-        self.navigationController?.popViewControllerAnimated(true)
+        self.navigationController!.popViewController(animated: true)
         
     }
     
     func homePressed(){
         
-        self.navigationController?.setToolbarHidden(true, animated: true)
-        self.navigationController?.popToRootViewControllerAnimated(true)
+        self.navigationController!.setToolbarHidden(true, animated: true)
+        self.navigationController!.popToRootViewController(animated: true)
         //        CurrentInfo.sharedInstance.backToHome()
     }
     
@@ -96,13 +96,13 @@ class NewEquipTableViewController: UITableViewController {
     }
     
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cellIdentifier = "newEquip";
-        let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier);
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier);
         let contentView = cell!.subviews[0];
         for label in contentView.subviews {
-            if(label.isKindOfClass(UILabel)){
-                (label as! UILabel).text = keyArray[indexPath.row] as String;
+            if(label.isKind(of: UILabel.self)){
+                (label as! UILabel).text = keyArray[(indexPath as NSIndexPath).row] as String;
                 break;
             }
         }

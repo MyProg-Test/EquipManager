@@ -14,7 +14,7 @@ class XmlParser {
     
     
     //从data里读取xml文档
-    init(data:NSData){
+    init(data:Data){
         do{
             doc = try GDataXMLDocument (data: data, options: 0)
             doc.setCharacterEncoding("utf-8")
@@ -36,7 +36,7 @@ class XmlParser {
     }
     
     //设置当前文档的根元素
-    func setRootElement (root:GDataXMLElement) -> Bool{
+    func setRootElement (_ root:GDataXMLElement) -> Bool{
         do{
             doc = GDataXMLDocument(rootElement: root)
             return true
@@ -44,14 +44,14 @@ class XmlParser {
     }
     
     //根据名字获取根元素下的第一个元素
-    func getElementFromRoot(name:NSString) -> String{
+    func getElementFromRoot(_ name:String) -> String{
         do{
             if (self.getRootElement() == nil){
                 return "nil"
             }
             let root = self.getRootElement()!;
             //print(root.XMLString());
-            let rtn = try root.nodesForXPath(name as String);
+            let rtn = try root.nodes(forXPath: name);
             if(rtn.count > 0){
                 return (rtn[0] as! GDataXMLElement).stringValue();
             }else{
@@ -64,46 +64,45 @@ class XmlParser {
     }
     
     //根据名字获取根元素下的所有元素
-    func getElementsFromRoot(name:NSString) -> [GDataXMLElement]? {
+    func getElementsFromRoot(_ name:String) -> [GDataXMLElement]? {
         if (self.getRootElement() == nil){
             return nil
         }
-        return self.getRootElement()!.elementsForName(name as String) as? [GDataXMLElement]
+        return self.getRootElement()!.elements(forName: name) as? [GDataXMLElement]
     }
     
     //根据路径获取元素数组
-    func getElementFromPath(path:NSString) -> [GDataXMLElement]?{
+    func getElementFromPath(_ path:String) -> [GDataXMLElement]?{
         do{
-            return try doc.nodesForXPath(path as String) as? [GDataXMLElement]
+            return try doc.nodes(forXPath: path) as? [GDataXMLElement]
         }catch{
             return nil
         }
     }
     
     //给根元素添加元素
-    func addElementToRoot(key:NSString,value:NSString) -> Bool {
+    func addElementToRoot(_ key:String,value:String) -> Bool {
         if (self.getRootElement() == nil){
             return false
         }
-        self.getRootElement()!.addChild(GDataXMLElement.elementWithName(key as String, stringValue: value as String))
+        self.getRootElement()!.addChild(GDataXMLElement.element(withName: key, stringValue: value))
         return true
     }
     
     //设置当前根元素下的第一个元素
-    func setElementOfRoot(key:NSString,value:NSString) -> Bool {
+    func setElementOfRoot(_ key:String,value:String) -> Bool {
         if (self.getRootElement() == nil){
             return false
         }
-        if (try! self.getRootElement()!.nodesForXPath(key as String).isEmpty){
+        if (try! self.getRootElement()!.nodes(forXPath: key).isEmpty){
             return false
         }
-        let element:GDataXMLElement = self.getRootElement()!.elementsForName(key as String)[0] as! GDataXMLElement
-        element.setStringValue(value as String)
+        let element:GDataXMLElement = self.getRootElement()!.elements(forName: key)[0] as! GDataXMLElement
+        element.setStringValue(value)
         return true
     }
     //写入文件
-    func writeToFile(path:NSURL) -> Bool {
-        return doc.XMLData().writeToFile(path.path!, atomically: true)
-        
+    func writeToFile(_ path:URL) {
+        (doc.xmlData() as NSData).write(toFile: path.path, atomically: true);
     }
 }

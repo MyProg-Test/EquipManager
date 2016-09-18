@@ -39,11 +39,11 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
         self.navigationController?.setToolbarHidden(false, animated: true)
         tableView.estimatedRowHeight = tableView.rowHeight
         //tableView.rowHeight = CurrentInfo.sharedInstance.rowHeight
-        tableView.separatorStyle = .SingleLine
+        tableView.separatorStyle = .singleLine
         //下面的toolbar
         menuToolbar()
         
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(title: "编辑", style: .Done, target: self, action: #selector(EquipListTableViewController.editEquipList))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(title: "编辑", style: .done, target: self, action: #selector(EquipListTableViewController.editEquipList))
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -52,36 +52,29 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         DetailEquipViewController.data_source = nil;
-        self.pleaseWait();
-        dispatch_async(dispatch_get_main_queue()){
-            self.tableView.reloadData();
-            self.clearAllNotice();
-        }
-        
+        self.clearAllNotice();
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         
         super.viewWillDisappear(animated);
         
     }
     
     //长按
-    func longPressed(sender:UILongPressGestureRecognizer){
+    func longPressed(_ sender:UILongPressGestureRecognizer){
         
     }
     
     //下拉刷新
-    @IBAction func refresh(sender: UIRefreshControl?){
+    @IBAction func refresh(_ sender: UIRefreshControl?){
         
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0)){
-            while(!NetworkOperation.sharedInstance().downloadComplete){
-                sleep(1);
-            }
-            dispatch_async(dispatch_get_main_queue()){
+        DispatchQueue.global(qos: .default).async{
+            
+            DispatchQueue.main.async{
                 self.tableView.reloadData();
                 sender!.endRefreshing();
             }
@@ -95,19 +88,19 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
     
     // MARK: - Table view data source
     
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 1
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         return EquipFileControl.sharedInstance().count;
     }
     
     
     //有问题
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         //这里写cell的数据设置
         //        if(!loadingSuccess){
@@ -116,95 +109,95 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
         //            return cell
         //        }
         let equipListCellIdentifier = "EquipListCell"
-        var cell:EquipListTableViewCell! = tableView.dequeueReusableCellWithIdentifier(equipListCellIdentifier) as? EquipListTableViewCell
+        var cell:EquipListTableViewCell! = tableView.dequeueReusableCell(withIdentifier: equipListCellIdentifier) as? EquipListTableViewCell
         if(cell == nil){
-            cell = EquipListTableViewCell(style: .Default, reuseIdentifier: equipListCellIdentifier);
+            cell = EquipListTableViewCell(style: .default, reuseIdentifier: equipListCellIdentifier);
         }
         //cell数据设置
-        cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
-        let equip = EquipInfo(index: indexPath.row);
-        cell.equipName.text = equip.xmlInfo.equipAttr.valueForKey(EquipmentAttrKey.nameKey.rawValue as String) as? String;
-        cell.equipNumber.text = equip.xmlInfo.equipAttr.valueForKey(EquipmentAttrKey.codeKey.rawValue as String) as? String;
+        cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
+        let equip = EquipInfo(index: (indexPath as NSIndexPath).row);
+        cell.equipName.text = equip.xmlInfo.equipAttr.value(forKey: EquipmentAttrKey.nameKey.rawValue as String) as? String;
+        cell.equipNumber.text = equip.xmlInfo.equipAttr.value(forKey: EquipmentAttrKey.codeKey.rawValue as String) as? String;
         if(equip.imageInfo.getDisplayedImageInfo() == nil){
             cell.thumbnail!.image = UIImage(named: "equipImage.png");
         }else{
-            cell.thumbnail?.image = UIImage(data: (equip.imageInfo.getDisplayedImageInfo()!.getFileData()));
+            cell.thumbnail?.image = UIImage(data: (equip.imageInfo.getDisplayedImageInfo()!.getFileData()) as Data);
         }
         return cell
         
     }
     
     //Select
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let detailEquipView = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier("DetailEquip") as! DetailEquipViewController;
-        DetailEquipViewController.data_source = EquipInfo(index: indexPath.row);
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let detailEquipView = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "DetailEquip") as! DetailEquipViewController;
+        DetailEquipViewController.data_source = EquipInfo(index: (indexPath as NSIndexPath).row);
         self.navigationController?.pushViewController(detailEquipView, animated: true);
     }
     
     //Deselect
-    override func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         //to do
     }
     
     
     // Override to support conditional editing of the table view.
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         // Return false if you do not want the specified item to be editable.
         return true
     }
     
     //水平滑动cell，出现删除键
-    override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
+    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         return nil
     }
     
     func menuToolbar(){
-        let backButton = UIBarButtonItem(image: UIImage.init(named:"back"), style: .Plain, target: self, action: #selector(EquipListTableViewController.backPressed))
-        let flexItem = UIBarButtonItem.init(barButtonSystemItem: .FlexibleSpace, target: nil, action: nil)
-        let homeItem = UIBarButtonItem(image: UIImage.init(named: "home"), style: .Plain, target: self, action: #selector(EquipListTableViewController.homePressed))
-        let menuItem = UIBarButtonItem(image: UIImage.init(named: "new"), style: .Plain, target: self, action: #selector(EquipListTableViewController.menuPressed))
+        let backButton = UIBarButtonItem(image: UIImage.init(named:"back"), style: .plain, target: self, action: #selector(EquipListTableViewController.backPressed))
+        let flexItem = UIBarButtonItem.init(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let homeItem = UIBarButtonItem(image: UIImage.init(named: "home"), style: .plain, target: self, action: #selector(EquipListTableViewController.homePressed))
+        let menuItem = UIBarButtonItem(image: UIImage.init(named: "new"), style: .plain, target: self, action: #selector(EquipListTableViewController.menuPressed))
         let items = [backButton, flexItem, homeItem, flexItem, flexItem, flexItem, menuItem]
         self.setToolbarItems(items, animated: true)
     }
     
     func backPressed(){
-        self.navigationController?.popViewControllerAnimated(true)
+        self.navigationController?.popViewController(animated: true)
         
     }
     
     func homePressed(){
         
         self.navigationController?.setToolbarHidden(true, animated: true)
-        self.navigationController?.popToRootViewControllerAnimated(true)
+        self.navigationController?.popToRootViewController(animated: true)
         //        CurrentInfo.sharedInstance.backToHome()
     }
     
     func menuPressed(){
-        let menuAlertController:UIAlertController = UIAlertController(title:"设备管理",message:"选择一项操作",preferredStyle:UIAlertControllerStyle.ActionSheet)
+        let menuAlertController:UIAlertController = UIAlertController(title:"设备管理",message:"选择一项操作",preferredStyle:UIAlertControllerStyle.actionSheet)
         
-        menuAlertController.addAction(UIAlertAction(title: "添加设备", style: UIAlertActionStyle.Default, handler: { (UIAlertAction) -> Void in
+        menuAlertController.addAction(UIAlertAction(title: "添加设备", style: UIAlertActionStyle.default, handler: { (UIAlertAction) -> Void in
             self.newEquip()
         }))
-        menuAlertController.addAction(UIAlertAction(title: "扫一扫", style: UIAlertActionStyle.Default, handler: { (UIAlertAction) -> Void in
+        menuAlertController.addAction(UIAlertAction(title: "扫一扫", style: UIAlertActionStyle.default, handler: { (UIAlertAction) -> Void in
             self.qrCodeScan()
         }))
-        menuAlertController.addAction(UIAlertAction(title: "打印标签", style: UIAlertActionStyle.Default, handler: { (UIAlertAction) -> Void in
+        menuAlertController.addAction(UIAlertAction(title: "打印标签", style: UIAlertActionStyle.default, handler: { (UIAlertAction) -> Void in
             self.printTag()
         }))
-        menuAlertController.addAction(UIAlertAction(title: "设备转移", style: UIAlertActionStyle.Default, handler: { (UIAlertAction) -> Void in
+        menuAlertController.addAction(UIAlertAction(title: "设备转移", style: UIAlertActionStyle.default, handler: { (UIAlertAction) -> Void in
             self.transferEquip()
         }))
-        menuAlertController.addAction(UIAlertAction(title: "设备排序", style: UIAlertActionStyle.Default, handler: { (UIAlertAction) -> Void in
+        menuAlertController.addAction(UIAlertAction(title: "设备排序", style: UIAlertActionStyle.default, handler: { (UIAlertAction) -> Void in
             self.sortEquipList()
         }))
-        menuAlertController.addAction(UIAlertAction(title: "设备删除", style: UIAlertActionStyle.Default, handler: { (UIAlertAction) -> Void in
+        menuAlertController.addAction(UIAlertAction(title: "设备删除", style: UIAlertActionStyle.default, handler: { (UIAlertAction) -> Void in
             self.deleteEuip()
         }))
-        menuAlertController.addAction(UIAlertAction(title: "取消", style: UIAlertActionStyle.Cancel, handler: { (UIAlertAction) -> Void in
+        menuAlertController.addAction(UIAlertAction(title: "取消", style: UIAlertActionStyle.cancel, handler: { (UIAlertAction) -> Void in
             NSLog("cancel")
         }))
         
-        self.presentViewController(menuAlertController, animated: true, completion: nil)
+        self.present(menuAlertController, animated: true, completion: nil)
         
     }
     
@@ -218,7 +211,7 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
     //以下actionSheet里面的函数最后可写成闭包加入到上面的hander里面
     //添加设备
     func newEquip(){
-        let newEquipView = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier("newEquip");
+        let newEquipView = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "newEquip");
         self.navigationController?.pushViewController(newEquipView, animated: true);
         //出现newEquip的VC
     }
@@ -244,15 +237,15 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
     }
     //设备排序
     func sortEquipList(){
-        let sortAlertController:UIAlertController = UIAlertController(title: "排序", message: nil, preferredStyle: .ActionSheet)
-        sortAlertController.addAction(UIAlertAction(title: "按添加时间排序", style: .Default, handler: { (UIAlertAction) -> Void in self.sortByAddTime()}))
-        sortAlertController.addAction(UIAlertAction(title: "按设备名排序", style: .Default, handler: { (UIAlertAction) -> Void in self.sortByEquipName()}))
-        sortAlertController.addAction(UIAlertAction(title: "按领用人排序", style: .Default, handler: { (UIAlertAction) -> Void in self.sortByManager()}))
-        sortAlertController.addAction(UIAlertAction(title: "取消", style: UIAlertActionStyle.Cancel, handler: { (UIAlertAction) -> Void in
+        let sortAlertController:UIAlertController = UIAlertController(title: "排序", message: nil, preferredStyle: .actionSheet)
+        sortAlertController.addAction(UIAlertAction(title: "按添加时间排序", style: .default, handler: { (UIAlertAction) -> Void in self.sortByAddTime()}))
+        sortAlertController.addAction(UIAlertAction(title: "按设备名排序", style: .default, handler: { (UIAlertAction) -> Void in self.sortByEquipName()}))
+        sortAlertController.addAction(UIAlertAction(title: "按领用人排序", style: .default, handler: { (UIAlertAction) -> Void in self.sortByManager()}))
+        sortAlertController.addAction(UIAlertAction(title: "取消", style: UIAlertActionStyle.cancel, handler: { (UIAlertAction) -> Void in
             NSLog("cancel")
         }))
         
-        self.presentViewController(sortAlertController, animated: true, completion: nil)
+        self.present(sortAlertController, animated: true, completion: nil)
     }
     //按添加时间排序
     func sortByAddTime(){

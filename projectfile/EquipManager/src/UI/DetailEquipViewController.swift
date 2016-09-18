@@ -26,20 +26,20 @@ class DetailEquipViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated);
         setEquipImage();
         setQRCodeImage();
         //手势识别，图片点击
         let equipTap:UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(DetailEquipViewController.equipImageTap(_:)));
         equipImage.addGestureRecognizer(equipTap);
-        equipImage.userInteractionEnabled = true;
+        equipImage.isUserInteractionEnabled = true;
         let qrTap:UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(DetailEquipViewController.qrCodeTap(_:)));
-        QRCodeImage.userInteractionEnabled = true;
+        QRCodeImage.isUserInteractionEnabled = true;
         QRCodeImage.addGestureRecognizer(qrTap);
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated);
         equipImage.image = nil;
         QRCodeImage.image = nil;
@@ -66,24 +66,24 @@ class DetailEquipViewController: UIViewController {
             equipImage.image = UIImage(named: "equipImage.png");
             return ;
         }
-        if(DetailEquipViewController.data_source!.imageInfo.getDisplayedImageInfo()!.getFileData().isEqualToData(NSData())){
+        if(DetailEquipViewController.data_source!.imageInfo.getDisplayedImageInfo()!.getFileData() as Data == Data()){
             equipImage.image = UIImage(named: "equipImage.png");
             return ;
         }
-        equipImage.image = UIImage(data: DetailEquipViewController.data_source!.imageInfo.getDisplayedImageInfo()!.getFileData());
+        equipImage.image = UIImage(data: DetailEquipViewController.data_source!.imageInfo.getDisplayedImageInfo()!.getFileData() as Data);
         //to do
     }
     
     //点击设备图片
-    func equipImageTap(sender:UITapGestureRecognizer){
-        let equipImageView = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier("EquipImage") as!EquipImagePickerTableViewController;
+    func equipImageTap(_ sender:UITapGestureRecognizer){
+        let equipImageView = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "EquipImage") as!EquipImagePickerTableViewController;
         EquipFileControl.sharedInstance().downloadEquipImageFromNet(DetailEquipViewController.data_source!.equipIndex);
         self.pleaseWait();
         self.navigationController?.pushViewController(equipImageView, animated: true);
     }
     
     //点击QRCode图片
-    func qrCodeTap(sender:UITapGestureRecognizer) {
+    func qrCodeTap(_ sender:UITapGestureRecognizer) {
         print("qrCodeTap");
     }
     
@@ -94,7 +94,7 @@ class DetailEquipViewController: UIViewController {
     
     //设置QRCodeImage
     func setQRCodeImage(){
-        QRCodeImage.image = (DetailEquipViewController.data_source!.xmlInfo.equipAttr.valueForKey(EquipmentAttrKey.codeKey.rawValue as String) as! String).qrImage;
+        QRCodeImage.image = (DetailEquipViewController.data_source!.xmlInfo.equipAttr.value(forKey: EquipmentAttrKey.codeKey.rawValue as String) as! String).qrImage;
         //生成二维码
     }
     //获取QRCodeImage里面的图片
@@ -105,43 +105,43 @@ class DetailEquipViewController: UIViewController {
     }
     
     func menuToolbar(){
-        let backButton = UIBarButtonItem(image: UIImage.init(named:"back"), style: .Plain, target: self, action: #selector(DetailEquipViewController.backPressed))
-        let flexItem = UIBarButtonItem.init(barButtonSystemItem: .FlexibleSpace, target: nil, action: nil)
-        let homeItem = UIBarButtonItem(image: UIImage.init(named: "home"), style: .Plain, target: self, action: #selector(DetailEquipViewController.homePressed))
-        let menuItem = UIBarButtonItem(image: UIImage.init(named: "new"), style: .Plain, target: self, action: #selector(DetailEquipViewController.menuPressed))
+        let backButton = UIBarButtonItem(image: UIImage.init(named:"back"), style: .plain, target: self, action: #selector(DetailEquipViewController.backPressed))
+        let flexItem = UIBarButtonItem.init(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let homeItem = UIBarButtonItem(image: UIImage.init(named: "home"), style: .plain, target: self, action: #selector(DetailEquipViewController.homePressed))
+        let menuItem = UIBarButtonItem(image: UIImage.init(named: "new"), style: .plain, target: self, action: #selector(DetailEquipViewController.menuPressed))
         let items = [backButton, flexItem, homeItem, flexItem, flexItem, flexItem, menuItem]
         self.setToolbarItems(items, animated: true)
     }
     
     func backPressed(){
-        self.navigationController?.popViewControllerAnimated(true)
+        self.navigationController!.popViewController(animated: true)
         //数据保存
     }
     
     func homePressed(){
-        self.navigationController?.popToRootViewControllerAnimated(true)
+        self.navigationController!.popToRootViewController(animated: true)
         //数据保存或上传
     }
     
     
     func menuPressed(){
-        let menuAlertController:UIAlertController = UIAlertController(title:"设备信息操作",message:"选择一项操作",preferredStyle:UIAlertControllerStyle.ActionSheet)
+        let menuAlertController:UIAlertController = UIAlertController(title:"设备信息操作",message:"选择一项操作",preferredStyle:UIAlertControllerStyle.actionSheet)
         
-        menuAlertController.addAction(UIAlertAction(title: "打印信息", style: .Default, handler: { (UIAlertAction) -> Void in
+        menuAlertController.addAction(UIAlertAction(title: "打印信息", style: .default, handler: { (UIAlertAction) -> Void in
             self.printSelect()
         }))
         
-        menuAlertController.addAction(UIAlertAction(title: "修改信息", style: UIAlertActionStyle.Default, handler: { (UIAlertAction) -> Void in
+        menuAlertController.addAction(UIAlertAction(title: "修改信息", style: UIAlertActionStyle.default, handler: { (UIAlertAction) -> Void in
             self.modifyEquipInfo()
         }))
-        menuAlertController.addAction(UIAlertAction(title: "设备处理", style: UIAlertActionStyle.Default, handler: { (UIAlertAction) -> Void in
+        menuAlertController.addAction(UIAlertAction(title: "设备处理", style: UIAlertActionStyle.default, handler: { (UIAlertAction) -> Void in
             self.moreEquipManage()
         }))
-        menuAlertController.addAction(UIAlertAction(title: "取消", style: UIAlertActionStyle.Cancel, handler: { (UIAlertAction) -> Void in
+        menuAlertController.addAction(UIAlertAction(title: "取消", style: UIAlertActionStyle.cancel, handler: { (UIAlertAction) -> Void in
             NSLog("cancel")
         }))
         
-        self.presentViewController(menuAlertController, animated: true, completion: nil)
+        self.present(menuAlertController, animated: true, completion: nil)
         
         
     }
@@ -152,24 +152,24 @@ class DetailEquipViewController: UIViewController {
     }
     
     func moreEquipManage(){
-        let moreEquipManageAlertController:UIAlertController = UIAlertController(title:"设备处理",message:"选择一项操作",preferredStyle:UIAlertControllerStyle.ActionSheet)
+        let moreEquipManageAlertController:UIAlertController = UIAlertController(title:"设备处理",message:"选择一项操作",preferredStyle:UIAlertControllerStyle.actionSheet)
         
-        moreEquipManageAlertController.addAction(UIAlertAction(title: "设备报修", style: UIAlertActionStyle.Default, handler: { (UIAlertAction) -> Void in
+        moreEquipManageAlertController.addAction(UIAlertAction(title: "设备报修", style: UIAlertActionStyle.default, handler: { (UIAlertAction) -> Void in
             self.askFix()
         }))
         
-        moreEquipManageAlertController.addAction(UIAlertAction(title: "维修记录", style: UIAlertActionStyle.Default, handler: { (UIAlertAction) -> Void in
+        moreEquipManageAlertController.addAction(UIAlertAction(title: "维修记录", style: UIAlertActionStyle.default, handler: { (UIAlertAction) -> Void in
             self.fixLog()
         }))
         
-        moreEquipManageAlertController.addAction(UIAlertAction(title: "设备报废", style: UIAlertActionStyle.Default, handler: { (UIAlertAction) -> Void in
+        moreEquipManageAlertController.addAction(UIAlertAction(title: "设备报废", style: UIAlertActionStyle.default, handler: { (UIAlertAction) -> Void in
             self.uselessEquip()
         }))
-        moreEquipManageAlertController.addAction(UIAlertAction(title: "取消", style: UIAlertActionStyle.Cancel, handler: { (UIAlertAction) -> Void in
+        moreEquipManageAlertController.addAction(UIAlertAction(title: "取消", style: UIAlertActionStyle.cancel, handler: { (UIAlertAction) -> Void in
             NSLog("cancel")
         }))
         
-        self.presentViewController(moreEquipManageAlertController, animated: true, completion: nil)
+        self.present(moreEquipManageAlertController, animated: true, completion: nil)
         
         
     }
@@ -180,47 +180,48 @@ class DetailEquipViewController: UIViewController {
         //打印信息
         let detailTableView =  self.childViewControllers[0] as! DetailEquipTableViewController;
         detailTableView.tableView.setEditing(true, animated: true);
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: #selector(DetailEquipViewController.printStart));
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(DetailEquipViewController.printStart));
     }
     
     func printStart() {
         let detailTableView =  self.childViewControllers[0] as! DetailEquipTableViewController;
         self.pleaseWait();
         
-        dispatch_async(dispatch_get_main_queue()){
-            let viewRect = CGRectMake(0, 0, 840, 475.2);
-            let headerRect = CGRectMake(0, 0, 60, 40)
-            let keyRect = CGRectMake(0, 0, 280, 55);
-            let valueRect = CGRectMake(200, 0, 280, 55);
-            let qrImageRect = CGRectMake(520, 30, 270, 270);
-            let barImageRect = CGRectMake(300, 310, 510, 160);
-            let logoImageRect = CGRectMake(90, 310, 150, 150);
+        DispatchQueue.main.async{
+            let viewRect = CGRect(x: 0, y: 0, width: 840, height: 475.2);
+            let headerRect = CGRect(x: 0, y: 0, width: 60, height: 40)
+            let keyRect = CGRect(x: 0, y: 0, width: 280, height: 55);
+            let valueRect = CGRect(x: 200, y: 0, width: 280, height: 55);
+            let qrImageRect = CGRect(x: 520, y: 30, width: 270, height: 270);
+            let barImageRect = CGRect(x: 300, y: 310, width: 510, height: 160);
+            let logoImageRect = CGRect(x: 90, y: 310, width: 150, height: 150);
             
             
             var key:NSArray = NSArray();
             for i in 0..<detailTableView.tableView(detailTableView.tableView, numberOfRowsInSection: 0) {
-                let cell = detailTableView.tableView.cellForRowAtIndexPath(NSIndexPath(forRow: i, inSection: 0));
+                let cell = detailTableView.tableView.cellForRow(at: IndexPath(row: i, section: 0));
                 if(cell != nil){
-                    if(cell!.selected){
+                    if(cell!.isSelected){
                         let contentView = cell!.subviews[1];
                         let labelKey = contentView.subviews[0] as! UILabel;
-                        key = key.arrayByAddingObject(labelKey.text!);
+                        key = key.adding(labelKey.text!) as NSArray;
                     }
                 }
             }
             detailTableView.setEditing(false, animated: true);
-            let dict = DetailEquipViewController.data_source!.xmlInfo.equipAttr.dictionaryWithValuesForKeys(key as! [String]);
-            let qrImage = (DetailEquipViewController.data_source!.xmlInfo.equipAttr.valueForKey(EquipmentAttrKey.codeKey.rawValue as String) as! String).qrImageWithImage(self.getEquipImage());
-            let barImage = (DetailEquipViewController.data_source!.xmlInfo.equipAttr.valueForKey(EquipmentAttrKey.codeKey.rawValue as String) as! String).barCode;
+            let dict = DetailEquipViewController.data_source!.xmlInfo.equipAttr.dictionaryWithValues(forKeys: key as! [String]);
+            let qrImage = (DetailEquipViewController.data_source!.xmlInfo.equipAttr.value(forKey: EquipmentAttrKey.codeKey.rawValue as String) as! String).qrImageWithImage(self.getEquipImage());
+            let barImage = (DetailEquipViewController.data_source!.xmlInfo.equipAttr.value(forKey: EquipmentAttrKey.codeKey.rawValue as String) as! String).barCode;
             let logoImage = UIImage(named: "logo.png")!;
             
             
-            let view = SwiftPrint.sharedInstance().visitingCardView(dict, key: key as [AnyObject], image: [qrImage, barImage,logoImage], viewRect: viewRect, labelRect: [keyRect, valueRect, headerRect], imageRect: [qrImageRect, barImageRect,logoImageRect])!
-            view.backgroundColor = UIColor.whiteColor();
+            let view = SwiftPrint.sharedInstance().visitingCardView(dict as NSDictionary, key: key as [AnyObject], image: [qrImage, barImage,logoImage], viewRect: viewRect, labelRect: [keyRect, valueRect, headerRect], imageRect: [qrImageRect, barImageRect,logoImageRect])!
+            view.backgroundColor = UIColor.white;
             let printImageData = UIImagePNGRepresentation(view.visitingCardImage())!;
-            printImageData.writeToFile(DetailEquipViewController.data_source!.xmlInfo.xmlFile.path.URLByDeletingLastPathComponent!.URLByAppendingPathComponent("设备标签.png").path!, atomically: true);
-            NetworkOperation.sharedInstance().uploadResource(EquipManager.sharedInstance().defaultGroupId, parentID: DetailEquipViewController.data_source!.xmlInfo.xmlFile.parentId, fileData: printImageData, fileName: "设备标签.png", handler: {(any) in});
-            let image = SwiftPrint.sharedInstance().drawVisitingCardSet([view,view]);
+            (printImageData as NSData).write(toFile: DetailEquipViewController.data_source!.xmlInfo.xmlFile.path.deletingLastPathComponent().appendingPathComponent("设备标签.png").path, atomically: true);
+            let _ = NetworkOperation.sharedInstance().uploadResource(EquipManager.sharedInstance().defaultGroupId, parentID: DetailEquipViewController.data_source!.xmlInfo.xmlFile.parentId, fileData: printImageData, fileName: "设备标签.png", handler: {(any) in});
+            let image = SwiftPrint.sharedInstance().drawVisitingCardSet([view.visitingCardImage(),view.visitingCardImage()]);
+            print(image[0].ciImage);
             self.clearAllNotice();
             self.printImages(image);
         }
