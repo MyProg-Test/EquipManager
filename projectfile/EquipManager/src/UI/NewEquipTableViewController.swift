@@ -53,7 +53,6 @@ class NewEquipTableViewController: UITableViewController {
         }
         let equip = EquipXmlInfo(equipAttr: dict);
         let _ = equip.updateToFile();
-        let _ = EquipFileControl.sharedInstance().addEquipInfoToFile(0, XMLID: equip.xmlFile.id, XMLName: equip.xmlFile.name as String, imageSet: NSMutableArray(), path: "\(equip.xmlFile.id)", groupID: EquipManager.sharedInstance().defaultGroupId, status: FileSystem.Status.new.rawValue);
         print("saveEquip");
         self.backPressed();
     }

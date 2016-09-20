@@ -68,10 +68,10 @@ class FileSystem {
     //添加设备
     func addEquip(_ equip:NSMutableDictionary){
         equipDict.writeRequest();
-        equipDict.subject.setValue(equip.mutableCopy(), forKey: "\(equip.value(forKey: equipKey.parentID))");
+        equipDict.subject.setValue(equip.mutableCopy(), forKey: "\(equip.value(forKey: equipKey.parentID)!)");
         equipDict.writeEnd();
         attrKey.writeRequest();
-        attrKey.subject.add("\(equip.value(forKey: equipKey.parentID))")
+        attrKey.subject.add("\(equip.value(forKey: equipKey.parentID)!)")
         attrKey.writeEnd()
     }
     //添加设备
@@ -159,7 +159,7 @@ class FileSystem {
             equipDict.subject.setValue(newEquip, forKey: "\(parentId)")
             equipDict.writeEnd();
             attrKey.writeRequest();
-            let index = attrKey.subject.indexOfObjectIdentical(to: key);
+            let index = attrKey.subject.index(of: key);
             attrKey.subject.replaceObject(at: index, with: "\(parentId)");
             attrKey.writeEnd();
         }else{
@@ -310,7 +310,10 @@ class FileSystem {
     }
     
     //获取图片路径
-    func getImagePath(_ equipkey:String, imageIndex:Int) -> URL {
+    func getImagePath(_ equipkey:String, imageIndex:Int) -> URL? {
+        if(self.getImage(equipkey, imageIndex: imageIndex) == nil){
+            return nil;
+        }
         let fileName = self.getImage(equipkey, imageIndex: imageIndex)!.object(forKey: imageSetKey.imageName) as! String;
         let fileExt = (fileName as NSString).pathExtension;
         let url = URL(fileURLWithPath: (self.getImage(equipkey, imageIndex: imageIndex)!.object(forKey: imageSetKey.imagePath) as! String)).appendingPathComponent("\(self.getImage(equipkey, imageIndex: imageIndex)!.object(forKey: imageSetKey.imageID) as! Int).\(fileExt)");

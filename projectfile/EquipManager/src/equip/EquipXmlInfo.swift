@@ -91,35 +91,39 @@ enum EquipmentKey:String {
 //设备的xml信息
 class EquipXmlInfo {
     let attrKey:NSMutableArray;
-    var xmlFile:FileInfo
+    var equipkey:String
+    let fileAttr:NSMutableDictionary
     var xmlParser:XmlParser
     var equipAttr:NSMutableDictionary
     
     //根据xml文件信息初始化设备信息
-    init(xmlFile:FileInfo){
-        self.xmlFile = xmlFile
-        self.xmlParser = XmlParser(data: self.xmlFile.getFileData())
+    init(key:String){
+        self.equipkey = key
+        fileAttr = EquipFileControl.sharedInstance().getEquipFromFile(self.equipkey)!;
+        self.xmlParser = XmlParser(data: EquipFileControl.sharedInstance().getEquipData(self.equipkey));
         self.equipAttr = NSMutableDictionary()
         self.attrKey = NSMutableArray();
         initEquipAttrWithXml()
     }
     
-    //根据设备信息初始化xml信息
+    //根据设备信息新建xml信息
     init(equipAttr:NSMutableDictionary){
-        func getRandomID() -> NSString {
+        func getRandomID() -> String {
             let time = Date();
             let timeFormatter = DateFormatter();
             timeFormatter.dateFormat = "yyyyMMddHHmmss";
-            return "\(timeFormatter.string(from: time))" as NSString;
+            return "\(timeFormatter.string(from: time))";
         }
-        self.xmlFile = FileInfo();
-        self.xmlFile.id = getRandomID().integerValue;
-        self.xmlFile.name = "\(getRandomID()).xml";
-        self.xmlFile.parentId = 0;
-        self.xmlFile.path = EquipFileControl.sharedInstance().getEquipPath().appendingPathComponent(getRandomID() as String).appendingPathComponent(self.xmlFile.name);
+        let id: Int = (getRandomID() as NSString).integerValue;
+        let name: String = "\(getRandomID()).xml";
+        let parentId: Int = id;
+        let path = getRandomID();
+        self.equipkey = "\(parentId)";
         self.xmlParser = XmlParser()
         self.equipAttr = equipAttr
         self.attrKey = NSMutableArray();
+        _ = EquipFileControl.sharedInstance().addEquipInfoToFile(parentId, XMLID: id, XMLName: name, imageSet: NSMutableArray(), path: path, groupID: EquipManager.sharedInstance().defaultGroupId, status: FileSystem.Status.new.rawValue | FileSystem.Status.download.rawValue);
+        fileAttr = EquipFileControl.sharedInstance().getEquipFromFile(self.equipkey)!;
         initXmlWithEquipAttr(equipAttr)
     }
     
@@ -184,7 +188,7 @@ class EquipXmlInfo {
     //9.5
     fileprivate func initXmlWithEquipAttr(_ equipAttr:NSMutableDictionary){
         let rootElement:GDataXMLElement = GDataXMLElement.element(withName: EquipmentKey.rootKey.rawValue as String)
-        self.xmlParser.setRootElement(rootElement)
+        _ = self.xmlParser.setRootElement(rootElement)
         
         initXmlWithEquipAttrHelper(.nameKey, equipmentAttrKey:.nameKey)
         initXmlWithEquipAttrHelper(.codeKey, equipmentAttrKey:.codeKey)
@@ -235,18 +239,19 @@ class EquipXmlInfo {
             self.equipAttr.setValue("", forKey: equipmentAttrKey.rawValue as String);
         }
         objc_sync_enter(self.attrKey);
-        self.xmlParser.addElementToRoot(equipmentKey.rawValue, value: self.equipAttr.value(forKey: equipmentAttrKey.rawValue as String) as! (String))
+        _ = self.xmlParser.addElementToRoot(equipmentKey.rawValue, value: self.equipAttr.value(forKey: equipmentAttrKey.rawValue as String) as! (String))
         self.attrKey.add(equipmentAttrKey.rawValue as String);
         objc_sync_exit(self.attrKey);
     }
     
     //将设备信息更新到文件中
     func updateToFile(){
+        
         do{
-            if(!FileManager.default.fileExists(atPath: self.xmlFile.path.deletingLastPathComponent().path)){
-                try FileManager.default.createDirectory(atPath: self.xmlFile.path.deletingLastPathComponent().path, withIntermediateDirectories: true, attributes: nil);
+            if(!FileManager.default.fileExists(atPath: EquipFileControl.sharedInstance().getEquipFilePathFromFile(self.equipkey)!.deletingLastPathComponent().path)){
+                try FileManager.default.createDirectory(atPath: EquipFileControl.sharedInstance().getEquipFilePathFromFile(self.equipkey)!.deletingLastPathComponent().path, withIntermediateDirectories: true, attributes: nil);
             }
-            self.xmlParser.writeToFile(self.xmlFile.path)
+            self.xmlParser.writeToFile(EquipFileControl.sharedInstance().getEquipFilePathFromFile(self.equipkey)!)
         }catch{
             print(error);
         }
@@ -254,14 +259,14 @@ class EquipXmlInfo {
     
     //从文件中更新xml信息
     func updateFromFile(){
-        self.xmlParser = XmlParser(data: self.xmlFile.getFileData())
+        self.xmlParser = XmlParser(data: EquipFileControl.sharedInstance().getEquipData(self.equipkey))
         self.equipAttr = NSMutableDictionary()
         initEquipAttrWithXml()
     }
     
     //修改xml
     func modifyXml(_ equipmentKey:EquipmentKey, equipmentAttrKey:EquipmentAttrKey, value:String) {
-        self.xmlParser.setElementOfRoot(equipmentKey.rawValue as String, value: value)
+        _ = self.xmlParser.setElementOfRoot(equipmentKey.rawValue as String, value: value)
         self.equipAttr.setValue(value, forKey: equipmentAttrKey.rawValue as String)
     }
     

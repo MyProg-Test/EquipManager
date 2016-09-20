@@ -18,7 +18,6 @@
 		0806ABBA1D7EBA0600D93D95 /* EquipNetInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0806ABAD1D7EBA0600D93D95 /* EquipNetInfo.swift */; };
 		0806ABBB1D7EBA0600D93D95 /* EquipXmlInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0806ABAE1D7EBA0600D93D95 /* EquipXmlInfo.swift */; };
 		0806ABBC1D7EBA0600D93D95 /* Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0806ABAF1D7EBA0600D93D95 /* Extention.swift */; };
-		0806ABBD1D7EBA0600D93D95 /* FileInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0806ABB01D7EBA0600D93D95 /* FileInfo.swift */; };
 		0806ABBE1D7EBA0600D93D95 /* FileSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0806ABB11D7EBA0600D93D95 /* FileSystem.swift */; };
 		0806ABBF1D7EBA0600D93D95 /* GDataXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 0806ABB31D7EBA0600D93D95 /* GDataXMLNode.m */; };
 		0806ABC01D7EBA0600D93D95 /* NetworkOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0806ABB41D7EBA0600D93D95 /* NetworkOperation.swift */; };
@@ -75,7 +74,6 @@
 		0806ABAD1D7EBA0600D93D95 /* EquipNetInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EquipNetInfo.swift; path = EquipManager/src/equip/EquipNetInfo.swift; sourceTree = SOURCE_ROOT; };
 		0806ABAE1D7EBA0600D93D95 /* EquipXmlInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EquipXmlInfo.swift; path = EquipManager/src/equip/EquipXmlInfo.swift; sourceTree = SOURCE_ROOT; };
 		0806ABAF1D7EBA0600D93D95 /* Extention.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Extention.swift; path = EquipManager/src/equip/Extention.swift; sourceTree = SOURCE_ROOT; };
-		0806ABB01D7EBA0600D93D95 /* FileInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FileInfo.swift; path = EquipManager/src/equip/FileInfo.swift; sourceTree = SOURCE_ROOT; };
 		0806ABB11D7EBA0600D93D95 /* FileSystem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FileSystem.swift; path = EquipManager/src/equip/FileSystem.swift; sourceTree = SOURCE_ROOT; };
 		0806ABB21D7EBA0600D93D95 /* GDataXMLNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GDataXMLNode.h; path = EquipManager/src/equip/GDataXMLNode.h; sourceTree = SOURCE_ROOT; };
 		0806ABB31D7EBA0600D93D95 /* GDataXMLNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GDataXMLNode.m; path = EquipManager/src/equip/GDataXMLNode.m; sourceTree = SOURCE_ROOT; };
@@ -192,7 +190,6 @@
 				0806ABAD1D7EBA0600D93D95 /* EquipNetInfo.swift */,
 				0806ABAE1D7EBA0600D93D95 /* EquipXmlInfo.swift */,
 				0806ABAF1D7EBA0600D93D95 /* Extention.swift */,
-				0806ABB01D7EBA0600D93D95 /* FileInfo.swift */,
 				0806ABB11D7EBA0600D93D95 /* FileSystem.swift */,
 				0806ABB21D7EBA0600D93D95 /* GDataXMLNode.h */,
 				0806ABB31D7EBA0600D93D95 /* GDataXMLNode.m */,
@@ -292,7 +289,6 @@
 				0806ABB71D7EBA0600D93D95 /* EquipImageInfo.swift in Sources */,
 				0806ABD31D7EBA2100D93D95 /* EquipListTableViewController.swift in Sources */,
 				0806ABB81D7EBA0600D93D95 /* EquipInfo.swift in Sources */,
-				0806ABBD1D7EBA0600D93D95 /* FileInfo.swift in Sources */,
 				08032BED1D8051A8001AD72F /* SwiftPrint.swift in Sources */,
 				08B789D31D915C35009E0292 /* MySafeMutableMethod.swift in Sources */,
 				0806ABCC1D7EBA2100D93D95 /* AppDelegate.swift in Sources */,

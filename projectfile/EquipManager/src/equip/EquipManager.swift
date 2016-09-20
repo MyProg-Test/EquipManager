@@ -113,7 +113,7 @@ class EquipManager:NSObject{
                         }
                     }
                     for tmp in imageList {
-                        EquipFileControl.sharedInstance().deleteImageFromFile(l as! String, image: tmp as! NSMutableDictionary);
+                        _ = EquipFileControl.sharedInstance().deleteImageFromFile(l as! String, image: tmp as! NSMutableDictionary);
                     }
                     break;
                 }

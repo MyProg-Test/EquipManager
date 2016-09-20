@@ -54,8 +54,7 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        DetailEquipViewController.data_source = nil;
-        self.clearAllNotice();
+        self.tableView.reloadData();
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -118,11 +117,7 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
         let equip = EquipInfo(key: EquipFileControl.sharedInstance().getFileSystemFromFile()!.attrKey.subject.object(at: (indexPath as NSIndexPath).row) as! String);
         cell.equipName.text = equip.xmlInfo.equipAttr.value(forKey: EquipmentAttrKey.nameKey.rawValue as String) as? String;
         cell.equipNumber.text = equip.xmlInfo.equipAttr.value(forKey: EquipmentAttrKey.codeKey.rawValue as String) as? String;
-        if(equip.imageInfo.getDisplayedImageInfo() == nil){
-            cell.thumbnail!.image = UIImage(named: "equipImage.png");
-        }else{
-            cell.thumbnail?.image = UIImage(data: (equip.imageInfo.getDisplayedImageInfo()!.getFileData()) as Data);
-        }
+        cell.thumbnail?.image = equip.imageInfo.getMainImage();
         return cell
         
     }

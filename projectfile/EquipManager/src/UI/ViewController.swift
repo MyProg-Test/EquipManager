@@ -43,6 +43,7 @@ class ViewController: UIViewController {
                                 _ = EquipManager.sharedInstance(id);
                                 DispatchQueue.main.async {
                                     let equipListView = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "EquipList") as! EquipListTableViewController;
+                                    self.clearAllNotice();
                                     self.navigationController?.pushViewController(equipListView, animated: true);
                                 }
                             }

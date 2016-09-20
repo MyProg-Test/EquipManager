@@ -283,6 +283,13 @@ class EquipFileControl {
         return fs!.getEquipName(key);
     }
     
+    func getEquipData(_ key: String) -> Data {
+        if(FileManager.default.fileExists(atPath: self.getEquipFilePathFromFile(key)!.path)){
+            return (try! Data(contentsOf: self.getEquipFilePathFromFile(key)!))
+        }
+        return Data();
+    }
+    
     //MARK:- getImage
     func isMainImageFromFile(_ equipkey: String, imageIndex: Int) -> Bool {
         if(self.fs == nil){
@@ -332,7 +339,10 @@ class EquipFileControl {
         if(self.fs == nil){
             return nil;
         }
-        let url:URL = getEquipPath().appendingPathComponent(self.fs!.getImagePath(equipkey,imageIndex: imageIndex).path);
+        if(self.fs!.getImagePath(equipkey,imageIndex: imageIndex) == nil){
+            return nil;
+        }
+        let url:URL = getEquipPath().appendingPathComponent(self.fs!.getImagePath(equipkey,imageIndex: imageIndex)!.path);
         return url;
     }
     
@@ -341,6 +351,16 @@ class EquipFileControl {
             return 0;
         }
         return self.fs!.getImageCount(key);
+    }
+    
+    func getImageData(_ equipkey: String, imageIndex: Int) -> Data {
+        if self.getImageFilePathFromFile(equipkey, imageIndex: imageIndex) == nil {
+            return Data();
+        }
+        if(FileManager.default.fileExists(atPath: self.getImageFilePathFromFile(equipkey, imageIndex: imageIndex)!.path)){
+            return (try! Data(contentsOf: self.getImageFilePathFromFile(equipkey, imageIndex: imageIndex)!))
+        }
+        return Data();
     }
     
     //检查设备相关路径是否存在，若不存在，则建立
@@ -367,7 +387,7 @@ class EquipFileControl {
         }
         let deleteEquipList: NSMutableArray = NSMutableArray();
         for key in self.fs!.attrKey.subject {
-            let keyString = key as! String;
+            var keyString = key as! String;
             if(!(self.getEquipStatusFromFile(keyString) & FileSystem.Status.download.rawValue > 0)){
                 _ = NetworkOperation.sharedInstance().downloadResource(self.getEquipXMLIDFromFile(keyString), url: self.getEquipFilePathFromFile(keyString)!){ (any) in
                     if(FileManager.default.fileExists(atPath: self.getEquipFilePathFromFile(keyString)!.path)){
@@ -419,6 +439,7 @@ class EquipFileControl {
                     print(any);
                     let dirID = any.object(forKey: NetworkOperation.NetConstant.DictKey.CreateDir.Response.id) as! Int;
                     _ = self.modifyParentIDInFile(keyString, parentId: dirID);
+                    keyString = "\(dirID)";
                     _ = NetworkOperation.sharedInstance().uploadResourceReturnId(self.getEquipGroupIdFromFile(keyString), parentID: self.getEquipParentIdFromFile(keyString), fileURL: self.getEquipFilePathFromFile(keyString)!, fileName: self.getEquipNameFromFile(keyString)){(any) in
                         print(any);
                         let newFile:NSDictionary = (any.object(forKey: NetworkOperation.NetConstant.DictKey.UploadResourceReturnId.Response.file)! as AnyObject).firstObject as! NSDictionary;

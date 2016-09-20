@@ -69,9 +69,9 @@ class EquipNetInfo {
                     print(self.fs.getEquipPath(index).path);
                     for i in 0..<(self.fs.getEquip(index)!.value(forKey: FileSystem.equipKey.imageSet)! as AnyObject).count{
                         if(EquipImageInfo.isMainImage(self.fs.getImageName(index, imageIndex: i), parentId: parentID)){
-                            print("\(self.fs.getImagePath(index, imageIndex: i).path)----")
+                            print("\(self.fs.getImagePath(index, imageIndex: i)!.path)----")
                         }else{
-                            print(self.fs.getImagePath(index, imageIndex: i).path);
+                            print(self.fs.getImagePath(index, imageIndex: i)!.path);
                         }
                     }
                 }

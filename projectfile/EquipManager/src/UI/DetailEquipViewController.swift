@@ -62,15 +62,7 @@ class DetailEquipViewController: UIViewController {
             equipImage.image = UIImage(named: "equipImage.png");
             return ;
         }
-        if(DetailEquipViewController.data_source!.imageInfo.getDisplayedImageInfo() == nil){
-            equipImage.image = UIImage(named: "equipImage.png");
-            return ;
-        }
-        if(DetailEquipViewController.data_source!.imageInfo.getDisplayedImageInfo()!.getFileData() as Data == Data()){
-            equipImage.image = UIImage(named: "equipImage.png");
-            return ;
-        }
-        equipImage.image = UIImage(data: DetailEquipViewController.data_source!.imageInfo.getDisplayedImageInfo()!.getFileData() as Data);
+        equipImage.image = DetailEquipViewController.data_source!.imageInfo.getMainImage();
         //to do
     }
     
@@ -218,8 +210,9 @@ class DetailEquipViewController: UIViewController {
             let view = SwiftPrint.sharedInstance().visitingCardView(dict as NSDictionary, key: key as [AnyObject], image: [qrImage, barImage,logoImage], viewRect: viewRect, labelRect: [keyRect, valueRect, headerRect], imageRect: [qrImageRect, barImageRect,logoImageRect])!
             view.backgroundColor = UIColor.white;
             let printImageData = UIImagePNGRepresentation(view.visitingCardImage())!;
-            (printImageData as NSData).write(toFile: DetailEquipViewController.data_source!.xmlInfo.xmlFile.path.deletingLastPathComponent().appendingPathComponent("设备标签.png").path, atomically: true);
-            let _ = NetworkOperation.sharedInstance().uploadResource(EquipManager.sharedInstance().defaultGroupId, parentID: DetailEquipViewController.data_source!.xmlInfo.xmlFile.parentId, fileData: printImageData, fileName: "设备标签.png", handler: {(any) in});
+            let printImagePath = EquipFileControl.sharedInstance().getEquipFilePathFromFile(DetailEquipViewController.data_source!.xmlInfo.equipkey)!.deletingLastPathComponent().appendingPathComponent("设备标签.png");
+            (printImageData as NSData).write(toFile: printImagePath.path, atomically: true);
+            let _ = NetworkOperation.sharedInstance().uploadResource(EquipManager.sharedInstance().defaultGroupId, parentID: EquipFileControl.sharedInstance().getEquipParentIdFromFile(DetailEquipViewController.data_source!.xmlInfo.equipkey), fileData: printImageData, fileName: "设备标签.png", handler: {(any) in});
             let image = SwiftPrint.sharedInstance().drawVisitingCardSet([view.visitingCardImage(),view.visitingCardImage()]);
             self.clearAllNotice();
             self.printImages(image);
