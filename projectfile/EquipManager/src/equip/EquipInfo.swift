@@ -19,7 +19,7 @@ import UIKit
 
 //设备信息
 class EquipInfo {
-    var equipIndex:Int;
+    var equipkey:String;
     //xml就绪
     var xmlReady:Bool{
         get{
@@ -29,24 +29,24 @@ class EquipInfo {
     var imageInfo:EquipImageInfo
     var xmlInfo:EquipXmlInfo
     //根据index从equipFileControl里初始化
-    init(index:Int){
-        equipIndex = index;
+    init(key:String){
+        self.equipkey = key;
         let xmlFileInfo:FileInfo = FileInfo();
-        xmlFileInfo.id = EquipFileControl.sharedInstance().getFileSystemFromFile()!.getEquipXMLID(equipIndex);
-        xmlFileInfo.name = EquipFileControl.sharedInstance().getFileSystemFromFile()!.getEquipName(equipIndex);
-        xmlFileInfo.parentId = EquipFileControl.sharedInstance().getFileSystemFromFile()!.getEquipParentID(equipIndex);
-        xmlFileInfo.path = EquipFileControl.sharedInstance().getEquipFilePathFromFile(equipIndex)!;
+        xmlFileInfo.id = EquipFileControl.sharedInstance().getFileSystemFromFile()!.getEquipXMLID(equipkey);
+        xmlFileInfo.name = EquipFileControl.sharedInstance().getFileSystemFromFile()!.getEquipName(equipkey);
+        xmlFileInfo.parentId = EquipFileControl.sharedInstance().getFileSystemFromFile()!.getEquipParentID(equipkey);
+        xmlFileInfo.path = EquipFileControl.sharedInstance().getEquipFilePathFromFile(equipkey)!;
         self.xmlInfo = EquipXmlInfo(xmlFile: xmlFileInfo);
         let imageFileArray:NSMutableArray = NSMutableArray();
         var fileName:String = "";
-        for i in 0..<EquipFileControl.sharedInstance().getFileSystemFromFile()!.getImageCount(equipIndex){
+        for i in 0..<EquipFileControl.sharedInstance().getFileSystemFromFile()!.getImageCount(equipkey){
             let imageFileInfo:FileInfo = FileInfo();
-            imageFileInfo.id = EquipFileControl.sharedInstance().getFileSystemFromFile()!.getImageID(equipIndex, imageIndex: i);
-            imageFileInfo.name = EquipFileControl.sharedInstance().getFileSystemFromFile()!.getImageName(equipIndex, imageIndex: i);
+            imageFileInfo.id = EquipFileControl.sharedInstance().getFileSystemFromFile()!.getImageID(equipkey, imageIndex: i);
+            imageFileInfo.name = EquipFileControl.sharedInstance().getFileSystemFromFile()!.getImageName(equipkey, imageIndex: i);
             imageFileInfo.parentId = xmlFileInfo.parentId;
-            imageFileInfo.path = EquipFileControl.sharedInstance().getImageFilePathFromFile(equipIndex, imageIndex: i)!;
+            imageFileInfo.path = EquipFileControl.sharedInstance().getImageFilePathFromFile(equipkey, imageIndex: i)!;
             imageFileArray.add(imageFileInfo);
-            if(EquipFileControl.sharedInstance().getFileSystemFromFile()!.isMainImage(equipIndex, imageIndex: i)){
+            if(EquipFileControl.sharedInstance().getFileSystemFromFile()!.isMainImage(equipkey, imageIndex: i)){
                 fileName = imageFileInfo.name;
             }
         }
@@ -54,24 +54,24 @@ class EquipInfo {
         _ = self.imageInfo.setDisplayedImageInfo(fileName);
     }
     //根据index从equipFileControl里更新
-    func updateEquip(_ index:Int){
-        equipIndex = index;
+    func updateEquip(_ key:String){
+        self.equipkey = key;
         let xmlFileInfo:FileInfo = FileInfo();
-        xmlFileInfo.id = EquipFileControl.sharedInstance().getFileSystemFromFile()!.getEquipXMLID(equipIndex);
-        xmlFileInfo.name = EquipFileControl.sharedInstance().getFileSystemFromFile()!.getEquipName(equipIndex);
-        xmlFileInfo.parentId = EquipFileControl.sharedInstance().getFileSystemFromFile()!.getEquipParentID(equipIndex);
-        xmlFileInfo.path = EquipFileControl.sharedInstance().getEquipFilePathFromFile(equipIndex)!;
+        xmlFileInfo.id = EquipFileControl.sharedInstance().getFileSystemFromFile()!.getEquipXMLID(equipkey);
+        xmlFileInfo.name = EquipFileControl.sharedInstance().getFileSystemFromFile()!.getEquipName(equipkey);
+        xmlFileInfo.parentId = EquipFileControl.sharedInstance().getFileSystemFromFile()!.getEquipParentID(equipkey);
+        xmlFileInfo.path = EquipFileControl.sharedInstance().getEquipFilePathFromFile(equipkey)!;
         self.xmlInfo = EquipXmlInfo(xmlFile: xmlFileInfo);
         let imageFileArray:NSMutableArray = NSMutableArray();
         var fileName:String = "";
-        for i in 0..<EquipFileControl.sharedInstance().getFileSystemFromFile()!.getImageCount(equipIndex){
+        for i in 0..<EquipFileControl.sharedInstance().getFileSystemFromFile()!.getImageCount(equipkey){
             let imageFileInfo:FileInfo = FileInfo();
-            imageFileInfo.id = EquipFileControl.sharedInstance().getFileSystemFromFile()!.getImageID(equipIndex, imageIndex: i);
-            imageFileInfo.name = EquipFileControl.sharedInstance().getFileSystemFromFile()!.getImageName(equipIndex, imageIndex: i);
+            imageFileInfo.id = EquipFileControl.sharedInstance().getFileSystemFromFile()!.getImageID(equipkey, imageIndex: i);
+            imageFileInfo.name = EquipFileControl.sharedInstance().getFileSystemFromFile()!.getImageName(equipkey, imageIndex: i);
             imageFileInfo.parentId = xmlFileInfo.parentId;
-            imageFileInfo.path = EquipFileControl.sharedInstance().getImageFilePathFromFile(equipIndex, imageIndex: i)!;
+            imageFileInfo.path = EquipFileControl.sharedInstance().getImageFilePathFromFile(equipkey, imageIndex: i)!;
             imageFileArray.add(imageFileInfo);
-            if(EquipFileControl.sharedInstance().getFileSystemFromFile()!.isMainImage(equipIndex, imageIndex: i)){
+            if(EquipFileControl.sharedInstance().getFileSystemFromFile()!.isMainImage(equipkey, imageIndex: i)){
                 fileName = imageFileInfo.name;
             }
         }

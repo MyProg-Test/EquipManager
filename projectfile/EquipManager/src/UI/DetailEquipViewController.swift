@@ -77,7 +77,7 @@ class DetailEquipViewController: UIViewController {
     //点击设备图片
     func equipImageTap(_ sender:UITapGestureRecognizer){
         let equipImageView = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "EquipImage") as!EquipImagePickerTableViewController;
-        EquipFileControl.sharedInstance().downloadEquipImageFromNet(DetailEquipViewController.data_source!.equipIndex);
+        EquipFileControl.sharedInstance().downloadEquipImageFromNet(DetailEquipViewController.data_source!.equipkey);
         self.pleaseWait();
         self.navigationController?.pushViewController(equipImageView, animated: true);
     }
@@ -221,7 +221,6 @@ class DetailEquipViewController: UIViewController {
             (printImageData as NSData).write(toFile: DetailEquipViewController.data_source!.xmlInfo.xmlFile.path.deletingLastPathComponent().appendingPathComponent("设备标签.png").path, atomically: true);
             let _ = NetworkOperation.sharedInstance().uploadResource(EquipManager.sharedInstance().defaultGroupId, parentID: DetailEquipViewController.data_source!.xmlInfo.xmlFile.parentId, fileData: printImageData, fileName: "设备标签.png", handler: {(any) in});
             let image = SwiftPrint.sharedInstance().drawVisitingCardSet([view.visitingCardImage(),view.visitingCardImage()]);
-            print(image[0].ciImage);
             self.clearAllNotice();
             self.printImages(image);
         }

@@ -73,7 +73,7 @@ class EquipImagePickerTableViewController: UITableViewController,UIAlertViewDele
             cell = EquipImageTableViewCell(style: .default, reuseIdentifier: equipImageCellIdentifier);
         }
         cell.imageInCell.image = DetailEquipViewController.data_source!.imageInfo.getImage((indexPath as NSIndexPath).row);
-        cell.imageNameInCell.text = EquipFileControl.sharedInstance().getFileSystemFromFile()!.getImageName(DetailEquipViewController.data_source!.equipIndex, imageIndex: (indexPath as NSIndexPath).row) as String;
+        cell.imageNameInCell.text = EquipFileControl.sharedInstance().getFileSystemFromFile()!.getImageName(DetailEquipViewController.data_source!.equipkey, imageIndex: (indexPath as NSIndexPath).row) as String;
         return cell
     }
     

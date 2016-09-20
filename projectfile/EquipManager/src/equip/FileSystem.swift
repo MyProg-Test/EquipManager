@@ -20,13 +20,13 @@ class FileSystem {
     }
     //设备key
     internal struct equipKey{
-        static let parentID     = "1";
-        static let XMLID        = "2";
-        static let XMLName      = "3";
-        static let imageSet     = "4";
-        static let path         = "5";
-        static let groupID      = "6";
-        static let status       = "7";  //abcd
+        static let parentID: String     = "1";
+        static let XMLID: String        = "2";
+        static let XMLName: String      = "3";
+        static let imageSet: String     = "4";
+        static let path: String         = "5";
+        static let groupID: String      = "6";
+        static let status: String       = "7";  //abcd
         //a 0,1 download
         //b 0,1 delete
         //c 0,1 new
@@ -34,42 +34,45 @@ class FileSystem {
     }
     //图片组key
     internal struct imageSetKey{
-        static let imageID      = "1";
-        static let imagePath    = "2";
-        static let imageName    = "3";
-        static let status       = "4";  //abcd
+        static let imageID: String      = "1";
+        static let imagePath: String    = "2";
+        static let imageName: String    = "3";
+        static let status: String       = "4";  //abcd
         //a 0,1 download
         //b 0,1 delete
         //c 0,1 new
         //d 0,1 modify
     }
     
-    var equipArray:NSMutableArray;
+    let equipDict: MySafeMutableMethod<NSMutableDictionary>;
+    let attrKey:MySafeMutableMethod<NSMutableArray>;
     //返回当前设备数量
     var count:Int{
         get{
-            return self.equipArray.count;
+            attrKey.readRequest();
+            let count = attrKey.subject.count;
+            attrKey.readEnd();
+            return count;
         }
-    }
-    //获取图片数量
-    func getImageCount(_ index:Int)->Int{
-        let imageSet = self.getEquip(index)!.object(forKey: equipKey.imageSet);
-        return (imageSet! as AnyObject).count;
     }
     
     init(){
-        self.equipArray = NSMutableArray();
+        self.attrKey = MySafeMutableMethod(subject: NSMutableArray());
+        self.equipDict = MySafeMutableMethod(subject: NSMutableDictionary());
     }
     
-    init(equip:NSMutableArray){
-        self.equipArray = equip.mutableCopy() as! NSMutableArray;
+    init(equip:NSMutableDictionary){
+        self.equipDict = MySafeMutableMethod(subject: equip.mutableCopy() as! NSMutableDictionary);
+        self.attrKey = MySafeMutableMethod(subject: NSMutableArray(array: self.equipDict.subject.allKeys));
     }
     //添加设备
     func addEquip(_ equip:NSMutableDictionary){
-        objc_sync_enter(self);
-        let newEquip = equip.mutableCopy() as! NSMutableDictionary;
-        equipArray.add(newEquip);
-        objc_sync_exit(self);
+        equipDict.writeRequest();
+        equipDict.subject.setValue(equip.mutableCopy(), forKey: "\(equip.value(forKey: equipKey.parentID))");
+        equipDict.writeEnd();
+        attrKey.writeRequest();
+        attrKey.subject.add("\(equip.value(forKey: equipKey.parentID))")
+        attrKey.writeEnd()
     }
     //添加设备
     func addEquip(_ parentID:Int = -1, XMLID:Int = -1, XMLName:String = "", imageSet:NSMutableArray, path:String, groupID: Int, status:Int = 0){
@@ -84,173 +87,275 @@ class FileSystem {
         self.addEquip(newEquip);
     }
     //添加图片
-    func addImage(_ index:Int, image:NSMutableDictionary){
-        objc_sync_enter(self);
-        let newImage = image.mutableCopy() as! NSMutableDictionary;
-        ((equipArray.object(at: index) as AnyObject).object(forKey: equipKey.imageSet)! as AnyObject).add(newImage);
-        objc_sync_exit(self);
+    func addImage(_ key:String, image:NSMutableDictionary){
+        equipDict.readRequest()
+        if(equipDict.subject.allKeys.contains(where: {return key.isEqual($0)})){
+            equipDict.readEnd()
+            let newImage = image.mutableCopy() as! NSMutableDictionary;
+            equipDict.writeRequest()
+            ((equipDict.subject.object(forKey: key) as! NSMutableDictionary).object(forKey: equipKey.imageSet) as! NSMutableArray).add(newImage)
+            equipDict.writeEnd()
+        }else{
+            equipDict.readEnd();
+        }
+        
     }
     //添加图片
-    func addImage(_ index:Int, imageID:Int, imagePath:String, imageName:String, status:Int = 0){
+    func addImage(_ key:String, imageID:Int, imagePath:String, imageName:String, status:Int = 0){
         let newImage:NSMutableDictionary = NSMutableDictionary();
         newImage.setValue(imageID, forKey: imageSetKey.imageID);
         newImage.setValue(imagePath, forKey: imageSetKey.imagePath);
         newImage.setValue(imageName, forKey: imageSetKey.imageName);
         newImage.setValue(status, forKey: imageSetKey.status);
-        self.addImage(index, image: newImage);
+        self.addImage(key, image: newImage);
     }
     //添加图片数组
-    func addImageArray(_ index:Int, imageArray:NSMutableArray){
-        objc_sync_enter(self);
-        if(index >= 0){
+    func addImageArray(_ key:String, imageArray:NSMutableArray){
+        equipDict.readRequest()
+        if(equipDict.subject.allKeys.contains(where: {return key.isEqual($0)})){
+            equipDict.readEnd()
+            equipDict.writeRequest()
             let newImageArray = imageArray.mutableCopy() as! NSMutableArray;
-            ((equipArray.object(at: index) as AnyObject).object(forKey: equipKey.imageSet)! as AnyObject).addObjects(from: newImageArray as [AnyObject]);
+            ((equipDict.subject.object(forKey: key) as! NSMutableDictionary).object(forKey: equipKey.imageSet) as! NSMutableArray).addObjects(from: newImageArray as [AnyObject])
+            equipDict.writeEnd();
+        }else{
+            equipDict.readEnd();
         }
-        objc_sync_exit(self);
     }
     
-    func deleteImage(_ equipIndex: Int, image: NSMutableDictionary) -> Bool {
-        objc_sync_enter(self);
-        ((equipArray.object(at: equipIndex) as AnyObject).object(forKey: FileSystem.equipKey.imageSet) as! NSMutableArray).remove(image);
-        objc_sync_exit(self);
+    func deleteImage(_ equipkey: String, image: NSMutableDictionary) -> Bool {
+        equipDict.readRequest()
+        if(equipDict.subject.allKeys.contains(where: {return equipkey.isEqual($0)})){
+            equipDict.readEnd()
+            equipDict.writeRequest();
+            ((equipDict.subject.object(forKey: equipkey) as! NSMutableDictionary).object(forKey: equipKey.imageSet) as! NSMutableArray).remove(image)
+            equipDict.writeEnd()
+            return true;
+        }else{
+            equipDict.readEnd();
+            return false;
+        }
+        
+    }
+    
+    func deleteEquip(_ key: String) -> Bool {
+        equipDict.writeRequest()
+        equipDict.subject.removeObject(forKey: key)
+        equipDict.writeEnd()
+        attrKey.writeRequest()
+        attrKey.subject.remove(key)
+        attrKey.writeEnd();
         return true;
     }
     
-    func deleteEquip(_ equip: AnyObject) -> Bool {
-        objc_sync_enter(self);
-        equipArray.remove(equip);
-        objc_sync_exit(self);
-        return true;
+    func modifyParentID(_ key: String, parentId: Int) {
+        equipDict.readRequest()
+        if(equipDict.subject.allKeys.contains(where: {return key.isEqual($0)})){
+            equipDict.readEnd()
+            equipDict.writeRequest()
+            let newEquip = (equipDict.subject.object(forKey: key) as! NSMutableDictionary).mutableCopy() as! NSMutableDictionary;
+            newEquip.setValue(parentId, forKey: equipKey.parentID);
+            equipDict.subject.removeObject(forKey: key)
+            equipDict.subject.setValue(newEquip, forKey: "\(parentId)")
+            equipDict.writeEnd();
+            attrKey.writeRequest();
+            let index = attrKey.subject.indexOfObjectIdentical(to: key);
+            attrKey.subject.replaceObject(at: index, with: "\(parentId)");
+            attrKey.writeEnd();
+        }else{
+            equipDict.readEnd();
+        }
     }
     
-    func modifyParentID(_ index: Int, parentId: Int) {
-        objc_sync_enter(self);
-        (self.equipArray.object(at: index) as AnyObject).setValue(parentId, forKey: equipKey.parentID);
-        objc_sync_exit(self);
+    func modifyXMLID(_ key: String, id: Int) {
+        equipDict.readRequest()
+        if(equipDict.subject.allKeys.contains(where: {return key.isEqual($0)})){
+            equipDict.readEnd()
+            equipDict.writeRequest();
+            (equipDict.subject.object(forKey: key) as! NSMutableDictionary).setValue(id, forKey: equipKey.XMLID);
+            equipDict.writeEnd();
+        }else{
+            equipDict.readEnd();
+        }
     }
     
-    func modifyXMLID(_ index: Int, id: Int) {
-        objc_sync_enter(self);
-        (self.equipArray.object(at: index) as AnyObject).setValue(id, forKey: equipKey.XMLID);
-        objc_sync_exit(self);
-    }
-    //修改图片名
-    func modifyImageName(_ equipIndex:Int, imageIndex:Int, name:String){
-        objc_sync_enter(self);
-        (((self.equipArray.object(at: equipIndex) as AnyObject).object(forKey: equipKey.imageSet) as AnyObject).object(at: imageIndex) as AnyObject).setValue(name, forKey: imageSetKey.imageName);
-        objc_sync_exit(self);
-    }
     //修改设备状态
-    func modifyEquipStatus(_ index:Int,status:Int){
-        objc_sync_enter(self);
-        (self.equipArray.object(at: index) as AnyObject).setValue(status, forKey: equipKey.status);
-        objc_sync_exit(self);
+    func modifyEquipStatus(_ key:String,status:Int){
+        equipDict.readRequest()
+        if(equipDict.subject.allKeys.contains(where: {return key.isEqual($0)})){
+            equipDict.readEnd()
+            equipDict.writeRequest();
+            (equipDict.subject.object(forKey: key) as! NSMutableDictionary).setValue(status, forKey: equipKey.status);
+            equipDict.writeEnd();
+        }else{
+            equipDict.readEnd();
+        }
     }
     
-    func modifyImageID(_ equipIndex: Int, imageIndex: Int, id: Int) {
-        objc_sync_enter(self);
-        ((self.equipArray.object(at: equipIndex) as AnyObject).object(forKey: equipKey.imageSet)! as AnyObject).setValue(id, forKey: imageSetKey.imageID);
-        objc_sync_exit(self);
+    //修改图片名
+    func modifyImageName(_ equipkey: String, imageIndex: Int, name:String){
+        equipDict.readRequest()
+        if(equipDict.subject.allKeys.contains(where: {return equipkey.isEqual($0)})){
+            equipDict.readEnd()
+            equipDict.writeRequest();
+            (((equipDict.subject.object(forKey: equipkey) as! NSMutableDictionary).object(forKey: equipKey.imageSet) as! NSMutableArray).object(at: imageIndex) as! NSMutableDictionary).setValue(name, forKey: imageSetKey.imageName);
+            equipDict.writeEnd();
+        }else{
+            equipDict.readEnd()
+        }
+    }
+    
+    func modifyImageID(_ equipkey: String, imageIndex: Int, id: Int) {
+        equipDict.readRequest()
+        if(equipDict.subject.allKeys.contains(where: {return equipkey.isEqual($0)})){
+            equipDict.readEnd()
+            equipDict.writeRequest();
+            (((equipDict.subject.object(forKey: equipkey) as! NSMutableDictionary).object(forKey: equipKey.imageSet) as! NSMutableArray).object(at: imageIndex) as! NSMutableDictionary).setValue(id, forKey: imageSetKey.imageID);
+            equipDict.writeEnd();
+        }else{
+            equipDict.readEnd();
+        }
     }
     
     //修改图片状态
-    func modifyImageStatus(_ equipIndex:Int, imageIndex:Int, status:Int){
-        objc_sync_enter(self);
-        ((self.equipArray.object(at: equipIndex) as AnyObject).object(forKey: equipKey.imageSet)! as AnyObject).setValue(status, forKey: imageSetKey.status);
-        objc_sync_exit(self);
+    func modifyImageStatus(_ equipkey:String, imageIndex:Int, status:Int){
+        equipDict.readRequest()
+        if(equipDict.subject.allKeys.contains(where: {return equipkey.isEqual($0)})){
+            equipDict.readEnd()
+            equipDict.writeRequest();
+            (((equipDict.subject.object(forKey: equipkey) as! NSMutableDictionary).object(forKey: equipKey.imageSet) as! NSMutableArray).object(at: imageIndex) as! NSMutableDictionary).setValue(status, forKey: imageSetKey.status);
+            equipDict.writeEnd();
+        }else{
+            equipDict.readEnd();
+        }
     }
     //获取设备
-    func getEquip(_ index:Int)->NSMutableDictionary?{
-        if(index >= self.count || index < 0){
+    func getEquip(_ key:String)->NSMutableDictionary?{
+        equipDict.readRequest()
+        if(equipDict.subject.allKeys.contains(where: {return key.isEqual($0)})){
+            let equip = equipDict.subject.object(forKey: key) as! NSMutableDictionary;
+            equipDict.readEnd()
+            return equip.mutableCopy() as? NSMutableDictionary;
+        }else{
+            equipDict.readEnd();
             return nil;
         }
-        let equip = equipArray.object(at: index) as! NSMutableDictionary;
-        return equip.mutableCopy() as? NSMutableDictionary;
     }
     //获取图片
-    func getImage(_ equipIndex:Int, imageIndex:Int)->NSMutableDictionary?{
-        if(equipIndex >= self.count || equipIndex < 0){
-            return nil;
-        }
-        let imageSet:NSMutableArray = getEquipImageSet(equipIndex);
+    func getImage(_ equipkey:String, imageIndex:Int)->NSMutableDictionary?{
+        equipDict.readRequest()
+        if(equipDict.subject.allKeys.contains(where: {return equipkey.isEqual($0)})){
+            equipDict.readEnd();
+        let imageSet:NSMutableArray = getEquipImageSet(equipkey);
         if(imageIndex >= imageSet.count || imageIndex < 0){
             return nil;
         }
         return imageSet.object(at: imageIndex) as? NSMutableDictionary;
+        }else{
+            equipDict.readEnd();
+            return nil;
+        }
     }
-    //根据key和value获取index
-    func getSpecIndex(_ key:String,value:AnyObject)->Int{
-        for i in 0..<self.count{
-            if((self.getEquip(i)!.value(forKey: key as String)! as AnyObject).isEqual(value)){
-                return i;
+    //根据key和value获取key
+    func getSpecKey(_ key:String,value:AnyObject)->String{
+        equipDict.readRequest();
+        for (keyTmp, valueTmp) in equipDict.subject{
+            if(((valueTmp as! NSMutableDictionary).value(forKey: key as String)! as AnyObject).isEqual(value)){
+                equipDict.readEnd();
+                return keyTmp as! String;
             }
         }
-        return -1;
+        equipDict.readEnd();
+        return "";
     }
     //获取设备路径
-    func getEquipPath(_ index:Int)->URL{
-        return URL(fileURLWithPath: (self.getEquip(index)!.object(forKey: equipKey.path) as! String)).appendingPathComponent("\(self.getEquipXMLID(index)).xml");
+    func getEquipPath(_ key:String)->URL{
+        let url: URL = URL(fileURLWithPath: self.getEquip(key)!.object(forKey: equipKey.path) as! String).appendingPathComponent("\(self.getEquipXMLID(key)).xml");
+        return url;
     }
     //获取设备xmlID
-    func getEquipXMLID(_ index:Int)->Int{
-        return getEquip(index)!.object(forKey: equipKey.XMLID) as! Int;
+    func getEquipXMLID(_ key:String)->Int{
+        let xmlID = self.getEquip(key)!.object(forKey: equipKey.XMLID) as! Int;
+        return xmlID;
     }
     //获取设备PID
-    func getEquipParentID(_ index:Int) -> Int {
-        return getEquip(index)!.object(forKey: equipKey.parentID) as! Int;
+    func getEquipParentID(_ key:String) -> Int {
+        let parentID = getEquip(key)!.object(forKey: equipKey.parentID) as! Int;
+        return parentID;
     }
     //获取设备名称
-    func getEquipName(_ index:Int) -> String {
-        return getEquip(index)!.object(forKey: equipKey.XMLName) as! String;
+    func getEquipName(_ key:String) -> String {
+        let equipName = getEquip(key)!.object(forKey: equipKey.XMLName) as! String;
+        return equipName;
     }
     //获取设备的ImageSet
-    func getEquipImageSet(_ index:Int) -> NSMutableArray {
-        return getEquip(index)!.object(forKey: equipKey.imageSet) as! NSMutableArray;
+    func getEquipImageSet(_ key:String) -> NSMutableArray {
+        let imageSet = getEquip(key)!.object(forKey: equipKey.imageSet) as! NSMutableArray;
+        return imageSet;
     }
     //获取设备的groupID
-    func getEquipGroupID(_ index:Int) -> Int {
-        return getEquip(index)!.object(forKey: equipKey.groupID) as! Int;
+    func getEquipGroupID(_ key:String) -> Int {
+        let groupID = getEquip(key)!.object(forKey: equipKey.groupID) as! Int;
+        return groupID;
     }
     //获取设备状态
-    func getEquipStatus(_ index:Int) -> Int {
-        return getEquip(index)!.object(forKey: equipKey.status) as! Int;
+    func getEquipStatus(_ key:String) -> Int {
+        let equipStatus = getEquip(key)!.object(forKey: equipKey.status) as! Int;
+        return equipStatus;
     }
+    
+    func getImageCount(_ equipkey: String) -> Int {
+        let count = self.getEquipImageSet(equipkey).count;
+        return count;
+    }
+    
     //获取图片路径
-    func getImagePath(_ equipIndex:Int, imageIndex:Int) -> URL {
-        let fileName = self.getImage(equipIndex, imageIndex: imageIndex)!.object(forKey: imageSetKey.imageName) as! String;
+    func getImagePath(_ equipkey:String, imageIndex:Int) -> URL {
+        let fileName = self.getImage(equipkey, imageIndex: imageIndex)!.object(forKey: imageSetKey.imageName) as! String;
         let fileExt = (fileName as NSString).pathExtension;
-        return URL(fileURLWithPath: (self.getImage(equipIndex, imageIndex: imageIndex)!.object(forKey: imageSetKey.imagePath) as! String)).appendingPathComponent("\(self.getImage(equipIndex, imageIndex: imageIndex)!.object(forKey: imageSetKey.imageID) as! Int).\(fileExt)");
+        let url = URL(fileURLWithPath: (self.getImage(equipkey, imageIndex: imageIndex)!.object(forKey: imageSetKey.imagePath) as! String)).appendingPathComponent("\(self.getImage(equipkey, imageIndex: imageIndex)!.object(forKey: imageSetKey.imageID) as! Int).\(fileExt)");
+        return url;
     }
     //获取图片ID
-    func getImageID(_ equipIndex:Int, imageIndex:Int) -> Int {
-        return getImage(equipIndex, imageIndex: imageIndex)!.object(forKey: imageSetKey.imageID) as! Int;
+    func getImageID(_ equipkey:String, imageIndex:Int) -> Int {
+        let imageID = getImage(equipkey, imageIndex: imageIndex)!.object(forKey: imageSetKey.imageID) as! Int
+        return imageID;
     }
     //获取图片名称
-    func getImageName(_ equipIndex:Int, imageIndex:Int) -> String {
-        return getImage(equipIndex, imageIndex: imageIndex)!.object(forKey: imageSetKey.imageName) as! String;
+    func getImageName(_ equipkey:String, imageIndex:Int) -> String {
+        let imageName = getImage(equipkey, imageIndex: imageIndex)!.object(forKey: imageSetKey.imageName) as! String;
+        return imageName;
     }
     //获取图片状态
-    func getImageStatus(_ equipIndex:Int, imageIndex:Int) -> Int {
-        return getImage(equipIndex, imageIndex: imageIndex)!.object(forKey: imageSetKey.status) as! Int;
+    func getImageStatus(_ equipkey:String, imageIndex:Int) -> Int {
+        let imageStatus = getImage(equipkey, imageIndex: imageIndex)!.object(forKey: imageSetKey.status) as! Int;
+        return imageStatus;
     }
     //判断是否主图片
-    func isMainImage(_ equipIndex:Int, imageIndex:Int) -> Bool{
-        let name = getImageName(equipIndex, imageIndex: imageIndex);
-        let parentID = getEquipParentID(equipIndex);
+    func isMainImage(_ equipkey:String, imageIndex:Int) -> Bool{
+        let name = getImageName(equipkey, imageIndex: imageIndex);
+        let parentID = getEquipParentID(equipkey);
         return EquipImageInfo.isMainImage(name, parentId: parentID);
     }
     //从文件中读取
-    func readFromFile(_ url:URL)->Bool{
-        let equipArray:NSMutableArray? = NSMutableArray(contentsOf: url);
-        if(equipArray == nil){
-            return false;
-        }
-        self.equipArray = equipArray!.mutableCopy() as! NSMutableArray;
+    func readFromFile(_ dicturl:URL, orderurl: URL)->Bool{
+        equipDict.writeRequest();
+        self.equipDict.subject = NSMutableDictionary(contentsOf: dicturl)!;
+        equipDict.writeEnd();
+        attrKey.writeRequest();
+        attrKey.subject = NSMutableArray(contentsOf: orderurl)!;
+        attrKey.writeEnd();
         return true;
     }
     //写入文件
-    func writeToFile(_ url:URL)->Bool{
-        return self.equipArray.write(toFile: url.path, atomically: true);
+    func writeToFile(_ dicturl:URL, orderurl: URL)->Bool{
+        equipDict.readRequest();
+        let dictWrite = self.equipDict.subject.write(toFile: dicturl.path, atomically: true);
+        equipDict.readEnd();
+        attrKey.readRequest();
+        let orderWrite = self.attrKey.subject.write(toFile: orderurl.path, atomically: true);
+        attrKey.readEnd();
+        return dictWrite && orderWrite;
     }
     
     

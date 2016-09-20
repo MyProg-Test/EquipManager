@@ -40,6 +40,10 @@
 		084358E91D85F4CE00B02F1A /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 084358E81D85F4CE00B02F1A /* logo.png */; };
 		08B789821D8C6A4D009E0292 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08B789811D8C6A4D009E0292 /* Alamofire.framework */; };
 		08B789831D8C6A4D009E0292 /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 08B789811D8C6A4D009E0292 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		08B789D01D915C35009E0292 /* GCDGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B789CC1D915C35009E0292 /* GCDGroup.swift */; };
+		08B789D11D915C35009E0292 /* GCDSemaphore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B789CD1D915C35009E0292 /* GCDSemaphore.swift */; };
+		08B789D21D915C35009E0292 /* GCDThread.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B789CE1D915C35009E0292 /* GCDThread.swift */; };
+		08B789D31D915C35009E0292 /* MySafeMutableMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B789CF1D915C35009E0292 /* MySafeMutableMethod.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -93,6 +97,10 @@
 		0806ABDB1D7EBABF00D93D95 /* equipTwoCode.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = equipTwoCode.png; path = Assets.xcassets/equipTwoCode.png; sourceTree = "<group>"; };
 		084358E81D85F4CE00B02F1A /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = logo.png; path = Assets.xcassets/logo.png; sourceTree = "<group>"; };
 		08B789811D8C6A4D009E0292 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = EquipManager/library/Alamofire.framework; sourceTree = "<group>"; };
+		08B789CC1D915C35009E0292 /* GCDGroup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GCDGroup.swift; path = src/Other/GCDGroup.swift; sourceTree = "<group>"; };
+		08B789CD1D915C35009E0292 /* GCDSemaphore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GCDSemaphore.swift; path = src/Other/GCDSemaphore.swift; sourceTree = "<group>"; };
+		08B789CE1D915C35009E0292 /* GCDThread.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GCDThread.swift; path = src/Other/GCDThread.swift; sourceTree = "<group>"; };
+		08B789CF1D915C35009E0292 /* MySafeMutableMethod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MySafeMutableMethod.swift; path = src/Other/MySafeMutableMethod.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +119,10 @@
 		08032BEB1D805194001AD72F /* Other */ = {
 			isa = PBXGroup;
 			children = (
+				08B789CC1D915C35009E0292 /* GCDGroup.swift */,
+				08B789CD1D915C35009E0292 /* GCDSemaphore.swift */,
+				08B789CE1D915C35009E0292 /* GCDThread.swift */,
+				08B789CF1D915C35009E0292 /* MySafeMutableMethod.swift */,
 				08032BF01D806FC1001AD72F /* SwiftNotice.swift */,
 				08032BEC1D8051A8001AD72F /* SwiftPrint.swift */,
 			);
@@ -218,7 +230,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0730;
-				LastUpgradeCheck = 0730;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = LY;
 				TargetAttributes = {
 					0806AADE1D7EB1AF00D93D95 = {
@@ -275,19 +287,23 @@
 				0806ABB91D7EBA0600D93D95 /* EquipManager.swift in Sources */,
 				0806ABBC1D7EBA0600D93D95 /* Extention.swift in Sources */,
 				0806ABC01D7EBA0600D93D95 /* NetworkOperation.swift in Sources */,
+				08B789D21D915C35009E0292 /* GCDThread.swift in Sources */,
 				0806ABD11D7EBA2100D93D95 /* EquipImageTableViewCell.swift in Sources */,
 				0806ABB71D7EBA0600D93D95 /* EquipImageInfo.swift in Sources */,
 				0806ABD31D7EBA2100D93D95 /* EquipListTableViewController.swift in Sources */,
 				0806ABB81D7EBA0600D93D95 /* EquipInfo.swift in Sources */,
 				0806ABBD1D7EBA0600D93D95 /* FileInfo.swift in Sources */,
 				08032BED1D8051A8001AD72F /* SwiftPrint.swift in Sources */,
+				08B789D31D915C35009E0292 /* MySafeMutableMethod.swift in Sources */,
 				0806ABCC1D7EBA2100D93D95 /* AppDelegate.swift in Sources */,
 				0806ABCD1D7EBA2100D93D95 /* DetailEquipTableViewCell.swift in Sources */,
+				08B789D01D915C35009E0292 /* GCDGroup.swift in Sources */,
 				0806ABD21D7EBA2100D93D95 /* EquipListTableViewCell.swift in Sources */,
 				0806ABC11D7EBA0600D93D95 /* XmlParser.swift in Sources */,
 				0806ABCE1D7EBA2100D93D95 /* DetailEquipTableViewController.swift in Sources */,
 				0806ABBF1D7EBA0600D93D95 /* GDataXMLNode.m in Sources */,
 				0806ABBB1D7EBA0600D93D95 /* EquipXmlInfo.swift in Sources */,
+				08B789D11D915C35009E0292 /* GCDSemaphore.swift in Sources */,
 				0806ABBA1D7EBA0600D93D95 /* EquipNetInfo.swift in Sources */,
 				0806ABD01D7EBA2100D93D95 /* EquipImagePickerTableViewController.swift in Sources */,
 			);
@@ -310,8 +326,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -355,8 +373,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -375,6 +395,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;

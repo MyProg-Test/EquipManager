@@ -115,7 +115,7 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
         }
         //cell数据设置
         cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
-        let equip = EquipInfo(index: (indexPath as NSIndexPath).row);
+        let equip = EquipInfo(key: EquipFileControl.sharedInstance().getFileSystemFromFile()!.attrKey.subject.object(at: (indexPath as NSIndexPath).row) as! String);
         cell.equipName.text = equip.xmlInfo.equipAttr.value(forKey: EquipmentAttrKey.nameKey.rawValue as String) as? String;
         cell.equipNumber.text = equip.xmlInfo.equipAttr.value(forKey: EquipmentAttrKey.codeKey.rawValue as String) as? String;
         if(equip.imageInfo.getDisplayedImageInfo() == nil){
@@ -130,7 +130,7 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
     //Select
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let detailEquipView = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "DetailEquip") as! DetailEquipViewController;
-        DetailEquipViewController.data_source = EquipInfo(index: (indexPath as NSIndexPath).row);
+        DetailEquipViewController.data_source = EquipInfo(key: EquipFileControl.sharedInstance().getFileSystemFromFile()!.attrKey.subject.object(at: (indexPath as NSIndexPath).row) as! String);
         self.navigationController?.pushViewController(detailEquipView, animated: true);
     }
     
@@ -161,14 +161,14 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
     }
     
     func backPressed(){
-        self.navigationController?.popViewController(animated: true)
+        _ = self.navigationController?.popViewController(animated: true)
         
     }
     
     func homePressed(){
         
         self.navigationController?.setToolbarHidden(true, animated: true)
-        self.navigationController?.popToRootViewController(animated: true)
+        _ = self.navigationController?.popToRootViewController(animated: true)
         //        CurrentInfo.sharedInstance.backToHome()
     }
     

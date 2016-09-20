@@ -59,11 +59,11 @@ class EquipNetInfo {
                     }
                 }
                 objc_sync_enter(self.fs);
-                let index = self.fs.getSpecIndex(FileSystem.equipKey.parentID, value: parentID as AnyObject);
+                let index = self.fs.getSpecKey(FileSystem.equipKey.parentID, value: parentID as AnyObject);
                 self.fs.addImageArray(index, imageArray: imageSet);
                 objc_sync_exit(self.fs);
                 //debug-------------------------------
-                if(index != -1){
+                if(index != ""){
                     //print(self.fs.writeToFile(EquipFileControl.sharedInstance().getEquipInfoFilePath()));
                     print(index)
                     print(self.fs.getEquipPath(index).path);

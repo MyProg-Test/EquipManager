@@ -49,24 +49,24 @@ class EquipManager:NSObject{
         }
         //添加服务器有本地没有的文件节点，并处理所有设备的图片节点（图片路径和图片名字）
         let tmpList:NSMutableArray = NSMutableArray();
-        for s in stride(from: 0, to: EquipNetInfo.sharedInstance().count, by: 1){
-            let server = EquipNetInfo.sharedInstance().fs.getEquip(s)!;
+        for s in EquipNetInfo.sharedInstance().fs.attrKey.subject{
+            let server = EquipNetInfo.sharedInstance().fs.getEquip(s as! String)!;
             var matchFlag = false;
-            for l in stride(from: 0, to: EquipFileControl.sharedInstance().count, by: 1){
-                let local = EquipFileControl.sharedInstance().getEquipFromFile(l)!;
+            for l in EquipFileControl.sharedInstance().getFileSystemFromFile()!.attrKey.subject{
+                let local = EquipFileControl.sharedInstance().getEquipFromFile(l as! String)!;
                 if(dictionIsEqual(local, dict2: server, key: FileSystem.equipKey.XMLID as NSString)){
                     matchFlag = true;
                     let imageList:NSMutableArray = NSMutableArray();
-                    for si in stride(from: 0, to: EquipNetInfo.sharedInstance().fs.getImageCount(s), by: 1){
-                        let serverImageSet = EquipNetInfo.sharedInstance().fs.getImage(s, imageIndex: si)!;
+                    for si in stride(from: 0, to: EquipNetInfo.sharedInstance().fs.getImageCount(s as! String), by: 1){
+                        let serverImageSet = EquipNetInfo.sharedInstance().fs.getImage(s as! String, imageIndex: si)!;
                         var matchFlag2 = false;
-                        for li in stride(from: 0, to: EquipFileControl.sharedInstance().fs!.getImageCount(l), by: 1){
-                            let localImageSet = EquipFileControl.sharedInstance().fs!.getImage(l, imageIndex: li)!;
+                        for li in stride(from: 0, to: EquipFileControl.sharedInstance().fs!.getImageCount(l as! String), by: 1){
+                            let localImageSet = EquipFileControl.sharedInstance().fs!.getImage(l as! String, imageIndex: li)!;
                             if(dictionIsEqual(serverImageSet, dict2: localImageSet, key: FileSystem.imageSetKey.imageID as NSString)){
                                 matchFlag2 = true;
                                 if(!dictionIsEqual(serverImageSet, dict2: localImageSet, key: FileSystem.imageSetKey.imageName as NSString)){
-                                    if((EquipFileControl.sharedInstance().getImageStatusFromFile(l, imageIndex: li) & FileSystem.Status.modifty.rawValue) > 0){
-                                        _ = EquipFileControl.sharedInstance().modifyImageNameInFile(l, imageIndex: li, name: serverImageSet.object(forKey: FileSystem.imageSetKey.imageName) as! String);
+                                    if((EquipFileControl.sharedInstance().getImageStatusFromFile(l as! String, imageIndex: li) & FileSystem.Status.modifty.rawValue) > 0){
+                                        _ = EquipFileControl.sharedInstance().modifyImageNameInFile(l as! String, imageIndex: li, name: serverImageSet.object(forKey: FileSystem.imageSetKey.imageName) as! String);
                                     }
                                 }
                                 break;
@@ -77,7 +77,7 @@ class EquipManager:NSObject{
                         }
                     }
                     for tmp in imageList {
-                        _ = EquipFileControl.sharedInstance().addImageInfoToFile(l, imageID: (tmp as AnyObject).object(forKey: FileSystem.imageSetKey.imageID) as! Int, imagePath: (tmp as AnyObject).object(forKey: FileSystem.imageSetKey.imagePath) as! String, imageName: (tmp as AnyObject).object(forKey: FileSystem.imageSetKey.imageName) as! String);
+                        _ = EquipFileControl.sharedInstance().addImageInfoToFile(l as! String, imageID: (tmp as AnyObject).object(forKey: FileSystem.imageSetKey.imageID) as! Int, imagePath: (tmp as AnyObject).object(forKey: FileSystem.imageSetKey.imagePath) as! String, imageName: (tmp as AnyObject).object(forKey: FileSystem.imageSetKey.imageName) as! String);
                     }
                     break;
                 }
@@ -92,40 +92,40 @@ class EquipManager:NSObject{
         }
         tmpList.removeAllObjects();
         //删去不是new的服务器没有的节点（暂时不考虑安卓的操作和人为的网页删除）
-        for l in stride(from: 0, to: EquipFileControl.sharedInstance().count, by: 1) {
+        for l in EquipFileControl.sharedInstance().getFileSystemFromFile()!.attrKey.subject {
             var matchFlag = false;
-            for s in stride(from: 0, to: EquipNetInfo.sharedInstance().count, by: 1) {
-                if(dictionIsEqual(EquipFileControl.sharedInstance().getEquipFromFile(l)!, dict2: EquipNetInfo.sharedInstance().fs.getEquip(s)!, key: FileSystem.equipKey.XMLID as NSString)){
+            for s in EquipNetInfo.sharedInstance().fs.attrKey.subject {
+                if(dictionIsEqual(EquipFileControl.sharedInstance().getEquipFromFile(l as! String)!, dict2: EquipNetInfo.sharedInstance().fs.getEquip(s as! String)!, key: FileSystem.equipKey.XMLID as NSString)){
                     matchFlag = true;
                     let imageList:NSMutableArray = NSMutableArray();
-                    for li in stride(from: 0, to: EquipFileControl.sharedInstance().getImageCountFromFile(l), by: 1) {
+                    for li in stride(from: 0, to: EquipFileControl.sharedInstance().getImageCountFromFile(l as! String), by: 1) {
                         var matchFlag2 = false;
-                        for si in stride(from: 0, to: EquipNetInfo.sharedInstance().fs.getImageCount(s), by: 1) {
-                            if(dictionIsEqual(EquipFileControl.sharedInstance().getImageFromFile(l, imageIndex: li)!, dict2: EquipNetInfo.sharedInstance().fs.getImage(s, imageIndex: si)!, key: FileSystem.imageSetKey.imageID as NSString)){
+                        for si in stride(from: 0, to: EquipNetInfo.sharedInstance().fs.getImageCount(s as! String), by: 1) {
+                            if(dictionIsEqual(EquipFileControl.sharedInstance().getImageFromFile(l as! String, imageIndex: li)!, dict2: EquipNetInfo.sharedInstance().fs.getImage(s as! String, imageIndex: si)!, key: FileSystem.imageSetKey.imageID as NSString)){
                                 matchFlag2 = true
                                 break;
                             }
                         }
                         if(!matchFlag2){
-                            if(EquipFileControl.sharedInstance().getImageStatusFromFile(l, imageIndex: li) & FileSystem.Status.new.rawValue == 0){
-                                imageList.add(EquipFileControl.sharedInstance().getImageFromFile(l, imageIndex: li)!);
+                            if(EquipFileControl.sharedInstance().getImageStatusFromFile(l as! String, imageIndex: li) & FileSystem.Status.new.rawValue == 0){
+                                imageList.add(EquipFileControl.sharedInstance().getImageFromFile(l as! String, imageIndex: li)!);
                             }
                         }
                     }
                     for tmp in imageList {
-                        EquipFileControl.sharedInstance().deleteImageFromFile(l, image: tmp as! NSMutableDictionary);
+                        EquipFileControl.sharedInstance().deleteImageFromFile(l as! String, image: tmp as! NSMutableDictionary);
                     }
                     break;
                 }
             }
             if(!matchFlag){
-                if(EquipFileControl.sharedInstance().getEquipStatusFromFile(l) & FileSystem.Status.new.rawValue == 0){
-                    tmpList.add(EquipFileControl.sharedInstance().getEquipFromFile(l)!);
+                if(EquipFileControl.sharedInstance().getEquipStatusFromFile(l as! String) & FileSystem.Status.new.rawValue == 0){
+                    tmpList.add(l);
                 }
             }
         }
         for tmp in tmpList {
-            EquipFileControl.sharedInstance().deleteEquipFromFile(tmp as! NSMutableDictionary);
+            _ = EquipFileControl.sharedInstance().deleteEquipFromFile(tmp as! String);
         }
         //进行节点操作
         EquipFileControl.sharedInstance().interactEquipWithNet();
