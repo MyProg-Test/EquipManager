@@ -528,11 +528,12 @@ class EquipFileControl {
         if(fs == nil){
             return ;
         }
+        let waitList: MySafeMutableMethod = MySafeMutableMethod<Array<GCDSemaphore>>(subject: Array<GCDSemaphore>());
         for imageIndex in 0..<fs!.getImageCount(key){
             let imageID = fs!.getImageID(key, imageIndex: imageIndex);
             let imageStatus = fs!.getImageStatus(key, imageIndex: imageIndex);
             if(!FileManager.default.fileExists(atPath: self.getImageFilePathFromFile(key, imageIndex: imageIndex)!.path)){
-                _ = NetworkOperation.sharedInstance().getThumbnail(imageID, handler: { (any) in
+                let sema = NetworkOperation.sharedInstance().getThumbnail(imageID, handler: { (any) in
                     do{
                         let url = self.getImageFilePathFromFile(key, imageIndex: imageIndex)!;
                         if(!FileManager.default.fileExists(atPath: url.deletingLastPathComponent().path)){
@@ -543,8 +544,14 @@ class EquipFileControl {
                     }catch{
                         print(error);
                     }
-                })
+                });
+                waitList.writeRequest();
+                waitList.subject.append(sema);
+                waitList.writeEnd();
             }
+        }
+        for i in waitList.subject {
+            _ = i.enter();
         }
     }
     //检查当前路径，若不存在，则建立

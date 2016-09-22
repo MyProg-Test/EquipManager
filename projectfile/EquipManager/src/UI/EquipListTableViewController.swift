@@ -44,6 +44,14 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
         menuToolbar()
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(title: "编辑", style: .done, target: self, action: #selector(EquipListTableViewController.editEquipList))
+        self.pleaseWait();
+        DispatchQueue.global(qos: .utility).async {
+            EquipManager.sharedInstance().update();
+            DispatchQueue.main.async {
+                self.tableView.reloadData();
+                self.clearAllNotice();
+            }
+        }
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false

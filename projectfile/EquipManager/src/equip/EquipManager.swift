@@ -13,7 +13,7 @@ class EquipManager:NSObject{
     var rootId:Int = 0
     
     var defaultGroupId:Int = 1069;
-    fileprivate static var _sharedInstance:EquipManager = EquipManager(rootId: 0);
+    fileprivate static let _sharedInstance:EquipManager = EquipManager(rootId: 0);
     //根据rootID初始化
     init(rootId:Int){
         super.init();
@@ -22,14 +22,17 @@ class EquipManager:NSObject{
     //单例模式
     class func sharedInstance(_ rootId:Int) -> EquipManager{
         _sharedInstance.rootId = rootId;
-        _sharedInstance.initWithLocal();
-        _sharedInstance.initWithNet();
-        _sharedInstance.combine();
         return _sharedInstance;
     }
     
     class func sharedInstance()->EquipManager{
         return _sharedInstance;
+    }
+    
+    func update() {
+        initWithLocal();
+        initWithNet();
+        combine();
     }
     
     //从本地更新

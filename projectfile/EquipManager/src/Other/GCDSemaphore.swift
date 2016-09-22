@@ -49,13 +49,13 @@ class GCDSemaphore: NSObject {
         }
     }
     
-    func enter(timeout: DispatchTime = .distantFuture, message: String = "") -> DispatchTimeoutResult {
+    func enter(timeout: DispatchTime = .distantFuture, message: Any = "") -> DispatchTimeoutResult {
         let rtn: DispatchTimeoutResult = self.semaphore.wait(timeout: timeout)
         self.printDebugInfo("当前信号: \(self.semaphore.description)\n等待时间: \(timeout)\n进入消息: \(message)");
         return rtn;
     }
     
-    func exit(message: String = "") -> Int {
+    func exit(message: Any = "") -> Int {
         let rtn: Int = self.semaphore.signal()
         self.printDebugInfo("当前信号: \(self.semaphore.description)\n离开消息: \(message)");
         return rtn;

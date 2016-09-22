@@ -30,7 +30,7 @@ class GCDThread: NSObject {
         super.init();
     }
     
-    init(label: String, attr: DispatchQueue.Attributes) {
+    init(label: String, attr: DispatchQueue.Attributes = .concurrent) {
         queue = DispatchQueue(label: label, attributes: attr);
         super.init();
     }
@@ -47,21 +47,21 @@ class GCDThread: NSObject {
         }
     }
     
-    func async(message:String = "", block:@escaping ()->()!) {
+    func async(message:String = "", block:@escaping ()->Void) {
         self.queue.async{
             self.printDebugInfo(message: "当前队列:\(self.queueInfo)\n异步消息(async):\(message)");
             block();
         };
     }
     
-    func sync(message:String = "", block:()->()!) {
+    func sync(message:String = "", block:()->Void) {
         self.queue.sync{
             self.printDebugInfo(message: "当前队列:\(self.queueInfo)\n同步消息(sync):\(message)");
             block();
         };
     }
     
-    func after(delay:Double, message:String = "", block:@escaping ()->()!){
+    func after(delay:Double, message:String = "", block:@escaping ()->Void){
         self.queue.asyncAfter(
         deadline: DispatchTime.now() + Double(Int64(delay * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)){
             self.printDebugInfo(message: "当前队列:\(self.queueInfo)\n延迟消息(after):\(message)");

@@ -23,7 +23,7 @@ class GCDGroup: NSObject {
         }
     }
     
-    func regist(message: String = "", block: ()->()) {
+    func regist(message: String = "", block: ()->Void) {
         self.group.enter();
         self.printDebugInfo("当前组:\(self.group) start\n消息(notify):\(message)" as AnyObject);
         block();
@@ -31,7 +31,7 @@ class GCDGroup: NSObject {
         self.group.leave();
     }
     
-    func notify(message: String = "", thread: GCDThread, block: @escaping ()->()) {
+    func notify(message: String = "", thread: GCDThread, block: @escaping ()->Void) {
         self.group.notify(queue: thread.queue){
             self.printDebugInfo("当前组:\(self.group)\n通知消息(notify):\(message)");
             block();
@@ -43,7 +43,7 @@ class GCDGroup: NSObject {
         return self.group.wait(timeout: timeout);
     }
     
-    func async(message: String = "", thread: GCDThread, block:@escaping ()->()) {
+    func async(message: String = "", thread: GCDThread, block:@escaping ()->Void) {
         thread.queue.async(group: self.group){
             self.printDebugInfo("当前组:\(self.group)\n异步消息(notify):\(message)");
             block();

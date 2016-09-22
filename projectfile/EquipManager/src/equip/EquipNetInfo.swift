@@ -34,7 +34,7 @@ class EquipNetInfo {
         }
     }
     //从网络端添加设备
-    func addEquipFromNet(_ parentID:Int, parentName:String) -> DispatchSemaphore{
+    func addEquipFromNet(_ parentID:Int, parentName:String) -> GCDSemaphore{
         let rtn = NetworkOperation.sharedInstance().getResources(parentID) { (any) in
             if let resArray = any.object(forKey: NetworkOperation.NetConstant.DictKey.GetResources.Response.resources){
                 let tmpArray = resArray as! NSArray;
@@ -85,7 +85,13 @@ class EquipNetInfo {
     }
     //从网络端读取
     func readFromNet(_ rootID:Int){
-        var waitList = Array<DispatchSemaphore>();
+        var waitList = Array<GCDSemaphore>();
+        fs.attrKey.writeRequest();
+        fs.attrKey.subject.removeAllObjects();
+        fs.attrKey.writeEnd();
+        fs.equipDict.writeRequest();
+        fs.equipDict.subject.removeAllObjects();
+        fs.equipDict.writeEnd();
         let wait = NetworkOperation.sharedInstance().getResources(rootID) { (any) in
             if let folderResArray = any.object(forKey: NetworkOperation.NetConstant.DictKey.GetResources.Response.resources){
                 for i in 0..<(folderResArray as AnyObject).count{
@@ -96,16 +102,10 @@ class EquipNetInfo {
                 }
             }
         }
-        let group: DispatchGroup = DispatchGroup();
-        NetworkOperation.NetConstant.defaultQueue.async(group: group){
-            wait.wait();
-            print("readWaitEnd");
-            for i in waitList{
-                i.wait();
-                print("\(i) waitEND");
-            }
+        _ = wait.enter(message: "getFolder: \(Thread.current)");
+        for i in waitList{
+            _ = i.enter(message: "getEquip: \(i)");
         }
-        group.wait();
     }
     
     //判断当前是否为图片

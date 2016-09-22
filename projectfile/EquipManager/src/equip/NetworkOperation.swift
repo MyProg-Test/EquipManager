@@ -14,7 +14,7 @@ class NetworkOperation {
     internal struct NetConstant{
         static let serverURL = "weblib.ccnl.scut.edu.cn/"
         static let serverProtocol = "http://"
-        static let defaultQueue:DispatchQueue = DispatchQueue(label: "NetworkOperation", attributes: .concurrent);
+        static let defaultQueue:GCDThread = GCDThread(label: "NetworkOperation", attr: .concurrent);
         //网络接口使用的询问key和回答key
         struct DictKey {
             //登录时使用的key
@@ -316,25 +316,25 @@ class NetworkOperation {
         return _sharedInstance
     }
     
-    func postRequest(url: String,dict: [String: Any], queue: DispatchQueue, handler: @escaping (AnyObject) -> Void) -> DispatchSemaphore {
-        let sema: DispatchSemaphore = DispatchSemaphore(value: 0);
-        queue.async{
-            let request = Alamofire.request(url, method: .post, parameters: dict, headers: nil);
-            request.responseJSON{(response) in
+    func postRequest(url: String,dict: [String: Any], queue: GCDThread, handler: @escaping (AnyObject) -> Void) -> GCDSemaphore {
+        let sema: GCDSemaphore = GCDSemaphore(count: 0);
+        let request = Alamofire.request(url, method: .post, parameters: dict, headers: nil);
+        request.responseJSON{(response) in
+            queue.async{
                 switch response.result{
                 case .success(let data):
                     handler(data as AnyObject);
                 case .failure(let error):
                     print(error);
                 }
-                sema.signal();
+                _ = sema.exit(message: "post: \(Thread.current)");
             }
         }
         return sema;
     }
     
-    func download(url: String, dict: [String: Any], fileURL: URL, queue: DispatchQueue, handler: @escaping (AnyObject) -> Void) -> DispatchSemaphore {
-        let sema: DispatchSemaphore = DispatchSemaphore(value: 0);
+    func download(url: String, dict: [String: Any], fileURL: URL, queue: GCDThread, handler: @escaping (AnyObject) -> Void) -> GCDSemaphore {
+        let sema: GCDSemaphore = GCDSemaphore(count: 0)
         queue.async {
             let downloadURL = "\(url)?id=\(dict["id"]!)";
             let fileData = try! Data(contentsOf: URL(string: downloadURL)!);
@@ -343,61 +343,46 @@ class NetworkOperation {
             }
             (fileData as NSData).write(toFile: fileURL.path, atomically: true);
             handler(fileData as AnyObject);
-            sema.signal();
-            /*_ = Alamofire.download(url, method: .post, parameters: dict, encoding: JSONEncoding.default, headers: nil, to: { (tmpURL, response) -> (destinationURL: URL, options: DownloadRequest.DownloadOptions) in
-                print(response.statusCode,"sadnhquwhej");
-                return (fileURL, [.createIntermediateDirectories, .removePreviousFile]);
-            }).responseJSON{
-                (response) in
-                switch response.result{
-                case .success(let data):
-                    if let responseDict: NSDictionary = data as? NSDictionary{
-                        print(dict);
-                        handler(responseDict);
-                    }
-                case .failure(let error):
-                    print(error);
-                }
-                sema.signal();
-            }*/
+            _ = sema.exit(message: "download: \(Thread.current)");
         }
         return sema;
     }
     
-    func upload(dict: [String: Any], fileDict: [String: Data], fileName: String, mimeType: String, url: String, queue: DispatchQueue, handler: @escaping (AnyObject) -> Void) -> DispatchSemaphore {
-        let sema = DispatchSemaphore(value: 0);
-        queue.async {
-            Alamofire.upload(multipartFormData: {
-                (multipartFormData) in
-                for (key, value) in dict{
-                    multipartFormData.append((value as! String).data(using: .utf8)!, withName: key);
-                }
-                multipartFormData.append(fileDict.first!.value, withName: fileDict.first!.key, fileName: fileName, mimeType: mimeType)
-                
-                
-                }, to: url, method: .post, headers: nil, encodingCompletion: {
-                    (encodingResult) in
-                    switch encodingResult{
-                    case .success(request: let request, streamingFromDisk: _, streamFileURL: _):
-                        request.responseJSON{ response in
+    func upload(dict: [String: Any], fileDict: [String: Data], fileName: String, mimeType: String, url: String, queue: GCDThread, handler: @escaping (AnyObject) -> Void) -> GCDSemaphore {
+        let sema = GCDSemaphore(count: 0);
+        
+        Alamofire.upload(multipartFormData: {
+            (multipartFormData) in
+            for (key, value) in dict{
+                multipartFormData.append((value as! String).data(using: .utf8)!, withName: key);
+            }
+            multipartFormData.append(fileDict.first!.value, withName: fileDict.first!.key, fileName: fileName, mimeType: mimeType)
+            
+            
+            }, to: url, method: .post, headers: nil, encodingCompletion: {
+                (encodingResult) in
+                switch encodingResult{
+                case .success(request: let request, streamingFromDisk: _, streamFileURL: _):
+                    request.responseJSON{ response in
+                        queue.async {
                             switch response.result{
                             case .success(let data):
                                 handler(data as AnyObject);
                             case .failure(let error):
                                 print(error)
                             }
-                            sema.signal();
+                            _ = sema.exit(message: "upload: \(Thread.current)");
                         }
-                    case .failure(let error):
-                        print(error);
                     }
-            })
-        }
+                case .failure(let error):
+                    print(error);
+                }
+        })
         return sema;
     }
     
     //登陆
-    func Login(_ userName : String, passwd: String, queue:DispatchQueue = NetConstant.defaultQueue,handler:@escaping (AnyObject)->Void){
+    func Login(_ userName : String, passwd: String, queue:GCDThread = NetConstant.defaultQueue,handler:@escaping (AnyObject)->Void){
         var dict = [NetConstant.DictKey.Authenticate.Query.username : userName,
                     NetConstant.DictKey.Authenticate.Query.password : passwd];
         _ = self.postRequest(url: NetworkOperation.NetConstant.API.Authenticate.asURLConvertible, dict: dict, queue: queue){
@@ -412,7 +397,7 @@ class NetworkOperation {
         }
     }
     
-    func Status(_ queue: DispatchQueue = NetConstant.defaultQueue, handler: @escaping (AnyObject)->Void) -> DispatchSemaphore {
+    func Status(_ queue: GCDThread = NetConstant.defaultQueue, handler: @escaping (AnyObject)->Void) -> GCDSemaphore {
         let rtn = self.postRequest(url: NetworkOperation.NetConstant.API.Status.asURLConvertible, dict: [:], queue: queue){
             (responseDict) in
             handler(responseDict);
@@ -421,13 +406,13 @@ class NetworkOperation {
     }
     
     // group/getResources.action  获取文件树节点信息
-    func getResources(_ parentID:Int,type:Int = 0,start:Int = 0,limit:Int = 1000,queue:DispatchQueue = NetConstant.defaultQueue,handler:@escaping (AnyObject)->Void) -> DispatchSemaphore{
+    func getResources(_ parentID:Int,type:Int = 0,start:Int = 0,limit:Int = 1000,queue:GCDThread = NetConstant.defaultQueue,handler:@escaping (AnyObject)->Void) -> GCDSemaphore{
         let dict = [NetConstant.DictKey.GetResources.Query.parentId : parentID];
         return self.postRequest(url: NetworkOperation.NetConstant.API.GetResources.asURLConvertible, dict: dict, queue: queue,handler: handler);
     }
     
     //group/getResourceInfo.action  获取资源信息
-    func getResourceInfo(_ resourceID:Int, queue:DispatchQueue = NetConstant.defaultQueue, handler:@escaping (AnyObject)->Void) -> DispatchSemaphore{
+    func getResourceInfo(_ resourceID:Int, queue:GCDThread = NetConstant.defaultQueue, handler:@escaping (AnyObject)->Void) -> GCDSemaphore{
         let dict = [NetConstant.DictKey.GetResourceInfo.Query.resourceId : resourceID];
         return self.postRequest(url: NetworkOperation.NetConstant.API.GetResourceInfo.asURLConvertible, dict: dict, queue: queue){ (responseDict) in
             handler(responseDict)
@@ -435,7 +420,7 @@ class NetworkOperation {
     }
     
     //group/getSimpleResources.action  获取文件树节点简要信息
-    func getSimpleResources(_ parentID:Int,type:Int,start:Int,limit:Int, queue:DispatchQueue = NetConstant.defaultQueue, handler:@escaping (AnyObject)->Void) -> DispatchSemaphore{
+    func getSimpleResources(_ parentID:Int,type:Int,start:Int,limit:Int, queue:GCDThread = NetConstant.defaultQueue, handler:@escaping (AnyObject)->Void) -> GCDSemaphore{
         let dict = [NetConstant.DictKey.GetSimpleResources.Query.parentId : parentID];
         
         return self.postRequest(url: NetworkOperation.NetConstant.API.GetSimpleResources.asURLConvertible, dict: dict, queue: queue){
@@ -444,7 +429,7 @@ class NetworkOperation {
         }
     }
     
-    func deleteResource(_ id:Int, queue:DispatchQueue = NetConstant.defaultQueue, handler: @escaping (AnyObject)->Void) -> DispatchSemaphore {
+    func deleteResource(_ id:Int, queue:GCDThread = NetConstant.defaultQueue, handler: @escaping (AnyObject)->Void) -> GCDSemaphore {
         let dict = [NetConstant.DictKey.DeleteResource.Query.id : "\(id)"];
         return self.postRequest(url: NetworkOperation.NetConstant.API.DeleteResource.asURLConvertible, dict: dict, queue: queue){
             (responseDict) in
@@ -453,7 +438,7 @@ class NetworkOperation {
     }
     
     //group/createDir.action  新建文件夹
-    func createDir(_ groupID:Int,name:String,parentID:Int,queue:DispatchQueue = NetConstant.defaultQueue, handler:@escaping (AnyObject)->Void) -> DispatchSemaphore{
+    func createDir(_ groupID:Int,name:String,parentID:Int,queue:GCDThread = NetConstant.defaultQueue, handler:@escaping (AnyObject)->Void) -> GCDSemaphore{
         let dict = [NetConstant.DictKey.CreateDir.Query.groupId : "\(groupID)",
             NetConstant.DictKey.CreateDir.Query.name : name,
             NetConstant.DictKey.CreateDir.Query.parentId : "\(parentID)"] as [String : Any];
@@ -464,7 +449,7 @@ class NetworkOperation {
     }
     
     //group/downloadResource.action  下载文件或打包下载
-    func downloadResource(_ id:Int, url:URL, queue:DispatchQueue = NetConstant.defaultQueue, handler:@escaping (AnyObject)->Void) -> DispatchSemaphore{
+    func downloadResource(_ id:Int, url:URL, queue:GCDThread = NetConstant.defaultQueue, handler:@escaping (AnyObject)->Void) -> GCDSemaphore{
         let dict = [NetConstant.DictKey.DownloadResource.Query.id : "\(id)"];
         
         return self.download(url: NetworkOperation.NetConstant.API.Download.asURLConvertible, dict: dict, fileURL: url, queue: queue, handler: { (responseDict) in
@@ -473,13 +458,13 @@ class NetworkOperation {
     }
     
     //group/uploadResource.action   上传资源
-    func uploadResource(_ groupID:Int,parentID:Int,fileURL:URL,fileName:String,fileDataContentType:String = "multipart/form-data",documentType:String = "", queue:DispatchQueue = NetConstant.defaultQueue, handler:@escaping (AnyObject)->Void) -> DispatchSemaphore{
+    func uploadResource(_ groupID:Int,parentID:Int,fileURL:URL,fileName:String,fileDataContentType:String = "multipart/form-data",documentType:String = "", queue:GCDThread = NetConstant.defaultQueue, handler:@escaping (AnyObject)->Void) -> GCDSemaphore{
         let data:Data = try! Data(contentsOf: URL(fileURLWithPath: fileURL.path));
         return self.uploadResource(groupID, parentID: parentID, fileData: data, fileName: fileName, fileDataContentType: fileDataContentType, documentType: documentType, queue: queue, handler: handler);
     }
     
     //group/uploadResource.action   上传资源
-    func uploadResource(_ groupID:Int,parentID:Int,fileData:Data,fileName:String,fileDataContentType:String = "multipart/form-data",documentType:String = "", queue:DispatchQueue = NetConstant.defaultQueue, handler:@escaping (AnyObject)->Void) -> DispatchSemaphore{
+    func uploadResource(_ groupID:Int,parentID:Int,fileData:Data,fileName:String,fileDataContentType:String = "multipart/form-data",documentType:String = "", queue:GCDThread = NetConstant.defaultQueue, handler:@escaping (AnyObject)->Void) -> GCDSemaphore{
         let dict = [NetConstant.DictKey.UploadResource.Query.groupId : "\(groupID)",
             NetConstant.DictKey.UploadResource.Query.parentId : "\(parentID)"];
         let fileDict = [NetConstant.DictKey.UploadResource.Query.fileData: fileData];
@@ -488,13 +473,13 @@ class NetworkOperation {
     }
     
     //group/uploadResourceReturnId.action   上传资源并返回ID
-    func uploadResourceReturnId(_ groupID:Int,parentID:Int,fileURL:URL,fileName:String,fileDataContentType:String = "multipart/form-data",documentType:String = "", queue:DispatchQueue = NetConstant.defaultQueue, handler:@escaping (AnyObject)->Void) -> DispatchSemaphore{
+    func uploadResourceReturnId(_ groupID:Int,parentID:Int,fileURL:URL,fileName:String,fileDataContentType:String = "multipart/form-data",documentType:String = "", queue:GCDThread = NetConstant.defaultQueue, handler:@escaping (AnyObject)->Void) -> GCDSemaphore{
         let data:Data = try! Data(contentsOf: URL(fileURLWithPath: fileURL.path));
         return self.uploadResourceReturnId(groupID, parentID: parentID, fileData: data, fileName: fileName, fileDataContentType: fileDataContentType, documentType: documentType, queue: queue, handler: handler);
     }
     
     //group/uploadResourceReturnId.action   上传资源并返回ID
-    func uploadResourceReturnId(_ groupID:Int,parentID:Int,fileData:Data,fileName:String,fileDataContentType:String = "multipart/form-data",documentType:String = "", queue:DispatchQueue = NetConstant.defaultQueue, handler:@escaping (AnyObject)->Void) -> DispatchSemaphore{
+    func uploadResourceReturnId(_ groupID:Int,parentID:Int,fileData:Data,fileName:String,fileDataContentType:String = "multipart/form-data",documentType:String = "", queue:GCDThread = NetConstant.defaultQueue, handler:@escaping (AnyObject)->Void) -> GCDSemaphore{
         
         let dict = [NetConstant.DictKey.UploadResourceReturnId.Query.groupId : "\(groupID)",
             NetConstant.DictKey.UploadResourceReturnId.Query.parentId : "\(parentID)"];
@@ -503,7 +488,7 @@ class NetworkOperation {
     }
     
     //group/copyResource.action  复制资源
-    func copyResource(_ groupID:Int,parentID:Int,id:Int, queue:DispatchQueue = NetConstant.defaultQueue, handler:@escaping (AnyObject)->Void) -> DispatchSemaphore{
+    func copyResource(_ groupID:Int,parentID:Int,id:Int, queue:GCDThread = NetConstant.defaultQueue, handler:@escaping (AnyObject)->Void) -> GCDSemaphore{
         let dict = [NetConstant.DictKey.CopyResource.Query.groupId : "\(groupID)",
             NetConstant.DictKey.CopyResource.Query.parentId : "\(parentID)",
             NetConstant.DictKey.CopyResource.Query.id : "\(id)"];
@@ -511,7 +496,7 @@ class NetworkOperation {
     }
     
     //group/moveResource.action  移动资源
-    func moveResource(_ groupID:Int,parentID:Int,id:Int, queue:DispatchQueue = NetConstant.defaultQueue, handler:@escaping (AnyObject)->Void) -> DispatchSemaphore{
+    func moveResource(_ groupID:Int,parentID:Int,id:Int, queue:GCDThread = NetConstant.defaultQueue, handler:@escaping (AnyObject)->Void) -> GCDSemaphore{
         let dict = [NetConstant.DictKey.MoveResource.Query.groupId : "\(groupID)",
             NetConstant.DictKey.MoveResource.Query.parentId : "\(parentID)",
             NetConstant.DictKey.MoveResource.Query.id : "\(id)"];
@@ -519,7 +504,7 @@ class NetworkOperation {
     }
     
     //group/modifyResource.action 修改资源文件夹
-    func modifyResource(_ id:Int, name:String, desc:String = "", queue:DispatchQueue = NetConstant.defaultQueue, handler:@escaping (AnyObject)->Void) -> DispatchSemaphore{
+    func modifyResource(_ id:Int, name:String, desc:String = "", queue:GCDThread = NetConstant.defaultQueue, handler:@escaping (AnyObject)->Void) -> GCDSemaphore{
         let dict = [NetConstant.DictKey.ModifyResource.Query.id : "\(id)",
             NetConstant.DictKey.ModifyResource.Query.name : "\(name)",
             NetConstant.DictKey.ModifyResource.Query.desc : "\(desc)"];
@@ -527,7 +512,7 @@ class NetworkOperation {
     }
     
     //group/getThumbnail.action  缩略图
-    func getThumbnail(_ id:Int,width:Int = 100,height:Int = 100,queue:DispatchQueue = NetConstant.defaultQueue, handler:@escaping (AnyObject?)->Void) -> DispatchSemaphore{
+    func getThumbnail(_ id:Int,width:Int = 100,height:Int = 100,queue:GCDThread = NetConstant.defaultQueue, handler:@escaping (AnyObject?)->Void) -> GCDSemaphore{
         
         let dict = [NetConstant.DictKey.GetThumbnail.Query.id : "\(id)",
             NetConstant.DictKey.GetThumbnail.Query.width : "\(width)",

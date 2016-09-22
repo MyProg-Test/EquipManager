@@ -68,10 +68,14 @@ class DetailEquipViewController: UIViewController {
     
     //点击设备图片
     func equipImageTap(_ sender:UITapGestureRecognizer){
-        let equipImageView = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "EquipImage") as!EquipImagePickerTableViewController;
-        EquipFileControl.sharedInstance().downloadEquipImageFromNet(DetailEquipViewController.data_source!.equipkey);
         self.pleaseWait();
-        self.navigationController?.pushViewController(equipImageView, animated: true);
+        DispatchQueue.global(qos: .utility).async {
+            let equipImageView = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "EquipImage") as!EquipImagePickerTableViewController;
+            EquipFileControl.sharedInstance().downloadEquipImageFromNet(DetailEquipViewController.data_source!.equipkey);
+            DispatchQueue.main.async {
+                self.navigationController?.pushViewController(equipImageView, animated: true);
+            }
+        }
     }
     
     //点击QRCode图片
