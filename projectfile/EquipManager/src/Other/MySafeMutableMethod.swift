@@ -35,11 +35,11 @@ class MySafeMutableMethod<T> {
     }
     
     fileprivate func lock(_ semaphore: GCDSemaphore) {
-        _ = semaphore.enter();
+        _ = semaphore.lock();
     }
     
     fileprivate func unlock(_ semaphore: GCDSemaphore) {
-        _ = semaphore.exit();
+        _ = semaphore.unlock();
     }
     
     func printDebugInfo(_ message: Any){

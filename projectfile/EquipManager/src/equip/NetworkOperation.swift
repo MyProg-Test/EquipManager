@@ -327,7 +327,7 @@ class NetworkOperation {
                 case .failure(let error):
                     print(error);
                 }
-                _ = sema.exit(message: "post: \(Thread.current)");
+                _ = sema.unlock(message: "post: \(Thread.current)");
             }
         }
         return sema;
@@ -343,7 +343,7 @@ class NetworkOperation {
             }
             (fileData as NSData).write(toFile: fileURL.path, atomically: true);
             handler(fileData as AnyObject);
-            _ = sema.exit(message: "download: \(Thread.current)");
+            _ = sema.unlock(message: "download: \(Thread.current)");
         }
         return sema;
     }
@@ -371,7 +371,7 @@ class NetworkOperation {
                             case .failure(let error):
                                 print(error)
                             }
-                            _ = sema.exit(message: "upload: \(Thread.current)");
+                            _ = sema.unlock(message: "upload: \(Thread.current)");
                         }
                     }
                 case .failure(let error):

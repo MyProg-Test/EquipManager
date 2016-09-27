@@ -44,7 +44,7 @@ class GCDGroup: NSObject {
     }
     
     func async(message: String = "", thread: GCDThread, block:@escaping ()->Void) {
-        thread.queue.async(group: self.group){
+        thread.async(group: self){
             self.printDebugInfo("当前组:\(self.group)\n异步消息(notify):\(message)");
             block();
         }

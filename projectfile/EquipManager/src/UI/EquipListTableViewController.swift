@@ -45,9 +45,9 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(title: "编辑", style: .done, target: self, action: #selector(EquipListTableViewController.editEquipList))
         self.pleaseWait();
-        DispatchQueue.global(qos: .utility).async {
+        GCDThread(global: .utility).async {
             EquipManager.sharedInstance().update();
-            DispatchQueue.main.async {
+            GCDThread().async {
                 self.tableView.reloadData();
                 self.clearAllNotice();
             }
@@ -79,9 +79,9 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
     //下拉刷新
     @IBAction func refresh(_ sender: UIRefreshControl?){
         
-        DispatchQueue.global(qos: .default).async{
+        GCDThread(global: .utility).async{
             
-            DispatchQueue.main.async{
+            GCDThread().async{
                 self.tableView.reloadData();
                 sender!.endRefreshing();
             }

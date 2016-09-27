@@ -17,8 +17,8 @@ class EquipImagePickerTableViewController: UITableViewController,UIAlertViewDele
         tableView.estimatedRowHeight = tableView.rowHeight
         tableView.separatorStyle  = .singleLine
         
-        DispatchQueue.global(qos: .default).async{
-            DispatchQueue.main.async{
+        GCDThread(global: .utility).async{
+            GCDThread().async{
                 self.clearAllNotice();
                 self.tableView.reloadData();
             }

@@ -29,9 +29,6 @@ class EquipListTableViewCell: UITableViewCell {
         thumbnail.image  = nil
         equipName.text   = nil
         equipNumber.text = nil
-        getEquipName()
-        getEquipNumber()
-        getThumbnail()
         
     }
     

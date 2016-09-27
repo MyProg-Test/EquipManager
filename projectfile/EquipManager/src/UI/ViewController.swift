@@ -40,7 +40,7 @@ class ViewController: UIViewController {
                         if(name.hasPrefix(self.equipName)){
                             let id = (tmp as AnyObject).object(forKey: NetworkOperation.NetConstant.DictKey.GetResources.Response.ResourcesKey.id) as! Int;
                             _ = EquipManager.sharedInstance(id);
-                            DispatchQueue.main.async {
+                            GCDThread().async {
                                 let equipListView = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "EquipList") as! EquipListTableViewController;
                                 self.clearAllNotice();
                                 self.navigationController!.pushViewController(equipListView, animated: true);

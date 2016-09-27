@@ -102,9 +102,9 @@ class EquipNetInfo {
                 }
             }
         }
-        _ = wait.enter(message: "getFolder: \(Thread.current)");
+        _ = wait.lock(message: "getFolder: \(Thread.current)");
         for i in waitList{
-            _ = i.enter(message: "getEquip: \(i)");
+            _ = i.lock(message: "getEquip: \(i)");
         }
     }
     

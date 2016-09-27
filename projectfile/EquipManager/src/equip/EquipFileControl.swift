@@ -551,7 +551,7 @@ class EquipFileControl {
             }
         }
         for i in waitList.subject {
-            _ = i.enter();
+            _ = i.lock();
         }
     }
     //检查当前路径，若不存在，则建立

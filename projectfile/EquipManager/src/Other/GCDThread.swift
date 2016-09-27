@@ -8,6 +8,20 @@
 
 import UIKit
 
+enum Global {
+    case background
+    
+    case utility
+    
+    case `default`
+    
+    case userInitiated
+    
+    case userInteractive
+    
+    case unspecified
+}
+
 class GCDThread: NSObject {
     
     var queue:DispatchQueue;
@@ -19,8 +33,25 @@ class GCDThread: NSObject {
         }
     };
     var onceFlag:Int = 0;
+    var global:Global = .default;
     
-    init(qos:DispatchQoS.QoSClass = .default) {
+    init(global:Global = .default) {
+        self.global = global;
+        var qos:DispatchQoS.QoSClass!;
+        switch self.global {
+        case .default:
+            qos = .default;
+        case .background:
+            qos = .background;
+        case .unspecified:
+            qos = .unspecified;
+        case .userInitiated:
+            qos = .userInitiated;
+        case .userInteractive:
+            qos = .userInteractive
+        case .utility:
+            qos = .utility
+        }
         queue = DispatchQueue.global(qos: qos);
         super.init();
     }
@@ -47,8 +78,8 @@ class GCDThread: NSObject {
         }
     }
     
-    func async(message:String = "", block:@escaping ()->Void) {
-        self.queue.async{
+    func async(message:String = "", group: GCDGroup = GCDGroup(), block:@escaping ()->Void) {
+        self.queue.async(group: group.group){
             self.printDebugInfo(message: "当前队列:\(self.queueInfo)\n异步消息(async):\(message)");
             block();
         };

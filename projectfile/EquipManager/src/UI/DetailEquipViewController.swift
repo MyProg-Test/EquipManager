@@ -69,10 +69,10 @@ class DetailEquipViewController: UIViewController {
     //点击设备图片
     func equipImageTap(_ sender:UITapGestureRecognizer){
         self.pleaseWait();
-        DispatchQueue.global(qos: .utility).async {
+        GCDThread(global: .utility).async {
             let equipImageView = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "EquipImage") as!EquipImagePickerTableViewController;
             EquipFileControl.sharedInstance().downloadEquipImageFromNet(DetailEquipViewController.data_source!.equipkey);
-            DispatchQueue.main.async {
+            GCDThread().async {
                 self.navigationController?.pushViewController(equipImageView, animated: true);
             }
         }
@@ -183,7 +183,7 @@ class DetailEquipViewController: UIViewController {
         let detailTableView =  self.childViewControllers[0] as! DetailEquipTableViewController;
         self.pleaseWait();
         
-        DispatchQueue.main.async{
+        GCDThread().async{
             let viewRect = CGRect(x: 0, y: 0, width: 840, height: 475.2);
             let headerRect = CGRect(x: 0, y: 0, width: 60, height: 40)
             let keyRect = CGRect(x: 0, y: 0, width: 280, height: 55);
