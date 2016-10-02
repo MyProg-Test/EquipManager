@@ -177,17 +177,4 @@ class SwiftPrint {
         return rtnImage as! [UIImage];
     }
     
-    func setLogo(image:UIImage){
-        let imageData = UIImagePNGRepresentation(image)!
-        let url = EquipFileControl.sharedInstance().getAccountPath().appendingPathComponent("logo.png")
-        try! imageData.write(to: url)
-    }
-    
-    func getLogo()->UIImage{
-        let url = EquipFileControl.sharedInstance().getAccountPath().appendingPathComponent("logo.png")
-        if !FileManager.default.fileExists(atPath: url.path) {
-            return UIImage(named: "logo.png")!
-        }
-        return UIImage(contentsOfFile: url.path)!
-    }
 }

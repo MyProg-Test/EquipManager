@@ -39,6 +39,7 @@
 		0806ABDD1D7EBABF00D93D95 /* equipTwoCode.png in Resources */ = {isa = PBXBuildFile; fileRef = 0806ABDB1D7EBABF00D93D95 /* equipTwoCode.png */; };
 		084358E91D85F4CE00B02F1A /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 084358E81D85F4CE00B02F1A /* logo.png */; };
 		110A01431D9C19CE0085C215 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 110A01421D9C19CE0085C215 /* MobileCoreServices.framework */; };
+		113DEE961DA0EE2100E0ADCF /* EquipLogo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113DEE951DA0EE2100E0ADCF /* EquipLogo.swift */; };
 		117FD70F1D9274E7005218FE /* LogoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 117FD70E1D9274E7005218FE /* LogoTableViewController.swift */; };
 		11C323D21D911AEC00E3DBC0 /* EquipSimpleInfoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11C323D01D911AEC00E3DBC0 /* EquipSimpleInfoTableViewController.swift */; };
 		11C323D31D911AEC00E3DBC0 /* ManagerInfoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11C323D11D911AEC00E3DBC0 /* ManagerInfoTableViewController.swift */; };
@@ -82,6 +83,7 @@
 		0806ABDB1D7EBABF00D93D95 /* equipTwoCode.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = equipTwoCode.png; path = Assets.xcassets/equipTwoCode.png; sourceTree = "<group>"; };
 		084358E81D85F4CE00B02F1A /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = logo.png; path = Assets.xcassets/logo.png; sourceTree = "<group>"; };
 		110A01421D9C19CE0085C215 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		113DEE951DA0EE2100E0ADCF /* EquipLogo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EquipLogo.swift; path = src/Other/EquipLogo.swift; sourceTree = "<group>"; };
 		117FD70E1D9274E7005218FE /* LogoTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LogoTableViewController.swift; path = src/UI/LogoTableViewController.swift; sourceTree = "<group>"; };
 		11C323D01D911AEC00E3DBC0 /* EquipSimpleInfoTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EquipSimpleInfoTableViewController.swift; path = src/UI/EquipSimpleInfoTableViewController.swift; sourceTree = "<group>"; };
 		11C323D11D911AEC00E3DBC0 /* ManagerInfoTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ManagerInfoTableViewController.swift; path = src/UI/ManagerInfoTableViewController.swift; sourceTree = "<group>"; };
@@ -109,6 +111,7 @@
 			children = (
 				08032BF01D806FC1001AD72F /* SwiftNotice.swift */,
 				08032BEC1D8051A8001AD72F /* SwiftPrint.swift */,
+				113DEE951DA0EE2100E0ADCF /* EquipLogo.swift */,
 			);
 			name = Other;
 			sourceTree = "<group>";
@@ -339,6 +342,7 @@
 				0806ABCF1D7EBA2100D93D95 /* DetailEquipViewController.swift in Sources */,
 				0806ABBE1D7EBA0600D93D95 /* FileSystem.swift in Sources */,
 				0806ABD41D7EBA2100D93D95 /* NewEquipTableViewController.swift in Sources */,
+				113DEE961DA0EE2100E0ADCF /* EquipLogo.swift in Sources */,
 				08032BF11D806FC1001AD72F /* SwiftNotice.swift in Sources */,
 				0806ABB61D7EBA0600D93D95 /* EquipFileControl.swift in Sources */,
 				0806ABD51D7EBA2100D93D95 /* ViewController.swift in Sources */,

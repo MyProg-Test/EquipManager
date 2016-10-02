@@ -10,15 +10,16 @@ import UIKit
 
 class LogoTableViewController: UITableViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
-    let logoArray = NSMutableArray()
+    var logoArray: [UIImage]{
+        get{
+            return EquipLogo.sharedInstance().getLogoList();
+        }
+    }
         
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.setHidesBackButton(true, animated: false)
         self.navigationController?.setToolbarHidden(false, animated: false)
-        logoArray.add(UIImage(named:"logo.png")!)
-        logoArray.add(UIImage(named: "equipImage.png")!)
-        logoArray.add(UIImage(named: "equipTwoCode.png")!)
         
         menuToolbar()
         
@@ -30,14 +31,14 @@ class LogoTableViewController: UITableViewController, UIImagePickerControllerDel
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let image = logoArray.object(at: indexPath.row) as! UIImage
-        SwiftPrint.sharedInstance().setLogo(image: image)
+        let name: String = EquipLogo.sharedInstance().key.object(at: indexPath.row) as! String;
+        EquipLogo.sharedInstance().setLogo(name: name);
         _ = self.navigationController?.popViewController(animated: true)
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "logoCell")
-        (cell!.subviews[0].subviews[0] as! UIImageView).image = logoArray.object(at: indexPath.row) as? UIImage
+        (cell!.subviews[0].subviews[0] as! UIImageView).image = logoArray[indexPath.row]
         return cell!
     }
 
@@ -52,14 +53,14 @@ class LogoTableViewController: UITableViewController, UIImagePickerControllerDel
     }
     
     func backPressed(){
-        self.navigationController?.popViewController(animated: true)
+        _ = self.navigationController?.popViewController(animated: true)
         
     }
     
     func homePressed(){
         
         self.navigationController?.setToolbarHidden(true, animated: true)
-        self.navigationController?.popToRootViewController(animated: true)
+        _ = self.navigationController?.popToRootViewController(animated: true)
         //        CurrentInfo.sharedInstance.backToHome()
     }
 
@@ -129,8 +130,8 @@ class LogoTableViewController: UITableViewController, UIImagePickerControllerDel
         let lastChosen = NSDictionary(dictionary: info);
         if((lastChosen.object(forKey: UIImagePickerControllerMediaType) as! NSString) == (kUTTypeImage as NSString)){
             let chosenImage:UIImage = lastChosen.object(forKey: UIImagePickerControllerEditedImage) as! UIImage;
-            SwiftPrint.sharedInstance().setLogo(image: chosenImage);
-            logoArray.add(chosenImage);
+            let name = EquipLogo.sharedInstance().addLogo(image: chosenImage);
+            EquipLogo.sharedInstance().setLogo(name: name);
             self.tableView.reloadData();
         }
         if((lastChosen.object(forKey: UIImagePickerControllerMediaType) as! NSString) == (kUTTypeMovie as NSString)){

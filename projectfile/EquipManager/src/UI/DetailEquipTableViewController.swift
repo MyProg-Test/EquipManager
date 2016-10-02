@@ -106,7 +106,7 @@ class DetailEquipTableViewController: UITableViewController {
             
             let barImage = (DetailEquipViewController.data_source!.xmlInfo.equipAttr.value(forKey: EquipmentAttrKey.codeKey.rawValue as String) as! String).barCode;
             
-            let logoImage = SwiftPrint.sharedInstance().getLogo()
+            let logoImage = EquipLogo.sharedInstance().getLogo();
             
             
             let view = SwiftPrint.sharedInstance().visitingCardView(dict as NSDictionary, key: key as [AnyObject], image: [qrImage, barImage,logoImage], viewRect: viewRect, labelRect: [keyRect, valueRect, headerRect], imageRect: [qrImageRect, barImageRect,logoImageRect])!
