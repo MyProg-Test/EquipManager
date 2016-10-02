@@ -1,0 +1,535 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		08032BED1D8051A8001AD72F /* SwiftPrint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08032BEC1D8051A8001AD72F /* SwiftPrint.swift */; };
+		08032BF11D806FC1001AD72F /* SwiftNotice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08032BF01D806FC1001AD72F /* SwiftNotice.swift */; };
+		0806AB6E1D7EB3EC00D93D95 /* libxml2.2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0806AB6D1D7EB3EC00D93D95 /* libxml2.2.tbd */; };
+		0806ABA41D7EB93000D93D95 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0806AAE91D7EB1AF00D93D95 /* Assets.xcassets */; };
+		0806ABB61D7EBA0600D93D95 /* EquipFileControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0806ABA91D7EBA0600D93D95 /* EquipFileControl.swift */; };
+		0806ABB71D7EBA0600D93D95 /* EquipImageInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0806ABAA1D7EBA0600D93D95 /* EquipImageInfo.swift */; };
+		0806ABB81D7EBA0600D93D95 /* EquipInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0806ABAB1D7EBA0600D93D95 /* EquipInfo.swift */; };
+		0806ABB91D7EBA0600D93D95 /* EquipManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0806ABAC1D7EBA0600D93D95 /* EquipManager.swift */; };
+		0806ABBA1D7EBA0600D93D95 /* EquipNetInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0806ABAD1D7EBA0600D93D95 /* EquipNetInfo.swift */; };
+		0806ABBB1D7EBA0600D93D95 /* EquipXmlInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0806ABAE1D7EBA0600D93D95 /* EquipXmlInfo.swift */; };
+		0806ABBC1D7EBA0600D93D95 /* Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0806ABAF1D7EBA0600D93D95 /* Extention.swift */; };
+		0806ABBD1D7EBA0600D93D95 /* FileInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0806ABB01D7EBA0600D93D95 /* FileInfo.swift */; };
+		0806ABBE1D7EBA0600D93D95 /* FileSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0806ABB11D7EBA0600D93D95 /* FileSystem.swift */; };
+		0806ABBF1D7EBA0600D93D95 /* GDataXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 0806ABB31D7EBA0600D93D95 /* GDataXMLNode.m */; };
+		0806ABC01D7EBA0600D93D95 /* NetworkOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0806ABB41D7EBA0600D93D95 /* NetworkOperation.swift */; };
+		0806ABC11D7EBA0600D93D95 /* XmlParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0806ABB51D7EBA0600D93D95 /* XmlParser.swift */; };
+		0806ABCC1D7EBA2100D93D95 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0806ABC21D7EBA2100D93D95 /* AppDelegate.swift */; };
+		0806ABCD1D7EBA2100D93D95 /* DetailEquipTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0806ABC31D7EBA2100D93D95 /* DetailEquipTableViewCell.swift */; };
+		0806ABCE1D7EBA2100D93D95 /* DetailEquipTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0806ABC41D7EBA2100D93D95 /* DetailEquipTableViewController.swift */; };
+		0806ABCF1D7EBA2100D93D95 /* DetailEquipViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0806ABC51D7EBA2100D93D95 /* DetailEquipViewController.swift */; };
+		0806ABD01D7EBA2100D93D95 /* EquipImagePickerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0806ABC61D7EBA2100D93D95 /* EquipImagePickerTableViewController.swift */; };
+		0806ABD11D7EBA2100D93D95 /* EquipImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0806ABC71D7EBA2100D93D95 /* EquipImageTableViewCell.swift */; };
+		0806ABD21D7EBA2100D93D95 /* EquipListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0806ABC81D7EBA2100D93D95 /* EquipListTableViewCell.swift */; };
+		0806ABD31D7EBA2100D93D95 /* EquipListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0806ABC91D7EBA2100D93D95 /* EquipListTableViewController.swift */; };
+		0806ABD41D7EBA2100D93D95 /* NewEquipTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0806ABCA1D7EBA2100D93D95 /* NewEquipTableViewController.swift */; };
+		0806ABD51D7EBA2100D93D95 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0806ABCB1D7EBA2100D93D95 /* ViewController.swift */; };
+		0806ABD81D7EBA6B00D93D95 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0806ABD61D7EBA6B00D93D95 /* LaunchScreen.storyboard */; };
+		0806ABD91D7EBA6B00D93D95 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0806ABD71D7EBA6B00D93D95 /* Main.storyboard */; };
+		0806ABDC1D7EBABF00D93D95 /* equipImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 0806ABDA1D7EBABF00D93D95 /* equipImage.png */; };
+		0806ABDD1D7EBABF00D93D95 /* equipTwoCode.png in Resources */ = {isa = PBXBuildFile; fileRef = 0806ABDB1D7EBABF00D93D95 /* equipTwoCode.png */; };
+		084358E91D85F4CE00B02F1A /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 084358E81D85F4CE00B02F1A /* logo.png */; };
+		110A01431D9C19CE0085C215 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 110A01421D9C19CE0085C215 /* MobileCoreServices.framework */; };
+		117FD70F1D9274E7005218FE /* LogoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 117FD70E1D9274E7005218FE /* LogoTableViewController.swift */; };
+		11C323D21D911AEC00E3DBC0 /* EquipSimpleInfoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11C323D01D911AEC00E3DBC0 /* EquipSimpleInfoTableViewController.swift */; };
+		11C323D31D911AEC00E3DBC0 /* ManagerInfoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11C323D11D911AEC00E3DBC0 /* ManagerInfoTableViewController.swift */; };
+		D7218A4A96721C3CBA18A390 /* Pods_EquipManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A659B4FB2DC5C230747589B /* Pods_EquipManager.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		08032BEC1D8051A8001AD72F /* SwiftPrint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwiftPrint.swift; path = src/Other/SwiftPrint.swift; sourceTree = "<group>"; };
+		08032BF01D806FC1001AD72F /* SwiftNotice.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwiftNotice.swift; path = src/Other/SwiftNotice.swift; sourceTree = "<group>"; };
+		0806AADF1D7EB1AF00D93D95 /* EquipManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EquipManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0806AAE91D7EB1AF00D93D95 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		0806AAEE1D7EB1AF00D93D95 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../Info.plist; sourceTree = "<group>"; };
+		0806AB6D1D7EB3EC00D93D95 /* libxml2.2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.2.tbd; path = usr/lib/libxml2.2.tbd; sourceTree = SDKROOT; };
+		0806ABA81D7EB9F800D93D95 /* EquipManager-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "EquipManager-Bridging-Header.h"; path = "src/bridge-header/EquipManager-Bridging-Header.h"; sourceTree = "<group>"; };
+		0806ABA91D7EBA0600D93D95 /* EquipFileControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EquipFileControl.swift; path = EquipManager/src/equip/EquipFileControl.swift; sourceTree = SOURCE_ROOT; };
+		0806ABAA1D7EBA0600D93D95 /* EquipImageInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EquipImageInfo.swift; path = EquipManager/src/equip/EquipImageInfo.swift; sourceTree = SOURCE_ROOT; };
+		0806ABAB1D7EBA0600D93D95 /* EquipInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EquipInfo.swift; path = EquipManager/src/equip/EquipInfo.swift; sourceTree = SOURCE_ROOT; };
+		0806ABAC1D7EBA0600D93D95 /* EquipManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EquipManager.swift; path = EquipManager/src/equip/EquipManager.swift; sourceTree = SOURCE_ROOT; };
+		0806ABAD1D7EBA0600D93D95 /* EquipNetInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EquipNetInfo.swift; path = EquipManager/src/equip/EquipNetInfo.swift; sourceTree = SOURCE_ROOT; };
+		0806ABAE1D7EBA0600D93D95 /* EquipXmlInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EquipXmlInfo.swift; path = EquipManager/src/equip/EquipXmlInfo.swift; sourceTree = SOURCE_ROOT; };
+		0806ABAF1D7EBA0600D93D95 /* Extention.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Extention.swift; path = EquipManager/src/equip/Extention.swift; sourceTree = SOURCE_ROOT; };
+		0806ABB01D7EBA0600D93D95 /* FileInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FileInfo.swift; path = EquipManager/src/equip/FileInfo.swift; sourceTree = SOURCE_ROOT; };
+		0806ABB11D7EBA0600D93D95 /* FileSystem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FileSystem.swift; path = EquipManager/src/equip/FileSystem.swift; sourceTree = SOURCE_ROOT; };
+		0806ABB21D7EBA0600D93D95 /* GDataXMLNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GDataXMLNode.h; path = EquipManager/src/equip/GDataXMLNode.h; sourceTree = SOURCE_ROOT; };
+		0806ABB31D7EBA0600D93D95 /* GDataXMLNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GDataXMLNode.m; path = EquipManager/src/equip/GDataXMLNode.m; sourceTree = SOURCE_ROOT; };
+		0806ABB41D7EBA0600D93D95 /* NetworkOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NetworkOperation.swift; path = EquipManager/src/equip/NetworkOperation.swift; sourceTree = SOURCE_ROOT; };
+		0806ABB51D7EBA0600D93D95 /* XmlParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = XmlParser.swift; path = EquipManager/src/equip/XmlParser.swift; sourceTree = SOURCE_ROOT; };
+		0806ABC21D7EBA2100D93D95 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = EquipManager/src/UI/AppDelegate.swift; sourceTree = SOURCE_ROOT; };
+		0806ABC31D7EBA2100D93D95 /* DetailEquipTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DetailEquipTableViewCell.swift; path = EquipManager/src/UI/DetailEquipTableViewCell.swift; sourceTree = SOURCE_ROOT; };
+		0806ABC41D7EBA2100D93D95 /* DetailEquipTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DetailEquipTableViewController.swift; path = EquipManager/src/UI/DetailEquipTableViewController.swift; sourceTree = SOURCE_ROOT; };
+		0806ABC51D7EBA2100D93D95 /* DetailEquipViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DetailEquipViewController.swift; path = EquipManager/src/UI/DetailEquipViewController.swift; sourceTree = SOURCE_ROOT; };
+		0806ABC61D7EBA2100D93D95 /* EquipImagePickerTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EquipImagePickerTableViewController.swift; path = src/UI/EquipImagePickerTableViewController.swift; sourceTree = "<group>"; };
+		0806ABC71D7EBA2100D93D95 /* EquipImageTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EquipImageTableViewCell.swift; path = src/UI/EquipImageTableViewCell.swift; sourceTree = "<group>"; };
+		0806ABC81D7EBA2100D93D95 /* EquipListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EquipListTableViewCell.swift; path = src/UI/EquipListTableViewCell.swift; sourceTree = "<group>"; };
+		0806ABC91D7EBA2100D93D95 /* EquipListTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EquipListTableViewController.swift; path = src/UI/EquipListTableViewController.swift; sourceTree = "<group>"; };
+		0806ABCA1D7EBA2100D93D95 /* NewEquipTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NewEquipTableViewController.swift; path = src/UI/NewEquipTableViewController.swift; sourceTree = "<group>"; };
+		0806ABCB1D7EBA2100D93D95 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ViewController.swift; path = src/UI/ViewController.swift; sourceTree = "<group>"; };
+		0806ABD61D7EBA6B00D93D95 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = storyboard/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		0806ABD71D7EBA6B00D93D95 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = storyboard/Main.storyboard; sourceTree = "<group>"; };
+		0806ABDA1D7EBABF00D93D95 /* equipImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = equipImage.png; path = Assets.xcassets/equipImage.png; sourceTree = "<group>"; };
+		0806ABDB1D7EBABF00D93D95 /* equipTwoCode.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = equipTwoCode.png; path = Assets.xcassets/equipTwoCode.png; sourceTree = "<group>"; };
+		084358E81D85F4CE00B02F1A /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = logo.png; path = Assets.xcassets/logo.png; sourceTree = "<group>"; };
+		110A01421D9C19CE0085C215 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		117FD70E1D9274E7005218FE /* LogoTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LogoTableViewController.swift; path = src/UI/LogoTableViewController.swift; sourceTree = "<group>"; };
+		11C323D01D911AEC00E3DBC0 /* EquipSimpleInfoTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EquipSimpleInfoTableViewController.swift; path = src/UI/EquipSimpleInfoTableViewController.swift; sourceTree = "<group>"; };
+		11C323D11D911AEC00E3DBC0 /* ManagerInfoTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ManagerInfoTableViewController.swift; path = src/UI/ManagerInfoTableViewController.swift; sourceTree = "<group>"; };
+		3A659B4FB2DC5C230747589B /* Pods_EquipManager.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_EquipManager.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		50B9F585860180C3297CDBBC /* Pods-EquipManager.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EquipManager.debug.xcconfig"; path = "Pods/Target Support Files/Pods-EquipManager/Pods-EquipManager.debug.xcconfig"; sourceTree = "<group>"; };
+		6516E8F51E66B36DFB32B0A4 /* Pods-EquipManager.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EquipManager.release.xcconfig"; path = "Pods/Target Support Files/Pods-EquipManager/Pods-EquipManager.release.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		0806AADC1D7EB1AF00D93D95 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				110A01431D9C19CE0085C215 /* MobileCoreServices.framework in Frameworks */,
+				0806AB6E1D7EB3EC00D93D95 /* libxml2.2.tbd in Frameworks */,
+				D7218A4A96721C3CBA18A390 /* Pods_EquipManager.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		08032BEB1D805194001AD72F /* Other */ = {
+			isa = PBXGroup;
+			children = (
+				08032BF01D806FC1001AD72F /* SwiftNotice.swift */,
+				08032BEC1D8051A8001AD72F /* SwiftPrint.swift */,
+			);
+			name = Other;
+			sourceTree = "<group>";
+		};
+		0806AAD61D7EB1AF00D93D95 = {
+			isa = PBXGroup;
+			children = (
+				0806AB6D1D7EB3EC00D93D95 /* libxml2.2.tbd */,
+				0806AAE11D7EB1AF00D93D95 /* EquipManager */,
+				0806AAE01D7EB1AF00D93D95 /* Products */,
+				D5EC301BFFF6C3241337E1C1 /* Pods */,
+				AAF916800C9457F71AA7C2AE /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		0806AAE01D7EB1AF00D93D95 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0806AADF1D7EB1AF00D93D95 /* EquipManager.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0806AAE11D7EB1AF00D93D95 /* EquipManager */ = {
+			isa = PBXGroup;
+			children = (
+				0806ABA81D7EB9F800D93D95 /* EquipManager-Bridging-Header.h */,
+				0806AB491D7EB34D00D93D95 /* Equip */,
+				0806AB101D7EB2A000D93D95 /* UI */,
+				08032BEB1D805194001AD72F /* Other */,
+				0806AAE91D7EB1AF00D93D95 /* Assets.xcassets */,
+				084358E81D85F4CE00B02F1A /* logo.png */,
+				0806ABDA1D7EBABF00D93D95 /* equipImage.png */,
+				0806ABDB1D7EBABF00D93D95 /* equipTwoCode.png */,
+				0806ABD61D7EBA6B00D93D95 /* LaunchScreen.storyboard */,
+				0806ABD71D7EBA6B00D93D95 /* Main.storyboard */,
+				0806AAEE1D7EB1AF00D93D95 /* Info.plist */,
+			);
+			path = EquipManager;
+			sourceTree = "<group>";
+		};
+		0806AB101D7EB2A000D93D95 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				0806ABCB1D7EBA2100D93D95 /* ViewController.swift */,
+				0806ABC91D7EBA2100D93D95 /* EquipListTableViewController.swift */,
+				0806ABC81D7EBA2100D93D95 /* EquipListTableViewCell.swift */,
+				0806ABC51D7EBA2100D93D95 /* DetailEquipViewController.swift */,
+				0806ABC41D7EBA2100D93D95 /* DetailEquipTableViewController.swift */,
+				0806ABC31D7EBA2100D93D95 /* DetailEquipTableViewCell.swift */,
+				0806ABC61D7EBA2100D93D95 /* EquipImagePickerTableViewController.swift */,
+				0806ABC71D7EBA2100D93D95 /* EquipImageTableViewCell.swift */,
+				0806ABCA1D7EBA2100D93D95 /* NewEquipTableViewController.swift */,
+				11C323D01D911AEC00E3DBC0 /* EquipSimpleInfoTableViewController.swift */,
+				11C323D11D911AEC00E3DBC0 /* ManagerInfoTableViewController.swift */,
+				117FD70E1D9274E7005218FE /* LogoTableViewController.swift */,
+				0806ABC21D7EBA2100D93D95 /* AppDelegate.swift */,
+			);
+			name = UI;
+			sourceTree = "<group>";
+		};
+		0806AB491D7EB34D00D93D95 /* Equip */ = {
+			isa = PBXGroup;
+			children = (
+				0806ABAC1D7EBA0600D93D95 /* EquipManager.swift */,
+				0806ABA91D7EBA0600D93D95 /* EquipFileControl.swift */,
+				0806ABB41D7EBA0600D93D95 /* NetworkOperation.swift */,
+				0806ABAD1D7EBA0600D93D95 /* EquipNetInfo.swift */,
+				0806ABB11D7EBA0600D93D95 /* FileSystem.swift */,
+				0806ABAB1D7EBA0600D93D95 /* EquipInfo.swift */,
+				0806ABAE1D7EBA0600D93D95 /* EquipXmlInfo.swift */,
+				0806ABAA1D7EBA0600D93D95 /* EquipImageInfo.swift */,
+				0806ABB51D7EBA0600D93D95 /* XmlParser.swift */,
+				0806ABAF1D7EBA0600D93D95 /* Extention.swift */,
+				0806ABB01D7EBA0600D93D95 /* FileInfo.swift */,
+				0806ABB21D7EBA0600D93D95 /* GDataXMLNode.h */,
+				0806ABB31D7EBA0600D93D95 /* GDataXMLNode.m */,
+			);
+			name = Equip;
+			sourceTree = "<group>";
+		};
+		AAF916800C9457F71AA7C2AE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				110A01421D9C19CE0085C215 /* MobileCoreServices.framework */,
+				3A659B4FB2DC5C230747589B /* Pods_EquipManager.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D5EC301BFFF6C3241337E1C1 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				50B9F585860180C3297CDBBC /* Pods-EquipManager.debug.xcconfig */,
+				6516E8F51E66B36DFB32B0A4 /* Pods-EquipManager.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		0806AADE1D7EB1AF00D93D95 /* EquipManager */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0806AB071D7EB1AF00D93D95 /* Build configuration list for PBXNativeTarget "EquipManager" */;
+			buildPhases = (
+				1242770F1E4816ECEFC92684 /* [CP] Check Pods Manifest.lock */,
+				0806AADB1D7EB1AF00D93D95 /* Sources */,
+				0806AADC1D7EB1AF00D93D95 /* Frameworks */,
+				0806AADD1D7EB1AF00D93D95 /* Resources */,
+				7FAEF3B5F4AF6A95555A1BE0 /* [CP] Embed Pods Frameworks */,
+				86052E70EDED5BDA790E0EBD /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = EquipManager;
+			productName = EquipManager;
+			productReference = 0806AADF1D7EB1AF00D93D95 /* EquipManager.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0806AAD71D7EB1AF00D93D95 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0730;
+				LastUpgradeCheck = 0730;
+				ORGANIZATIONNAME = LY;
+				TargetAttributes = {
+					0806AADE1D7EB1AF00D93D95 = {
+						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = QRKJGYSRZH;
+						LastSwiftMigration = 0800;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 0806AADA1D7EB1AF00D93D95 /* Build configuration list for PBXProject "EquipManager" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 0806AAD61D7EB1AF00D93D95;
+			productRefGroup = 0806AAE01D7EB1AF00D93D95 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				0806AADE1D7EB1AF00D93D95 /* EquipManager */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		0806AADD1D7EB1AF00D93D95 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0806ABDD1D7EBABF00D93D95 /* equipTwoCode.png in Resources */,
+				0806ABDC1D7EBABF00D93D95 /* equipImage.png in Resources */,
+				084358E91D85F4CE00B02F1A /* logo.png in Resources */,
+				0806ABD91D7EBA6B00D93D95 /* Main.storyboard in Resources */,
+				0806ABA41D7EB93000D93D95 /* Assets.xcassets in Resources */,
+				0806ABD81D7EBA6B00D93D95 /* LaunchScreen.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		1242770F1E4816ECEFC92684 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		7FAEF3B5F4AF6A95555A1BE0 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-EquipManager/Pods-EquipManager-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		86052E70EDED5BDA790E0EBD /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-EquipManager/Pods-EquipManager-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		0806AADB1D7EB1AF00D93D95 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0806ABCF1D7EBA2100D93D95 /* DetailEquipViewController.swift in Sources */,
+				0806ABBE1D7EBA0600D93D95 /* FileSystem.swift in Sources */,
+				0806ABD41D7EBA2100D93D95 /* NewEquipTableViewController.swift in Sources */,
+				08032BF11D806FC1001AD72F /* SwiftNotice.swift in Sources */,
+				0806ABB61D7EBA0600D93D95 /* EquipFileControl.swift in Sources */,
+				0806ABD51D7EBA2100D93D95 /* ViewController.swift in Sources */,
+				0806ABB91D7EBA0600D93D95 /* EquipManager.swift in Sources */,
+				11C323D31D911AEC00E3DBC0 /* ManagerInfoTableViewController.swift in Sources */,
+				0806ABBC1D7EBA0600D93D95 /* Extention.swift in Sources */,
+				0806ABC01D7EBA0600D93D95 /* NetworkOperation.swift in Sources */,
+				0806ABD11D7EBA2100D93D95 /* EquipImageTableViewCell.swift in Sources */,
+				0806ABB71D7EBA0600D93D95 /* EquipImageInfo.swift in Sources */,
+				0806ABD31D7EBA2100D93D95 /* EquipListTableViewController.swift in Sources */,
+				0806ABB81D7EBA0600D93D95 /* EquipInfo.swift in Sources */,
+				0806ABBD1D7EBA0600D93D95 /* FileInfo.swift in Sources */,
+				08032BED1D8051A8001AD72F /* SwiftPrint.swift in Sources */,
+				0806ABCC1D7EBA2100D93D95 /* AppDelegate.swift in Sources */,
+				0806ABCD1D7EBA2100D93D95 /* DetailEquipTableViewCell.swift in Sources */,
+				0806ABD21D7EBA2100D93D95 /* EquipListTableViewCell.swift in Sources */,
+				0806ABC11D7EBA0600D93D95 /* XmlParser.swift in Sources */,
+				0806ABCE1D7EBA2100D93D95 /* DetailEquipTableViewController.swift in Sources */,
+				117FD70F1D9274E7005218FE /* LogoTableViewController.swift in Sources */,
+				0806ABBF1D7EBA0600D93D95 /* GDataXMLNode.m in Sources */,
+				0806ABBB1D7EBA0600D93D95 /* EquipXmlInfo.swift in Sources */,
+				11C323D21D911AEC00E3DBC0 /* EquipSimpleInfoTableViewController.swift in Sources */,
+				0806ABBA1D7EBA0600D93D95 /* EquipNetInfo.swift in Sources */,
+				0806ABD01D7EBA2100D93D95 /* EquipImagePickerTableViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		0806AB051D7EB1AF00D93D95 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		0806AB061D7EB1AF00D93D95 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				ONLY_ACTIVE_ARCH = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		0806AB081D7EB1AF00D93D95 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 50B9F585860180C3297CDBBC /* Pods-EquipManager.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = NO;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = QRKJGYSRZH;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/library",
+					"$(PROJECT_DIR)/EquipManager/library",
+				);
+				HEADER_SEARCH_PATHS = "$(SDK_DIR)/usr/include/libxml2";
+				INFOPLIST_FILE = "$(SRCROOT)/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.dcampus.EquipManager;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/EquipManager/src/bridge-header/EquipManager-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		0806AB091D7EB1AF00D93D95 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6516E8F51E66B36DFB32B0A4 /* Pods-EquipManager.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = NO;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = QRKJGYSRZH;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/library",
+					"$(PROJECT_DIR)/EquipManager/library",
+				);
+				HEADER_SEARCH_PATHS = "$(SDK_DIR)/usr/include/libxml2";
+				INFOPLIST_FILE = "$(SRCROOT)/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.dcampus.EquipManager;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/EquipManager/src/bridge-header/EquipManager-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0806AADA1D7EB1AF00D93D95 /* Build configuration list for PBXProject "EquipManager" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0806AB051D7EB1AF00D93D95 /* Debug */,
+				0806AB061D7EB1AF00D93D95 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0806AB071D7EB1AF00D93D95 /* Build configuration list for PBXNativeTarget "EquipManager" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0806AB081D7EB1AF00D93D95 /* Debug */,
+				0806AB091D7EB1AF00D93D95 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0806AAD71D7EB1AF00D93D95 /* Project object */;
+}
