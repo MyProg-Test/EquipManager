@@ -41,8 +41,6 @@ class DetailEquipViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated);
-        equipImage.image = nil;
-        QRCodeImage.image = nil;
         for i in equipImage.gestureRecognizers! {
             equipImage.removeGestureRecognizer(i);
         }

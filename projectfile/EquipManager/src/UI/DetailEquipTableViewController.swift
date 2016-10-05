@@ -108,16 +108,14 @@ class DetailEquipTableViewController: UITableViewController {
             
             let logoImage = EquipLogo.sharedInstance().getLogo();
             
-            
-            let view = SwiftPrint.sharedInstance().visitingCardView(dict as NSDictionary, key: key as [AnyObject], image: [qrImage, barImage,logoImage], viewRect: viewRect, labelRect: [keyRect, valueRect, headerRect], imageRect: [qrImageRect, barImageRect,logoImageRect])!
-            view.backgroundColor = UIColor.white;
-            let printImageData = UIImagePNGRepresentation(view.visitingCardImage())!;
+            let printImage = SwiftPrint.sharedInstance().labelCard(dict: dict as! [String : String], key: key, qrImage: qrImage, logoImage: logoImage, barImage: barImage);
+            let printImageData = UIImagePNGRepresentation(printImage)!;
             (printImageData as NSData).write(toFile: DetailEquipViewController.data_source!.xmlInfo.xmlFile.path.deletingLastPathComponent().appendingPathComponent("设备标签.png").path, atomically: true);
             //let _ = NetworkOperation.sharedInstance().uploadResource(EquipManager.sharedInstance().defaultGroupId, parentID: DetailEquipViewController.data_source!.xmlInfo.xmlFile.parentId, fileData: printImageData, fileName: "设备标签.png", handler: {(any) in});
-            let image = SwiftPrint.sharedInstance().drawVisitingCardSet([view.visitingCardImage(),view.visitingCardImage()]);
-            print(image[0].ciImage);
+            //let image = SwiftPrint.sharedInstance().drawVisitingCardSet([printImage,printImage]);
+            let image = SwiftPrint.sharedInstance().singlePrint(image: printImage, row: 2);
             self.clearAllNotice();
-            self.printImages(image);
+            self.printImage(image: image);
         }
         self.navigationItem.rightBarButtonItem = nil;
     }
