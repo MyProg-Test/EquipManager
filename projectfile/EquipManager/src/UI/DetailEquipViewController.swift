@@ -184,13 +184,6 @@ class DetailEquipViewController: UIViewController {
         self.pleaseWait();
         
         GCDThread().async{
-            let viewRect = CGRect(x: 0, y: 0, width: 840, height: 475.2);
-            let headerRect = CGRect(x: 0, y: 0, width: 60, height: 40)
-            let keyRect = CGRect(x: 0, y: 0, width: 280, height: 55);
-            let valueRect = CGRect(x: 200, y: 0, width: 280, height: 55);
-            let qrImageRect = CGRect(x: 520, y: 30, width: 270, height: 270);
-            let barImageRect = CGRect(x: 300, y: 310, width: 510, height: 160);
-            let logoImageRect = CGRect(x: 90, y: 310, width: 150, height: 150);
             
             
             var key:NSArray = NSArray();
@@ -210,16 +203,14 @@ class DetailEquipViewController: UIViewController {
             let barImage = (DetailEquipViewController.data_source!.xmlInfo.equipAttr.value(forKey: EquipmentAttrKey.codeKey.rawValue as String) as! String).barCode;
             let logoImage = UIImage(named: "logo.png")!;
             
-            
-            let view = SwiftPrint.sharedInstance().visitingCardView(dict as NSDictionary, key: key as [AnyObject], image: [qrImage, barImage,logoImage], viewRect: viewRect, labelRect: [keyRect, valueRect, headerRect], imageRect: [qrImageRect, barImageRect,logoImageRect])!
-            view.backgroundColor = UIColor.white;
-            let printImageData = UIImagePNGRepresentation(view.visitingCardImage())!;
+            let printImage = SwiftPrint.sharedInstance().labelCard(dict: dict as! [String : String], key: key as! [String], qrImage: qrImage, logoImage: logoImage, barImage: barImage);
+            let printImageData = UIImagePNGRepresentation(printImage)!;
             let printImagePath = EquipFileControl.sharedInstance().getEquipFilePathFromFile(DetailEquipViewController.data_source!.xmlInfo.equipkey)!.deletingLastPathComponent().appendingPathComponent("设备标签.png");
             (printImageData as NSData).write(toFile: printImagePath.path, atomically: true);
-            let _ = NetworkOperation.sharedInstance().uploadResource(EquipManager.sharedInstance().defaultGroupId, parentID: EquipFileControl.sharedInstance().getEquipParentIdFromFile(DetailEquipViewController.data_source!.xmlInfo.equipkey), fileData: printImageData, fileName: "设备标签.png", handler: {(any) in});
-            let image = SwiftPrint.sharedInstance().drawVisitingCardSet([view.visitingCardImage(),view.visitingCardImage()]);
+            _ = NetworkOperation.sharedInstance().uploadResource(EquipManager.sharedInstance().defaultGroupId, parentID: EquipFileControl.sharedInstance().getEquipParentIdFromFile(DetailEquipViewController.data_source!.xmlInfo.equipkey), fileData: printImageData, fileName: "设备标签.png", handler: {(any) in});
+            let image = SwiftPrint.sharedInstance().singlePrint(image: printImage, row: 0);
             self.clearAllNotice();
-            self.printImages(image);
+            self.printImage(image: image);
         }
         self.navigationItem.rightBarButtonItem = nil;
     }
