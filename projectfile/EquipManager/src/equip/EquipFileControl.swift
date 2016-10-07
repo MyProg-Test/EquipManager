@@ -304,6 +304,27 @@ class EquipFileControl {
         return self.fs!.getImageStatus(equipkey, imageIndex: imageIndex);
     }
     
+    func setMainImageFromFile(_ equipkey: String, imageIndex: Int) -> Bool {
+        if(self.fs == nil){
+            return false;
+        }
+        let fs = self.fs;
+        _ = fs!.setMainImage(equipkey
+            , imageIndex: imageIndex);
+        return writeInfoToFile(fs!);
+        
+    }
+    
+    func resetMainImageFromFile(_ equipkey: String, imageIndex: Int) -> Bool {
+        if(self.fs == nil){
+            return false;
+        }
+        let fs = self.fs;
+        _ = fs!.resetMainImage(equipkey, imageIndex: imageIndex);
+        return writeInfoToFile(fs!);
+        
+    }
+    
     func getImageIDFromFile(_ equipkey: String, imageIndex: Int) -> Int {
         if(self.fs == nil){
             return 0;

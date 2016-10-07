@@ -44,12 +44,13 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
         menuToolbar()
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(title: "编辑", style: .done, target: self, action: #selector(EquipListTableViewController.editEquipList))
-        self.pleaseWait();
+        self.pleaseWait()
+    
         GCDThread(global: .utility).async {
-            EquipManager.sharedInstance().update();
+            EquipManager.sharedInstance().update()
             GCDThread().async {
-                self.tableView.reloadData();
-                self.clearAllNotice();
+                self.tableView.reloadData()
+                self.clearAllNotice()
             }
         }
         
@@ -59,15 +60,15 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.tableView.reloadData();
+        self.tableView.reloadData()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         
-        super.viewWillDisappear(animated);
+        super.viewWillDisappear(animated)
         
     }
     
@@ -77,13 +78,14 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
     }
     
     //下拉刷新
+
     @IBAction func refresh(_ sender: UIRefreshControl?){
         
         GCDThread(global: .utility).async{
             
             GCDThread().async{
-                self.tableView.reloadData();
-                sender!.endRefreshing();
+                self.tableView.reloadData()
+                sender!.endRefreshing()
             }
         }
     }
@@ -102,7 +104,7 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return EquipFileControl.sharedInstance().count;
+        return EquipFileControl.sharedInstance().count
     }
     
     
@@ -118,14 +120,14 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
         let equipListCellIdentifier = "EquipListCell"
         var cell:EquipListTableViewCell! = tableView.dequeueReusableCell(withIdentifier: equipListCellIdentifier) as? EquipListTableViewCell
         if(cell == nil){
-            cell = EquipListTableViewCell(style: .default, reuseIdentifier: equipListCellIdentifier);
+            cell = EquipListTableViewCell(style: .default, reuseIdentifier: equipListCellIdentifier)
         }
         //cell数据设置
         cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
-        let equip = EquipInfo(key: EquipFileControl.sharedInstance().getFileSystemFromFile()!.attrKey.subject.object(at: (indexPath as NSIndexPath).row) as! String);
-        cell.equipName.text = equip.xmlInfo.equipAttr.value(forKey: EquipmentAttrKey.nameKey.rawValue as String) as? String;
+        let equip = EquipInfo(key: EquipFileControl.sharedInstance().getFileSystemFromFile()!.attrKey.subject.object(at: (indexPath as NSIndexPath).row) as! String)
+        cell.equipName.text = equip.xmlInfo.equipAttr.value(forKey: EquipmentAttrKey.nameKey.rawValue as String) as? String
         cell.equipNumber.text = equip.xmlInfo.equipAttr.value(forKey: EquipmentAttrKey.codeKey.rawValue as String) as? String;
-        cell.thumbnail?.image = equip.imageInfo.getMainImage();
+        cell.thumbnail?.image = equip.imageInfo.getMainImage()
         return cell
         
     }
@@ -175,27 +177,32 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
         //        CurrentInfo.sharedInstance.backToHome()
     }
     
+    //Modify by gua 10.5
     func menuPressed(){
-        let menuAlertController:UIAlertController = UIAlertController(title:"设备管理",message:"选择一项操作",preferredStyle:UIAlertControllerStyle.actionSheet)
+        let menuAlertController:UIAlertController = UIAlertController(title:"设备管理",message:"选择一项操作",preferredStyle:UIAlertControllerStyle.alert)
         
         menuAlertController.addAction(UIAlertAction(title: "添加设备", style: UIAlertActionStyle.default, handler: { (UIAlertAction) -> Void in
             self.newEquip()
         }))
-        menuAlertController.addAction(UIAlertAction(title: "扫一扫", style: UIAlertActionStyle.default, handler: { (UIAlertAction) -> Void in
-            self.qrCodeScan()
-        }))
-        menuAlertController.addAction(UIAlertAction(title: "打印标签", style: UIAlertActionStyle.default, handler: { (UIAlertAction) -> Void in
-            self.printTag()
-        }))
+//        menuAlertController.addAction(UIAlertAction(title: "扫一扫", style: UIAlertActionStyle.default, handler: { (UIAlertAction) -> Void in
+//            self.qrCodeScan()
+//        }))
+//        menuAlertController.addAction(UIAlertAction(title: "打印标签", style: UIAlertActionStyle.default, handler: { (UIAlertAction) -> Void in
+//            self.printTag()
+//        }))
         menuAlertController.addAction(UIAlertAction(title: "设备转移", style: UIAlertActionStyle.default, handler: { (UIAlertAction) -> Void in
             self.transferEquip()
         }))
-        menuAlertController.addAction(UIAlertAction(title: "设备排序", style: UIAlertActionStyle.default, handler: { (UIAlertAction) -> Void in
-            self.sortEquipList()
+//        menuAlertController.addAction(UIAlertAction(title: "设备排序", style: UIAlertActionStyle.default, handler: { (UIAlertAction) -> Void in
+//            self.sortEquipList()
+//        }))
+//        menuAlertController.addAction(UIAlertAction(title: "设备删除", style: UIAlertActionStyle.default, handler: { (UIAlertAction) -> Void in
+//            self.deleteEuip()
+//        }))
+        menuAlertController.addAction(UIAlertAction(title: "选择系统Logo", style: UIAlertActionStyle.default, handler: { (UIAlertAction)->Void in
+            self.chooseLogo()
         }))
-        menuAlertController.addAction(UIAlertAction(title: "设备删除", style: UIAlertActionStyle.default, handler: { (UIAlertAction) -> Void in
-            self.deleteEuip()
-        }))
+        
         menuAlertController.addAction(UIAlertAction(title: "取消", style: UIAlertActionStyle.cancel, handler: { (UIAlertAction) -> Void in
             NSLog("cancel")
         }))
@@ -225,6 +232,13 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
         //扫描后的信息和两个选择的button，需要新建一个vc，在查看信息的时候，需要Nav的返回键
         
     }
+    
+    func chooseLogo(){
+        let chooseLogoView = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "Logo") as! LogoTableViewController
+        self.navigationController?.pushViewController(chooseLogoView, animated: true);
+        
+    }
+
     //打印标签
     func printTag(){
         //AirPrint API

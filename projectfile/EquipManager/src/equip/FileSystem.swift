@@ -340,6 +340,26 @@ class FileSystem {
         let parentID = getEquipParentID(equipkey);
         return EquipImageInfo.isMainImage(name, parentId: parentID);
     }
+    func setMainImage(_ equipkey:String, imageIndex:Int) -> Bool {
+        if isMainImage(equipkey, imageIndex: imageIndex){
+            return true;
+        }
+        let name = getImageName(equipkey, imageIndex: imageIndex);
+        let parentID = getEquipParentID(equipkey);
+        modifyImageName(equipkey, imageIndex: imageIndex, name: "\(parentID)_\(name)");
+        return true;
+    }
+    
+    func resetMainImage(_ equipkey:String, imageIndex:Int) -> Bool {
+        if isMainImage(equipkey, imageIndex: imageIndex){
+            return true;
+        }
+        var name = getImageName(equipkey, imageIndex: imageIndex);
+        let parentID = getEquipParentID(equipkey);
+        name = name.replacingOccurrences(of: "\(parentID)_", with: "")
+        modifyImageName(equipkey, imageIndex: imageIndex, name: name);
+        return true;
+    }
     //从文件中读取
     func readFromFile(_ dicturl:URL, orderurl: URL)->Bool{
         equipDict.writeRequest();

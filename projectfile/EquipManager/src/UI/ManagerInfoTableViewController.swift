@@ -1,35 +1,28 @@
 //
-//  NewEquipTableViewController.swift
-//  Crabfans_2016
+//  ManagerInfoTableViewController.swift
+//  EquipManager
 //
-//  Created by 李呱呱 on 16/9/4.
+//  Created by 李呱呱 on 16/9/14.
 //  Copyright © 2016年 liguagua. All rights reserved.
 //
 
 import UIKit
 
-class NewEquipTableViewController: UITableViewController {
-    
-    let keyArray = [EquipmentAttrKey.nameKey.rawValue,
-                    EquipmentAttrKey.codeKey.rawValue,
-                    EquipmentAttrKey.managerKey.rawValue,
-                    //EquipmentAttrKey.managerPhoneKey.rawValue,
-                    EquipmentAttrKey.locationKey.rawValue];
-    
-    //10.6
-    var valueArray:[String] = []
+class ManagerInfoTableViewController: UITableViewController {
 
+    @IBOutlet weak var manager: UILabel!
+    @IBOutlet weak var phone: UILabel!
+    @IBOutlet weak var email: UILabel!
+    @IBOutlet weak var fax: UILabel!
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        valueArray = ["",
-                      "\(getRandomCode())",
-            "",
-            ""]
+        self.navigationItem.setHidesBackButton(true, animated: false)
+        self.navigationController?.setToolbarHidden(false, animated: false)
         
-        self.navigationItem.setHidesBackButton(true, animated: false);
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "保存", style: .plain, target: self, action: #selector(NewEquipTableViewController.saveEquip(_:)));
-        menuToolbar()
+        menuToolbar() 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -37,33 +30,16 @@ class NewEquipTableViewController: UITableViewController {
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        manager.text =  DetailEquipViewController.data_source!.xmlInfo.equipAttr.value(forKey: EquipmentAttrKey.managerKey.rawValue as String) as? String
+        phone.text =  DetailEquipViewController.data_source!.xmlInfo.equipAttr.value(forKey: EquipmentAttrKey.managerPhoneKey.rawValue as String) as? String
+        email.text =  DetailEquipViewController.data_source!.xmlInfo.equipAttr.value(forKey: EquipmentAttrKey.managerEmailKey.rawValue as String) as? String
+        fax.text =  DetailEquipViewController.data_source!.xmlInfo.equipAttr.value(forKey: EquipmentAttrKey.managerFaxKey.rawValue as String) as? String
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
-    }
-    
-    func saveEquip(_ sender:AnyObject) {
-        let dict:NSMutableDictionary = NSMutableDictionary();
-        for i in 0..<keyArray.count {
-            let cell = tableView.cellForRow(at: IndexPath(row: i, section: 0))!;
-            let contentView = cell.subviews[0];
-            var labelKey:UILabel?;
-            var textValue:UITextField?;
-            for s in contentView.subviews {
-                if s.isKind(of: UILabel.self){
-                    labelKey = s as? UILabel;
-                }
-                if s.isKind(of: UITextField.self) {
-                    textValue = s as? UITextField;
-                }
-            }
-            dict.setValue(textValue!.text!, forKey: labelKey!.text!);
-        }
-        let equip = EquipXmlInfo(equipAttr: dict);
-        _ = equip.updateToFile();
-        
-        print("saveEquip");
-        self.backPressed();
     }
 
     // MARK: - Table view data source
@@ -75,9 +51,9 @@ class NewEquipTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return keyArray.count;
+        return 4
     }
-
+    
     func menuToolbar(){
         let backButton = UIBarButtonItem(image: UIImage.init(named:"back"), style: .plain, target: self, action: #selector(EquipListTableViewController.backPressed))
         let flexItem = UIBarButtonItem.init(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
@@ -88,49 +64,31 @@ class NewEquipTableViewController: UITableViewController {
     }
     
     func backPressed(){
-        self.navigationController!.popViewController(animated: true)
+        self.navigationController?.popViewController(animated: true)
         
     }
     
     func homePressed(){
         
-        self.navigationController!.setToolbarHidden(true, animated: true)
-        self.navigationController!.popToRootViewController(animated: true)
+        self.navigationController?.setToolbarHidden(true, animated: true)
+        self.navigationController?.popToRootViewController(animated: true)
         //        CurrentInfo.sharedInstance.backToHome()
     }
-    
+
     func menuPressed(){
         
-    }
-    
+           }
 
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cellIdentifier = "newEquip";
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier);
-        let contentView = cell!.subviews[0];
-        for label in contentView.subviews {
-            if(label.isKind(of: UILabel.self)){
-                (label as! UILabel).text = keyArray[(indexPath as NSIndexPath).row] as String;
-            }
-            //10.6
-            if label is UITextField {
-                (label as! UITextField).clearButtonMode = UITextFieldViewMode.whileEditing
-                (label as! UITextField).text = valueArray[(indexPath as NSIndexPath).row] as String;
-            }
 
-        }
+    /*
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath)
+
         // Configure the cell...
 
-        return cell!
+        return cell
     }
-
-    func getRandomCode()->String{
-        let dateFormat = DateFormatter()
-        dateFormat.dateFormat = "yyyyMMddHHmmss"
-        let date = Date()
-        return dateFormat.string(from: date)
-    }
-    
+    */
 
     /*
     // Override to support conditional editing of the table view.

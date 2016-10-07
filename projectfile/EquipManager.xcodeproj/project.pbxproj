@@ -41,6 +41,10 @@
 		08B789D11D915C35009E0292 /* GCDSemaphore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B789CD1D915C35009E0292 /* GCDSemaphore.swift */; };
 		08B789D21D915C35009E0292 /* GCDThread.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B789CE1D915C35009E0292 /* GCDThread.swift */; };
 		08B789D31D915C35009E0292 /* MySafeMutableMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B789CF1D915C35009E0292 /* MySafeMutableMethod.swift */; };
+		1122C90D1DA61F30002E150D /* EquipSimpleInfoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1122C90A1DA61F30002E150D /* EquipSimpleInfoTableViewController.swift */; };
+		1122C90E1DA61F30002E150D /* LogoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1122C90B1DA61F30002E150D /* LogoTableViewController.swift */; };
+		1122C90F1DA61F30002E150D /* ManagerInfoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1122C90C1DA61F30002E150D /* ManagerInfoTableViewController.swift */; };
+		1122C9131DA65E16002E150D /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1122C9121DA65E16002E150D /* MobileCoreServices.framework */; };
 		113DEE931DA0DF7600E0ADCF /* EquipLogo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113DEE921DA0DF7600E0ADCF /* EquipLogo.swift */; };
 		15B45BB1470E083856ED1BB0 /* Pods_EquipManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 392AE5FC64C0321836E419D5 /* Pods_EquipManager.framework */; };
 /* End PBXBuildFile section */
@@ -97,6 +101,11 @@
 		08B789CD1D915C35009E0292 /* GCDSemaphore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GCDSemaphore.swift; path = src/Other/GCDSemaphore.swift; sourceTree = "<group>"; };
 		08B789CE1D915C35009E0292 /* GCDThread.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GCDThread.swift; path = src/Other/GCDThread.swift; sourceTree = "<group>"; };
 		08B789CF1D915C35009E0292 /* MySafeMutableMethod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MySafeMutableMethod.swift; path = src/Other/MySafeMutableMethod.swift; sourceTree = "<group>"; };
+		1122C90A1DA61F30002E150D /* EquipSimpleInfoTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EquipSimpleInfoTableViewController.swift; path = src/UI/EquipSimpleInfoTableViewController.swift; sourceTree = "<group>"; };
+		1122C90B1DA61F30002E150D /* LogoTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LogoTableViewController.swift; path = src/UI/LogoTableViewController.swift; sourceTree = "<group>"; };
+		1122C90C1DA61F30002E150D /* ManagerInfoTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ManagerInfoTableViewController.swift; path = src/UI/ManagerInfoTableViewController.swift; sourceTree = "<group>"; };
+		1122C9101DA65DAB002E150D /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
+		1122C9121DA65E16002E150D /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		113DEE921DA0DF7600E0ADCF /* EquipLogo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EquipLogo.swift; path = src/logo/EquipLogo.swift; sourceTree = "<group>"; };
 		160C948A303F2F397711C21E /* Pods-EquipManager.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EquipManager.debug.xcconfig"; path = "Pods/Target Support Files/Pods-EquipManager/Pods-EquipManager.debug.xcconfig"; sourceTree = "<group>"; };
 		392AE5FC64C0321836E419D5 /* Pods_EquipManager.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_EquipManager.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -108,6 +117,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1122C9131DA65E16002E150D /* MobileCoreServices.framework in Frameworks */,
 				0806AB6E1D7EB3EC00D93D95 /* libxml2.2.tbd in Frameworks */,
 				15B45BB1470E083856ED1BB0 /* Pods_EquipManager.framework in Frameworks */,
 			);
@@ -170,16 +180,19 @@
 		0806AB101D7EB2A000D93D95 /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				0806ABC21D7EBA2100D93D95 /* AppDelegate.swift */,
-				0806ABC31D7EBA2100D93D95 /* DetailEquipTableViewCell.swift */,
-				0806ABC41D7EBA2100D93D95 /* DetailEquipTableViewController.swift */,
+				0806ABCB1D7EBA2100D93D95 /* ViewController.swift */,
+				0806ABC91D7EBA2100D93D95 /* EquipListTableViewController.swift */,
+				0806ABC81D7EBA2100D93D95 /* EquipListTableViewCell.swift */,
 				0806ABC51D7EBA2100D93D95 /* DetailEquipViewController.swift */,
+				0806ABC41D7EBA2100D93D95 /* DetailEquipTableViewController.swift */,
+				0806ABC31D7EBA2100D93D95 /* DetailEquipTableViewCell.swift */,
 				0806ABC61D7EBA2100D93D95 /* EquipImagePickerTableViewController.swift */,
 				0806ABC71D7EBA2100D93D95 /* EquipImageTableViewCell.swift */,
-				0806ABC81D7EBA2100D93D95 /* EquipListTableViewCell.swift */,
-				0806ABC91D7EBA2100D93D95 /* EquipListTableViewController.swift */,
 				0806ABCA1D7EBA2100D93D95 /* NewEquipTableViewController.swift */,
-				0806ABCB1D7EBA2100D93D95 /* ViewController.swift */,
+				1122C90A1DA61F30002E150D /* EquipSimpleInfoTableViewController.swift */,
+				1122C90B1DA61F30002E150D /* LogoTableViewController.swift */,
+				1122C90C1DA61F30002E150D /* ManagerInfoTableViewController.swift */,
+				0806ABC21D7EBA2100D93D95 /* AppDelegate.swift */,
 			);
 			name = UI;
 			sourceTree = "<group>";
@@ -187,18 +200,18 @@
 		0806AB491D7EB34D00D93D95 /* Equip */ = {
 			isa = PBXGroup;
 			children = (
-				0806ABA91D7EBA0600D93D95 /* EquipFileControl.swift */,
-				0806ABAA1D7EBA0600D93D95 /* EquipImageInfo.swift */,
-				0806ABAB1D7EBA0600D93D95 /* EquipInfo.swift */,
 				0806ABAC1D7EBA0600D93D95 /* EquipManager.swift */,
+				0806ABA91D7EBA0600D93D95 /* EquipFileControl.swift */,
+				0806ABB41D7EBA0600D93D95 /* NetworkOperation.swift */,
 				0806ABAD1D7EBA0600D93D95 /* EquipNetInfo.swift */,
-				0806ABAE1D7EBA0600D93D95 /* EquipXmlInfo.swift */,
-				0806ABAF1D7EBA0600D93D95 /* Extention.swift */,
 				0806ABB11D7EBA0600D93D95 /* FileSystem.swift */,
+				0806ABAB1D7EBA0600D93D95 /* EquipInfo.swift */,
+				0806ABAE1D7EBA0600D93D95 /* EquipXmlInfo.swift */,
+				0806ABAA1D7EBA0600D93D95 /* EquipImageInfo.swift */,
+				0806ABB51D7EBA0600D93D95 /* XmlParser.swift */,
+				0806ABAF1D7EBA0600D93D95 /* Extention.swift */,
 				0806ABB21D7EBA0600D93D95 /* GDataXMLNode.h */,
 				0806ABB31D7EBA0600D93D95 /* GDataXMLNode.m */,
-				0806ABB41D7EBA0600D93D95 /* NetworkOperation.swift */,
-				0806ABB51D7EBA0600D93D95 /* XmlParser.swift */,
 			);
 			name = Equip;
 			sourceTree = "<group>";
@@ -223,6 +236,8 @@
 		BD173C566F7356E5594DBBDE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1122C9121DA65E16002E150D /* MobileCoreServices.framework */,
+				1122C9101DA65DAB002E150D /* CoreImage.framework */,
 				392AE5FC64C0321836E419D5 /* Pods_EquipManager.framework */,
 			);
 			name = Frameworks;
@@ -264,6 +279,7 @@
 				TargetAttributes = {
 					0806AADE1D7EB1AF00D93D95 = {
 						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = QRKJGYSRZH;
 						LastSwiftMigration = 0800;
 					};
 				};
@@ -361,6 +377,7 @@
 				113DEE931DA0DF7600E0ADCF /* EquipLogo.swift in Sources */,
 				08032BF11D806FC1001AD72F /* SwiftNotice.swift in Sources */,
 				0806ABB61D7EBA0600D93D95 /* EquipFileControl.swift in Sources */,
+				1122C90E1DA61F30002E150D /* LogoTableViewController.swift in Sources */,
 				0806ABD51D7EBA2100D93D95 /* ViewController.swift in Sources */,
 				0806ABB91D7EBA0600D93D95 /* EquipManager.swift in Sources */,
 				0806ABBC1D7EBA0600D93D95 /* Extention.swift in Sources */,
@@ -369,10 +386,12 @@
 				0806ABD11D7EBA2100D93D95 /* EquipImageTableViewCell.swift in Sources */,
 				0806ABB71D7EBA0600D93D95 /* EquipImageInfo.swift in Sources */,
 				0806ABD31D7EBA2100D93D95 /* EquipListTableViewController.swift in Sources */,
+				1122C90D1DA61F30002E150D /* EquipSimpleInfoTableViewController.swift in Sources */,
 				0806ABB81D7EBA0600D93D95 /* EquipInfo.swift in Sources */,
 				08032BED1D8051A8001AD72F /* SwiftPrint.swift in Sources */,
 				08B789D31D915C35009E0292 /* MySafeMutableMethod.swift in Sources */,
 				0806ABCC1D7EBA2100D93D95 /* AppDelegate.swift in Sources */,
+				1122C90F1DA61F30002E150D /* ManagerInfoTableViewController.swift in Sources */,
 				0806ABCD1D7EBA2100D93D95 /* DetailEquipTableViewCell.swift in Sources */,
 				08B789D01D915C35009E0292 /* GCDGroup.swift in Sources */,
 				0806ABD21D7EBA2100D93D95 /* EquipListTableViewCell.swift in Sources */,
@@ -485,6 +504,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = NO;
+				DEVELOPMENT_TEAM = QRKJGYSRZH;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/library",
@@ -492,6 +512,7 @@
 				);
 				HEADER_SEARCH_PATHS = "$(SDK_DIR)/usr/include/libxml2";
 				INFOPLIST_FILE = "$(SRCROOT)/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = test.EquipManager;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -509,6 +530,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = NO;
+				DEVELOPMENT_TEAM = QRKJGYSRZH;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/library",
@@ -516,6 +538,7 @@
 				);
 				HEADER_SEARCH_PATHS = "$(SDK_DIR)/usr/include/libxml2";
 				INFOPLIST_FILE = "$(SRCROOT)/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = test.EquipManager;
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class EquipImagePickerTableViewController: UITableViewController,UIAlertViewDelegate {
+class EquipImagePickerTableViewController: UITableViewController,UIAlertViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -97,7 +97,7 @@ class EquipImagePickerTableViewController: UITableViewController,UIAlertViewDele
     }
     
     func menuPressed(){
-        let imageAlertController:UIAlertController = UIAlertController(title: "图片操作", message: "选择一项操作", preferredStyle: UIAlertControllerStyle.actionSheet)
+        let imageAlertController:UIAlertController = UIAlertController(title: "图片操作", message: "选择一项操作", preferredStyle: UIAlertControllerStyle.alert)
         
         imageAlertController.addAction(UIAlertAction(title: "上传图片", style: UIAlertActionStyle.default, handler: {(UIAlertAction)-> Void in self.uploadImage()}))
         
@@ -136,6 +136,69 @@ class EquipImagePickerTableViewController: UITableViewController,UIAlertViewDele
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         // Return false if you do not want the specified item to be editable.
         return true
+    }
+    
+    //10.6
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        func getRandomID() -> String {
+            let time = Date();
+            let timeFormatter = DateFormatter();
+            timeFormatter.dateFormat = "yyyyMMddHHmmss";
+            return "\(timeFormatter.string(from: time))";
+        }
+        let lastChosen = NSDictionary(dictionary: info);
+        if((lastChosen.object(forKey: UIImagePickerControllerMediaType) as! NSString) == (kUTTypeImage as NSString)){
+            let chosenImage:UIImage = lastChosen.object(forKey: UIImagePickerControllerEditedImage) as! UIImage;
+            let imageName = getRandomID();
+            //10.7
+            let equipkey = DetailEquipViewController.data_source!.equipkey;
+            let dictInfo = EquipFileControl.sharedInstance().fs!.equipDict.subject.object(forKey: equipkey) as! NSMutableDictionary;
+            
+            _ = EquipFileControl.sharedInstance().addImageInfoToFile(equipkey, imageID: (imageName as NSString).integerValue, imagePath: dictInfo.object(forKey: FileSystem.equipKey.path) as! String, imageName: "\(imageName).png", status: FileSystem.Status.new.rawValue | FileSystem.Status.download.rawValue);
+            let chosenImageData: Data = UIImagePNGRepresentation(chosenImage)!;
+            try! chosenImageData.write(to: EquipFileControl.sharedInstance().getImageFilePathFromFile(equipkey, imageIndex: DetailEquipViewController.data_source!.imageInfo.historyImage.count)!);
+            for i in stride(from: 0, to: EquipFileControl.sharedInstance().getImageCountFromFile(equipkey), by: 1){
+                if EquipFileControl.sharedInstance().isMainImageFromFile(equipkey, imageIndex: i){
+                    _ = EquipFileControl.sharedInstance().resetMainImageFromFile(equipkey, imageIndex: i);
+                }
+            }
+            _ = EquipFileControl.sharedInstance().setMainImageFromFile(equipkey, imageIndex: DetailEquipViewController.data_source!.imageInfo.historyImage.count);
+            DetailEquipViewController.data_source!.updateEquip(equipkey);
+            self.tableView.reloadData();
+        }
+        if((lastChosen.object(forKey: UIImagePickerControllerMediaType) as! NSString) == (kUTTypeMovie as NSString)){
+            self.noticeError("设备只支持图片", autoClear: true, autoClearTime: 2)
+        }
+        picker.dismiss(animated: true, completion: nil);
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true, completion: nil);
+    }
+    
+    func takePic(){
+        getMediaResource(sourceType: UIImagePickerControllerSourceType.camera);
+    }
+    
+    func pickPic(){
+        getMediaResource(sourceType: UIImagePickerControllerSourceType.photoLibrary);
+    }
+    
+    func getMediaResource(sourceType:UIImagePickerControllerSourceType){
+        if(UIImagePickerController.isSourceTypeAvailable(sourceType)){
+            let mediatypes:NSArray = UIImagePickerController.availableMediaTypes(for: sourceType)! as NSArray;
+            let picker:UIImagePickerController = UIImagePickerController();
+            picker.mediaTypes = mediatypes as [AnyObject] as! [String];
+            picker.delegate = self;
+            picker.allowsEditing = true;
+            picker.sourceType = sourceType;
+            let requiredmediatypes:NSString = kUTTypeImage as NSString;
+            let arrmediatype:NSArray = NSArray(object: requiredmediatypes);
+            picker.mediaTypes = arrmediatype as [AnyObject] as! [String];
+            self.present(picker, animated: true, completion: nil);
+        }else{
+            self.noticeError("设备不支持拍照", autoClear: true, autoClearTime: 2);
+        }
     }
     
     /*
