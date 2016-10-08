@@ -68,7 +68,7 @@ class EquipManager:NSObject{
                             if(dictionIsEqual(serverImageSet, dict2: localImageSet, key: FileSystem.imageSetKey.imageID as NSString)){
                                 matchFlag2 = true;
                                 if(!dictionIsEqual(serverImageSet, dict2: localImageSet, key: FileSystem.imageSetKey.imageName as NSString)){
-                                    if((EquipFileControl.sharedInstance().getImageStatusFromFile(l as! String, imageIndex: li) & FileSystem.Status.modifty.rawValue) > 0){
+                                    if((EquipFileControl.sharedInstance().getImageStatusFromFile(l as! String, imageIndex: li) & FileSystem.Status.modifty.rawValue) == 0){
                                         _ = EquipFileControl.sharedInstance().modifyImageNameInFile(l as! String, imageIndex: li, name: serverImageSet.object(forKey: FileSystem.imageSetKey.imageName) as! String);
                                     }
                                 }

@@ -64,14 +64,14 @@ class ManagerInfoTableViewController: UITableViewController {
     }
     
     func backPressed(){
-        self.navigationController?.popViewController(animated: true)
+        _ = self.navigationController?.popViewController(animated: true)
         
     }
     
     func homePressed(){
         
         self.navigationController?.setToolbarHidden(true, animated: true)
-        self.navigationController?.popToRootViewController(animated: true)
+        _ = self.navigationController?.popToRootViewController(animated: true)
         //        CurrentInfo.sharedInstance.backToHome()
     }
 

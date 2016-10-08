@@ -347,17 +347,19 @@ class FileSystem {
         let name = getImageName(equipkey, imageIndex: imageIndex);
         let parentID = getEquipParentID(equipkey);
         modifyImageName(equipkey, imageIndex: imageIndex, name: "\(parentID)_\(name)");
+        modifyImageStatus(equipkey, imageIndex: imageIndex, status: getImageStatus(equipkey, imageIndex: imageIndex) | FileSystem.Status.modifty.rawValue);
         return true;
     }
     
     func resetMainImage(_ equipkey:String, imageIndex:Int) -> Bool {
-        if isMainImage(equipkey, imageIndex: imageIndex){
+        if !isMainImage(equipkey, imageIndex: imageIndex){
             return true;
         }
         var name = getImageName(equipkey, imageIndex: imageIndex);
         let parentID = getEquipParentID(equipkey);
         name = name.replacingOccurrences(of: "\(parentID)_", with: "")
         modifyImageName(equipkey, imageIndex: imageIndex, name: name);
+        modifyImageStatus(equipkey, imageIndex: imageIndex, status: getImageStatus(equipkey, imageIndex: imageIndex) | FileSystem.Status.modifty.rawValue);
         return true;
     }
     //从文件中读取

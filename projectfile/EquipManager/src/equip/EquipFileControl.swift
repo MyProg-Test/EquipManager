@@ -426,7 +426,6 @@ class EquipFileControl {
             if(self.getEquipStatusFromFile(keyString) & FileSystem.Status.modifty.rawValue > 0){
                 _ = NetworkOperation.sharedInstance().deleteResource(self.getEquipXMLIDFromFile(keyString)){
                     (any) in
-                    print(any);
                     _ = NetworkOperation.sharedInstance().uploadResourceReturnId(self.getEquipGroupIdFromFile(keyString), parentID: self.getEquipParentIdFromFile(keyString), fileURL: self.getEquipFilePathFromFile(keyString)!, fileName: self.getEquipNameFromFile(keyString)){(any) in
                         let newFile:NSDictionary = any.object(forKey: NetworkOperation.NetConstant.DictKey.UploadResourceReturnId.Response.file) as! NSDictionary;
                         let newid:Int = newFile.object(forKey: NetworkOperation.NetConstant.DictKey.UploadResourceReturnId.Response.FileKey.id) as! Int;
@@ -502,7 +501,6 @@ class EquipFileControl {
                 }
                 if(self.getImageStatusFromFile(keyString, imageIndex: imageIndex) & FileSystem.Status.modifty.rawValue > 0){
                     _ = NetworkOperation.sharedInstance().modifyResource(self.getImageIDFromFile(keyString, imageIndex: imageIndex), name: (self.getImageNameFromFile(keyString, imageIndex: imageIndex) as NSString).deletingPathExtension){ (any) in
-                        print(any);
                         _ = self.modifyImageStatusInFile(keyString, imageIndex: imageIndex, status: self.getImageStatusFromFile(keyString, imageIndex: imageIndex) & ~FileSystem.Status.modifty.rawValue);
                     }
                     //modify
@@ -519,11 +517,11 @@ class EquipFileControl {
                 }
                 if(self.getImageStatusFromFile(keyString, imageIndex: imageIndex) & FileSystem.Status.new.rawValue > 0) {
                     _ = NetworkOperation.sharedInstance().uploadResourceReturnId(self.getEquipGroupIdFromFile(keyString), parentID: self.getEquipParentIdFromFile(keyString), fileURL: self.getImageFilePathFromFile(keyString, imageIndex: imageIndex)!, fileName: self.getImageNameFromFile(keyString, imageIndex: imageIndex)){(any) in
-                        let newFile:NSDictionary = any.object(forKey: NetworkOperation.NetConstant.DictKey.UploadResourceReturnId.Response.file) as! NSDictionary;
+                        let newFile:NSDictionary = (any.object(forKey: NetworkOperation.NetConstant.DictKey.UploadResourceReturnId.Response.file) as! NSArray).firstObject as! NSDictionary;
                         let newid:Int = newFile.object(forKey: NetworkOperation.NetConstant.DictKey.UploadResourceReturnId.Response.FileKey.id) as! Int;
                         let oldPath = self.getImageFilePathFromFile(keyString, imageIndex: imageIndex)!;
                         _ = self.modifyImageIDFromFile(keyString, imageIndex: imageIndex, id: newid);
-                        let newPath = self.getEquipFilePathFromFile(keyString)!;
+                        let newPath = self.getImageFilePathFromFile(keyString, imageIndex: imageIndex)!;
                         do{
                             try FileManager.default.moveItem(atPath: oldPath.path, toPath: newPath.path);
                             _ = self.modifyEquipStatusInFile(keyString, status: self.getEquipStatusFromFile(keyString) & ~FileSystem.Status.new.rawValue)

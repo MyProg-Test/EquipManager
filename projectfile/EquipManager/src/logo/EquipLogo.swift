@@ -109,7 +109,7 @@ class EquipLogo {
     
     func getLogoList() -> [UIImage] {
         if self.logoDict.allKeys.count == 0 {
-            addLogo(image: UIImage(named: "logo.png")!);
+            _ = addLogo(image: UIImage(named: "logo.png")!);
         }
         var rtn: Array<UIImage> = Array();
         for key in self.key{

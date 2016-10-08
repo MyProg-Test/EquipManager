@@ -20,12 +20,15 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
     
     var loadingSuccess:Bool = false
     var mString:NSString = ""
-    
-    var updateDone:Bool = true
-    
-    
-    //显示“正在加载中”
-    var isLoading = true
+    let selArray: NSMutableArray = NSMutableArray();
+    var selected:Bool = false{
+        didSet{
+            if(!selected){
+                selArray.removeAllObjects();
+            }
+        }
+    }
+
     //toolbar的menuItems
     var actionMenuItems = [menuItem]()
     //其他
@@ -134,6 +137,10 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
     
     //Select
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if(selected){
+            selArray.add(EquipFileControl.sharedInstance().getFileSystemFromFile()!.attrKey.subject.object(at: (indexPath as NSIndexPath).row) as! String);
+            return ;
+        }
         let detailEquipView = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "DetailEquip") as! DetailEquipViewController;
         DetailEquipViewController.data_source = EquipInfo(key: EquipFileControl.sharedInstance().getFileSystemFromFile()!.attrKey.subject.object(at: (indexPath as NSIndexPath).row) as! String);
         self.navigationController?.pushViewController(detailEquipView, animated: true);
@@ -141,7 +148,10 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
     
     //Deselect
     override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        //to do
+        if(selected){
+            selArray.remove(EquipFileControl.sharedInstance().getFileSystemFromFile()!.attrKey.subject.object(at: (indexPath as NSIndexPath).row) as! String);
+            return ;
+        }//to do
     }
     
     
@@ -154,6 +164,10 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
     //水平滑动cell，出现删除键
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         return nil
+    }
+    
+    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+        return UITableViewCellEditingStyle.init(rawValue: UITableViewCellEditingStyle.insert.rawValue | UITableViewCellEditingStyle.delete.rawValue)!;
     }
     
     func menuToolbar(){
@@ -187,18 +201,12 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
 //        menuAlertController.addAction(UIAlertAction(title: "扫一扫", style: UIAlertActionStyle.default, handler: { (UIAlertAction) -> Void in
 //            self.qrCodeScan()
 //        }))
-//        menuAlertController.addAction(UIAlertAction(title: "打印标签", style: UIAlertActionStyle.default, handler: { (UIAlertAction) -> Void in
-//            self.printTag()
-//        }))
+        menuAlertController.addAction(UIAlertAction(title: "打印标签", style: UIAlertActionStyle.default, handler: { (UIAlertAction) -> Void in
+            self.printTag()
+        }))
         menuAlertController.addAction(UIAlertAction(title: "设备转移", style: UIAlertActionStyle.default, handler: { (UIAlertAction) -> Void in
             self.transferEquip()
         }))
-//        menuAlertController.addAction(UIAlertAction(title: "设备排序", style: UIAlertActionStyle.default, handler: { (UIAlertAction) -> Void in
-//            self.sortEquipList()
-//        }))
-//        menuAlertController.addAction(UIAlertAction(title: "设备删除", style: UIAlertActionStyle.default, handler: { (UIAlertAction) -> Void in
-//            self.deleteEuip()
-//        }))
         menuAlertController.addAction(UIAlertAction(title: "选择系统Logo", style: UIAlertActionStyle.default, handler: { (UIAlertAction)->Void in
             self.chooseLogo()
         }))
@@ -210,12 +218,6 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
         self.present(menuAlertController, animated: true, completion: nil)
         
     }
-    
-    //入口
-    //    class func initializeWithFileDict(fileDict:NSDictionary){
-    //        EquipFileConfig.sharedInstance().equipFileRoot = FileStruct(rId: NSMutableDictionary(dictionary: fileDict))
-    //        EquipFileConfig.sharedInstance().flag = true
-    //    }
     
     
     //以下actionSheet里面的函数最后可写成闭包加入到上面的hander里面
@@ -241,11 +243,49 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
 
     //打印标签
     func printTag(){
-        //AirPrint API
-        //整个cell列表变成可多选
-        //确定打印后，选择纸张打印类型，将选定的所有设备的tag组合放在在一页纸上
-        //选择打印机，打印
+        printSelect();
     }
+    
+    func printSelect() {
+        /**/
+        //打印信息
+        self.tableView.setEditing(true, animated: true);
+        selected = true;
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(EquipListTableViewController.printStart));
+    }
+    
+    func printStart() {
+        self.pleaseWait();
+        
+        GCDThread().async{
+            var key: Array<String> = Array();
+            key.append(EquipmentAttrKey.managerKey.rawValue)
+            key.append(EquipmentAttrKey.nameKey.rawValue)
+            key.append(EquipmentAttrKey.codeKey.rawValue)
+            key.append(EquipmentAttrKey.locationKey.rawValue)
+            var imageArray: Array<UIImage> = Array();
+            
+            for i in stride(from: 0, to: self.selArray.count, by: 1){
+                let equip: EquipInfo = EquipInfo(key: self.selArray.object(at: i) as! String);
+                let dict = equip.xmlInfo.equipAttr.dictionaryWithValues(forKeys: key);
+                
+                let qrImage = (equip.xmlInfo.equipAttr.value(forKey: EquipmentAttrKey.codeKey.rawValue as String) as! String).qrImageWithImage(equip.imageInfo.getMainImage());
+                let barImage = (equip.xmlInfo.equipAttr.value(forKey: EquipmentAttrKey.codeKey.rawValue as String) as! String).barCode;
+                let logoImage = EquipLogo.sharedInstance().getLogo();
+                
+                let printImage = SwiftPrint.sharedInstance().labelCard(dict: dict as! [String : String], key: key, qrImage: qrImage, logoImage: logoImage, barImage: barImage);
+                imageArray.append(printImage);
+                imageArray.append(printImage);
+            }
+            let image = SwiftPrint.sharedInstance().drawVisitingCardSet(imageArray);
+            self.clearAllNotice();
+            self.selected = false;
+            self.tableView.setEditing(false, animated: true);
+            self.printImages(image);
+        }
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(title: "编辑", style: .done, target: self, action: #selector(EquipListTableViewController.editEquipList))
+    }
+    
     //设备转移
     func transferEquip(){
         //reason.xml

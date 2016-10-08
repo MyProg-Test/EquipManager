@@ -72,9 +72,20 @@ class EquipImagePickerTableViewController: UITableViewController,UIAlertViewDele
         if(cell == nil){
             cell = EquipImageTableViewCell(style: .default, reuseIdentifier: equipImageCellIdentifier);
         }
+        if EquipFileControl.sharedInstance().isMainImageFromFile(DetailEquipViewController.data_source!.equipkey, imageIndex: indexPath.row){
+            cell.accessoryType = .checkmark;
+        }else{
+            cell.accessoryType = .none;
+        }
         cell.imageInCell.image = DetailEquipViewController.data_source!.imageInfo.getImage((indexPath as NSIndexPath).row);
         cell.imageNameInCell.text = EquipFileControl.sharedInstance().getFileSystemFromFile()!.getImageName(DetailEquipViewController.data_source!.equipkey, imageIndex: (indexPath as NSIndexPath).row) as String;
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        setMainImage(equipkey: DetailEquipViewController.data_source!.equipkey, index: indexPath.row);
+        self.tableView.reloadData();
+        DetailEquipViewController.data_source!.updateEquip(DetailEquipViewController.data_source!.equipkey);
     }
     
     
@@ -104,6 +115,7 @@ class EquipImagePickerTableViewController: UITableViewController,UIAlertViewDele
         imageAlertController.addAction(UIAlertAction(title: "取消", style: UIAlertActionStyle.cancel, handler: { (UIAlertAction) -> Void in
             NSLog("cancel")
         }))
+        self.present(imageAlertController, animated: true, completion: nil)
         
     }
     
@@ -117,13 +129,16 @@ class EquipImagePickerTableViewController: UITableViewController,UIAlertViewDele
         uploadImageAlertController.addAction(UIAlertAction(title: "取消", style: UIAlertActionStyle.cancel, handler: { (UIAlertAction) -> Void in
             NSLog("cancel")
         }))
+        self.present(uploadImageAlertController, animated: true, completion: nil)
     }
     
     func imagePickerFromLocal(){
+        self.pickPic();
         //本地照片选择图片
     }
     
     func imagePickerFromCamera(){
+        self.takePic();
         //拍照上传图片
     }
     
@@ -156,13 +171,8 @@ class EquipImagePickerTableViewController: UITableViewController,UIAlertViewDele
             
             _ = EquipFileControl.sharedInstance().addImageInfoToFile(equipkey, imageID: (imageName as NSString).integerValue, imagePath: dictInfo.object(forKey: FileSystem.equipKey.path) as! String, imageName: "\(imageName).png", status: FileSystem.Status.new.rawValue | FileSystem.Status.download.rawValue);
             let chosenImageData: Data = UIImagePNGRepresentation(chosenImage)!;
-            try! chosenImageData.write(to: EquipFileControl.sharedInstance().getImageFilePathFromFile(equipkey, imageIndex: DetailEquipViewController.data_source!.imageInfo.historyImage.count)!);
-            for i in stride(from: 0, to: EquipFileControl.sharedInstance().getImageCountFromFile(equipkey), by: 1){
-                if EquipFileControl.sharedInstance().isMainImageFromFile(equipkey, imageIndex: i){
-                    _ = EquipFileControl.sharedInstance().resetMainImageFromFile(equipkey, imageIndex: i);
-                }
-            }
-            _ = EquipFileControl.sharedInstance().setMainImageFromFile(equipkey, imageIndex: DetailEquipViewController.data_source!.imageInfo.historyImage.count);
+            try! chosenImageData.write(to: EquipFileControl.sharedInstance().getImageFilePathFromFile(equipkey, imageIndex: DetailEquipViewController.data_source!.imageInfo.historyImage.count - 1)!);
+            setMainImage(equipkey: equipkey, index: DetailEquipViewController.data_source!.imageInfo.historyImage.count - 1);
             DetailEquipViewController.data_source!.updateEquip(equipkey);
             self.tableView.reloadData();
         }
@@ -201,41 +211,13 @@ class EquipImagePickerTableViewController: UITableViewController,UIAlertViewDele
         }
     }
     
-    /*
-     // Override to support editing the table view.
-     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-     if editingStyle == .Delete {
-     // Delete the row from the data source
-     tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-     } else if editingStyle == .Insert {
-     // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-     }
-     }
-     */
-    
-    /*
-     // Override to support rearranging the table view.
-     override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-     
-     }
-     */
-    
-    /*
-     // Override to support conditional rearranging of the table view.
-     override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-     // Return false if you do not want the item to be re-orderable.
-     return true
-     }
-     */
-    
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-     // Get the new view controller using segue.destinationViewController.
-     // Pass the selected object to the new view controller.
-     }
-     */
+    func setMainImage(equipkey: String, index: Int){
+        for i in stride(from: 0, to: EquipFileControl.sharedInstance().getImageCountFromFile(equipkey), by: 1){
+            if EquipFileControl.sharedInstance().isMainImageFromFile(equipkey, imageIndex: i){
+                _ = EquipFileControl.sharedInstance().resetMainImageFromFile(equipkey, imageIndex: i);
+            }
+        }
+        _ = EquipFileControl.sharedInstance().setMainImageFromFile(equipkey, imageIndex: index);
+    }
     
 }
