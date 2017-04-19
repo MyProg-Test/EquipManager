@@ -21,7 +21,7 @@ class NewEquipTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+    
         valueArray = ["",
                       "\(getRandomCode())",
             "",
@@ -43,27 +43,50 @@ class NewEquipTableViewController: UITableViewController {
     }
     
     func saveEquip(_ sender:AnyObject) {
+        func getRandomName() -> String {
+            let time = Date();
+            let timeFormatter = DateFormatter();
+            timeFormatter.dateFormat = "yyyyMMddHHmmss";
+            return "\(timeFormatter.string(from: time))";
+        }
         let dict:NSMutableDictionary = NSMutableDictionary();
         for i in 0..<keyArray.count {
-            let cell = tableView.cellForRow(at: IndexPath(row: i, section: 0))!;
-            let contentView = cell.subviews[0];
-            var labelKey:UILabel?;
-            var textValue:UITextField?;
-            for s in contentView.subviews {
-                if s.isKind(of: UILabel.self){
-                    labelKey = s as? UILabel;
-                }
-                if s.isKind(of: UITextField.self) {
-                    textValue = s as? UITextField;
-                }
-            }
-            dict.setValue(textValue!.text!, forKey: labelKey!.text!);
+            let cell = tableView.cellForRow(at: IndexPath(row: i, section: 0))! as! NewEquipTableViewCell;
+            
+            dict.setValue(cell.textValue.text!, forKey: cell.labelKey.text!);
         }
         let equip = EquipXmlInfo(equipAttr: dict);
-        _ = equip.updateToFile();
+        //_ = equip.updateToFile(); online
+        let rootId = EquipManager.sharedInstance().rootId;
+        let groupId = EquipManager.sharedInstance().defaultGroupId;
+        let foldName = getRandomName();
+        let xmlName = "equip.xml"
+        let uploadData = equip.xmlParser.doc.xmlData()!;
+        self.pleaseWait();
+        _ = NetworkOperation.sharedInstance().createDir(groupId, name: foldName, parentID: rootId){
+            (any) in
+            print(any);
+            let response = any as! NSDictionary
+            let parentId = response.value(forKey: NetworkOperation.NetConstant.DictKey.CreateDir.Response.id) as! Int
+            
+            _ = NetworkOperation.sharedInstance().uploadResourceReturnId(groupId, parentID: parentId, fileData: uploadData, fileName: xmlName){
+                (any) in
+                let response = any as! NSDictionary;
+                let file = (response.value(forKey: NetworkOperation.NetConstant.DictKey.UploadResourceReturnId.Response.file) as! NSArray).object(at: 0) as! NSDictionary;
+                let xmlId = file.value(forKey: NetworkOperation.NetConstant.DictKey.UploadResourceReturnId.Response.FileKey.id) as! Int;
+                _ = EquipFileControl.sharedInstance().addEquipInfoToFile(parentId, XMLID: xmlId, XMLName: xmlName, imageSet: NSMutableArray(), path: "\(parentId)", groupID: groupId, status: FileSystem.Status.download.rawValue);
+                equip.equipkey = "\(parentId)"
+                _ = equip.updateToFile();
+                GCDThread().async {
+                    self.clearAllNotice();
+                    self.backPressed();
+                }
+                
+            }
+        }
+        
         
         print("saveEquip");
-        self.backPressed();
     }
 
     // MARK: - Table view data source
@@ -106,22 +129,14 @@ class NewEquipTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cellIdentifier = "newEquip";
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier);
-        let contentView = cell!.subviews[0];
-        for label in contentView.subviews {
-            if(label.isKind(of: UILabel.self)){
-                (label as! UILabel).text = keyArray[(indexPath as NSIndexPath).row] as String;
-            }
-            //10.6
-            if label is UITextField {
-                (label as! UITextField).clearButtonMode = UITextFieldViewMode.whileEditing
-                (label as! UITextField).text = valueArray[(indexPath as NSIndexPath).row] as String;
-            }
-
-        }
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as! NewEquipTableViewCell;
+        cell.labelKey.text = keyArray[(indexPath as NSIndexPath).row] as String
+        cell.textValue.clearButtonMode = UITextFieldViewMode.whileEditing
+        cell.textValue.text = valueArray[(indexPath as NSIndexPath).row] as String
+        
         // Configure the cell...
 
-        return cell!
+        return cell
     }
 
     func getRandomCode()->String{

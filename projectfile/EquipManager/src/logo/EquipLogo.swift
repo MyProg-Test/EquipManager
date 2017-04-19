@@ -3,7 +3,7 @@
 //  EquipManager
 //
 //  Created by 李呱呱 on 2016/10/2.
-//  Copyright © 2016年 LY. All rights reserved.
+//  Copyright © 2016年 liguagua. All rights reserved.
 //
 
 import UIKit
@@ -21,6 +21,8 @@ class EquipLogo {
         }
     }
     
+    let download:MySafeMutableMethod<Int>
+    
     var defaultFolderUrl:URL;
     var defaultKeyName:String;
     var defaultDataName:String;
@@ -35,7 +37,7 @@ class EquipLogo {
         defaultFolderUrl = EquipFileControl.sharedInstance().getEquipAssociationPath().appendingPathComponent("Logo");
         defaultKeyName = "logo.key";
         defaultDataName = "logo.data";
-        
+        download = MySafeMutableMethod(subject: 0)
     }
     
     func getRandomID() -> String {
@@ -96,10 +98,13 @@ class EquipLogo {
         dict.setValue(name, forKey: MAINLOGO);
         self.write(dict: dict, key: self.key);
     }
+    //jingmaixm
+    //景迈小苗-FZ
+    //
     
     func getLogo() -> UIImage {
         if !self.logoDict.allKeys.contains(where: {return ($0 as! String) == MAINLOGO}){
-            return UIImage(named: "logo.png")!;
+            return UIImage(named: "white.jpg")!;
         }
         let name: String = self.logoDict.value(forKey: MAINLOGO) as! String;
         let data: Data = self.logoDict.value(forKey: name) as! Data;
@@ -109,7 +114,7 @@ class EquipLogo {
     
     func getLogoList() -> [UIImage] {
         if self.logoDict.allKeys.count == 0 {
-            _ = addLogo(image: UIImage(named: "logo.png")!);
+            return [];
         }
         var rtn: Array<UIImage> = Array();
         for key in self.key{
@@ -119,7 +124,47 @@ class EquipLogo {
         return rtn;
         
     }
-    
+    //上传logo
+    func updateToNet(){
+        let dataUrl = defaultFolderUrl.appendingPathComponent(defaultDataName);
+        let keyUrl = defaultFolderUrl.appendingPathComponent(defaultKeyName);
+        _ = NetworkOperation.sharedInstance().getResources(EquipManager.sharedInstance().rootId, handler: { (any) in
+            //11.18 cut
+        })
+        _ = NetworkOperation.sharedInstance().uploadResource(EquipManager.sharedInstance().defaultGroupId, parentID: EquipManager.sharedInstance().defaultLogoID, fileURL: dataUrl, fileName: defaultDataName) { (any) in
+        }
+        _ = NetworkOperation.sharedInstance().uploadResource(EquipManager.sharedInstance().defaultGroupId, parentID: EquipManager.sharedInstance().defaultLogoID, fileURL: keyUrl, fileName: defaultKeyName, handler: { (any) in
+        })
+    }
+    //从网络端更新
+    func updateFromNet(){
+        let dataUrl = defaultFolderUrl.appendingPathComponent(defaultDataName);
+        let keyUrl = defaultFolderUrl.appendingPathComponent(defaultKeyName);
+        if FileManager.default.fileExists(atPath: dataUrl.path) {
+            try! FileManager.default.removeItem(at: dataUrl)
+        }
+        if FileManager.default.fileExists(atPath: keyUrl.path) {
+            try! FileManager.default.removeItem(at: keyUrl)
+        }
+        _ = NetworkOperation.sharedInstance().getResources(EquipManager.sharedInstance().defaultLogoID, handler: { (any) in
+            let resources = (any as! NSDictionary).value(forKey: NetworkOperation.NetConstant.DictKey.GetResources.Response.resources) as! NSArray
+            for resource in resources {
+                let r = resource as! NSDictionary
+                let name = r.value(forKey: NetworkOperation.NetConstant.DictKey.GetResources.Response.ResourcesKey.name) as! String
+                if (name == self.defaultDataName){
+                    let id = r.value(forKey: NetworkOperation.NetConstant.DictKey.GetResources.Response.ResourcesKey.id) as! Int
+                    _ = NetworkOperation.sharedInstance().downloadResource(id, url: dataUrl, handler: { (any) in
+                    })
+                }
+                if (name == self.defaultKeyName){
+                    let id = r.value(forKey: NetworkOperation.NetConstant.DictKey.GetResources.Response.ResourcesKey.id) as! Int
+                    _ = NetworkOperation.sharedInstance().downloadResource(id, url: keyUrl, handler: { (any) in
+                    })
+                }
+
+            }
+        })
+    }
     
 }
 //data

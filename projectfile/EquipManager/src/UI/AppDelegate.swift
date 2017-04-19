@@ -16,6 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        //MAThemeKit.setupTheme(withPrimaryColor: UIColor.blue, secondaryColor: UIColor.white, fontName: "Times New Roman", lightStatusBar: true)
         return true
     }
 

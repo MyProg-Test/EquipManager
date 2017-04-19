@@ -2,14 +2,14 @@
 //  EquipXmlInfo.swift
 //  EquipManager
 //
-//  Created by LY on 16/7/24.
-//  Copyright © 2016年 LY. All rights reserved.
+//  Created by 李呱呱 on 16/7/24.
+//  Copyright © 2016年 liguagua. All rights reserved.
 //
 
 import UIKit
 
 enum EquipmentAttrKey:String{
-    case codeKey                  = "仪器编号";
+    case codeKey                  = "编号";
     case nameKey                  = "名称";
     case modelKey                 = "型号";
     case categoryNOKey            = "分类号";
@@ -39,8 +39,8 @@ enum EquipmentAttrKey:String{
     case cancellationApprovalKey  = "注销批准人";
     case annexMarkedKey           = "有附件标注";
     case roomKey                  = "所在房间号";
-    case locationKey              = "存放地点";
-    case managerKey               = "领用人";
+    case locationKey              = "位置";
+    case managerKey               = "使用";
     case managerPhoneKey          = "电话";
     case managerEmailKey          = "Email";
     case managerFaxKey            = "传真";
@@ -108,22 +108,27 @@ class EquipXmlInfo {
     
     //根据设备信息新建xml信息
     init(equipAttr:NSMutableDictionary){
-        func getRandomID() -> String {
-            let time = Date();
-            let timeFormatter = DateFormatter();
-            timeFormatter.dateFormat = "yyyyMMddHHmmss";
-            return "\(timeFormatter.string(from: time))";
-        }
-        let id: Int = (getRandomID() as NSString).integerValue;
-        let name: String = "\(getRandomID()).xml";
-        let parentId: Int = id;
-        let path = getRandomID();
-        self.equipkey = "\(parentId)";
+//        func getRandomID() -> String {
+//            let time = Date();
+//            let timeFormatter = DateFormatter();
+//            timeFormatter.dateFormat = "yyyyMMddHHmmss";
+//            return "\(timeFormatter.string(from: time))";
+//        }
+//        let id: Int = (getRandomID() as NSString).integerValue;
+//        let name: String = "\(getRandomID()).xml";
+//        let parentId: Int = id;
+//        let path = getRandomID();
+//        self.equipkey = "\(parentId)";
+//        self.xmlParser = XmlParser()
+//        self.equipAttr = equipAttr
+//        self.attrKey = NSMutableArray();
+//        _ = EquipFileControl.sharedInstance().addEquipInfoToFile(parentId, XMLID: id, XMLName: name, imageSet: NSMutableArray(), path: path, groupID: EquipManager.sharedInstance().defaultGroupId, status: FileSystem.Status.new.rawValue | FileSystem.Status.download.rawValue);
+//        fileAttr = EquipFileControl.sharedInstance().getEquipFromFile(self.equipkey)!;
+        self.equipkey = "";
         self.xmlParser = XmlParser()
         self.equipAttr = equipAttr
         self.attrKey = NSMutableArray();
-        _ = EquipFileControl.sharedInstance().addEquipInfoToFile(parentId, XMLID: id, XMLName: name, imageSet: NSMutableArray(), path: path, groupID: EquipManager.sharedInstance().defaultGroupId, status: FileSystem.Status.new.rawValue | FileSystem.Status.download.rawValue);
-        fileAttr = EquipFileControl.sharedInstance().getEquipFromFile(self.equipkey)!;
+        self.fileAttr = NSMutableDictionary();
         initXmlWithEquipAttr(equipAttr)
     }
     
@@ -245,16 +250,19 @@ class EquipXmlInfo {
     }
     
     //将设备信息更新到文件中
-    func updateToFile(){
+    func updateToFile() -> Bool{
         
         do{
             if(!FileManager.default.fileExists(atPath: EquipFileControl.sharedInstance().getEquipFilePathFromFile(self.equipkey)!.deletingLastPathComponent().path)){
                 try FileManager.default.createDirectory(atPath: EquipFileControl.sharedInstance().getEquipFilePathFromFile(self.equipkey)!.deletingLastPathComponent().path, withIntermediateDirectories: true, attributes: nil);
             }
-            self.xmlParser.writeToFile(EquipFileControl.sharedInstance().getEquipFilePathFromFile(self.equipkey)!)
+            return self.xmlParser.writeToFile(EquipFileControl.sharedInstance().getEquipFilePathFromFile(self.equipkey)!)
+            
         }catch{
             print(error);
+            return false
         }
+        
     }
     
     //从文件中更新xml信息
@@ -265,11 +273,99 @@ class EquipXmlInfo {
     }
     
     //修改xml
-    func modifyXml(_ equipmentKey:EquipmentKey, equipmentAttrKey:EquipmentAttrKey, value:String) {
-        _ = self.xmlParser.setElementOfRoot(equipmentKey.rawValue as String, value: value)
+    func modifyXml(equipmentAttrKey:EquipmentAttrKey, value:String) {
+        _ = self.xmlParser.setElementOfRoot(self.translation(attrKey: equipmentAttrKey).rawValue as String, value: value)
         self.equipAttr.setValue(value, forKey: equipmentAttrKey.rawValue as String)
+        let oldStatus: Int = EquipFileControl.sharedInstance().getEquipStatusFromFile(self.equipkey);
+        _ = EquipFileControl.sharedInstance().modifyEquipStatusInFile(self.equipkey, status: oldStatus | FileSystem.Status.modifty.rawValue);
+        _ = self.updateToFile();
     }
     
+    func translation(attrKey: EquipmentAttrKey) -> EquipmentKey {
+        switch attrKey {
+        case .annexMarkedKey:
+            return .annexMarkedKey
+        case .annualDepreciationKey:
+            return .annualDepreciationKey
+        case .businessUsageNameKey:
+            return .businessUsageNameKey
+        case .campusKey:
+            return .campusKey
+        case .cancellationApprovalKey:
+            return .cancellationApprovalKey
+        case .cancellationDateKey:
+            return .cancellationDateKey
+        case .categoryGBNOKey:
+            return .categoryGBNOKey
+        case .categoryNOKey:
+            return .categoryNOKey
+        case .codeKey:
+            return .codeKey
+        case .countryKey:
+            return .countryKey
+        case .departmentNameKey:
+            return .departmentNameKey
+        case .increasingNOKey:
+            return .increasingNOKey
+        case .invoiceKey:
+            return .invoiceKey
+        case .locationKey:
+            return .locationKey
+        case .managerEmailKey:
+            return .managerEmailKey
+        case .managerFaxKey:
+            return .managerFaxKey
+        case .managerKey:
+            return .managerKey
+        case .managerPhoneKey:
+            return .managerPhoneKey
+        case .manufacturerKey:
+            return .manufacturerKey
+        case .modelKey:
+            return .modelKey
+        case .nameKey:
+            return .nameKey
+        case .officeNameKey:
+            return .officeNameKey
+        case .outFactoryDateKey:
+            return .outFactoryDateKey
+        case .postingDateKey:
+            return .postingDateKey
+        case .priceDollarKey:
+            return .priceDollarKey
+        case .priceKey:
+            return .priceKey
+        case .purchaseDateKey:
+            return .purchaseDateKey
+        case .roomKey:
+            return .roomKey
+        case .serialNoKey:
+            return .serialNoKey
+        case .sourceKey:
+            return .sourceKey
+        case .specialMarkKey:
+            return .specialMarkKey
+        case .specificationKey:
+            return .specificationKey
+        case .statusDesKey:
+            return .statusDesKey
+        case .subjectsKey:
+            return .subjectsKey
+        case .vendorKey:
+            return .vendorKey
+        default:
+            return .annexMarkedKey;
+        }
+    }
+    
+    func getQRImage(image:UIImage) -> UIImage {
+        let infoKey:[String] = [EquipmentAttrKey.nameKey.rawValue,EquipmentAttrKey.managerKey.rawValue,EquipmentAttrKey.codeKey.rawValue,EquipmentAttrKey.locationKey.rawValue,EquipmentAttrKey.manufacturerKey.rawValue]
+        let infoDict:[String:Any] = equipAttr.dictionaryWithValues(forKeys: infoKey)
+        
+        let info:String = infoDict.description
+        
+        return info.qrImageWithImage(image)
+    }
 }
 
 

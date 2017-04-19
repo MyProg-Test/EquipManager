@@ -3,7 +3,7 @@
 //  EquipManager
 //
 //  Created by 李呱呱 on 16/7/25.
-//  Copyright © 2016年 LY. All rights reserved.
+//  Copyright © 2016年 liguagua. All rights reserved.
 //
 
 import UIKit
@@ -37,10 +37,9 @@ class XmlParser {
     
     //设置当前文档的根元素
     func setRootElement (_ root:GDataXMLElement) -> Bool{
-        do{
-            doc = GDataXMLDocument(rootElement: root)
-            return true
-        }
+        
+        doc = GDataXMLDocument(rootElement: root)
+        return true
     }
     
     //根据名字获取根元素下的第一个元素
@@ -102,7 +101,7 @@ class XmlParser {
         return true
     }
     //写入文件
-    func writeToFile(_ path:URL) {
-        (doc.xmlData() as NSData).write(toFile: path.path, atomically: true);
+    func writeToFile(_ path:URL) -> Bool {
+        return (doc.xmlData() as NSData).write(toFile: path.path, atomically: true);
     }
 }

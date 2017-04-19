@@ -5,10 +5,10 @@
 //  Created by 李呱呱 on 16/8/9.
 //  Copyright © 2016年 liguagua. All rights reserved.
 //
-
 import UIKit
+import Photos
 
-class EquipImagePickerTableViewController: UITableViewController,UIAlertViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class EquipImagePickerTableViewController: UITableViewController,UIAlertViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate,CLLocationManagerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,7 +65,7 @@ class EquipImagePickerTableViewController: UITableViewController,UIAlertViewDele
         }
         return DetailEquipViewController.data_source!.imageInfo.historyImage.count;
     }
-    //数据源DetailEquipViewController.data_source
+  
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let equipImageCellIdentifier = "equipImageCell";
         var cell:EquipImageTableViewCell! = tableView.dequeueReusableCell(withIdentifier: equipImageCellIdentifier) as? EquipImageTableViewCell;
@@ -120,7 +120,7 @@ class EquipImagePickerTableViewController: UITableViewController,UIAlertViewDele
     }
     
     func uploadImage(){
-        let uploadImageAlertController:UIAlertController = UIAlertController(title: "上传图片", message: "选择图片来源", preferredStyle: UIAlertControllerStyle.actionSheet)
+        let uploadImageAlertController:UIAlertController = UIAlertController(title: "上传图片", message: "选择图片来源", preferredStyle: UIAlertControllerStyle.alert)
         
         uploadImageAlertController.addAction(UIAlertAction(title: "本地照片", style: UIAlertActionStyle.default, handler: {(UIAlertAction)-> Void in self.imagePickerFromLocal()}))
         
@@ -162,8 +162,27 @@ class EquipImagePickerTableViewController: UITableViewController,UIAlertViewDele
             return "\(timeFormatter.string(from: time))";
         }
         let lastChosen = NSDictionary(dictionary: info);
+        
+        let locationManager = CLLocationManager();
+        locationManager.delegate = self;
+        if let assetUrl = lastChosen.object(forKey: UIImagePickerControllerReferenceURL) as? URL{
+            let assets = PHAsset.fetchAssets(withALAssetURLs: [assetUrl], options: nil);
+            let asset = assets.firstObject!;
+            if let location = asset.location {
+                let latitude = location.coordinate.latitude;
+                let longtitude = location.coordinate.longitude;
+                //do something
+            }
+        }else{
+            locationManager.startUpdatingLocation();
+            
+        }
+        
+        
+        
         if((lastChosen.object(forKey: UIImagePickerControllerMediaType) as! NSString) == (kUTTypeImage as NSString)){
             let chosenImage:UIImage = lastChosen.object(forKey: UIImagePickerControllerEditedImage) as! UIImage;
+            
             let imageName = getRandomID();
             //10.7
             let equipkey = DetailEquipViewController.data_source!.equipkey;
@@ -209,6 +228,13 @@ class EquipImagePickerTableViewController: UITableViewController,UIAlertViewDele
         }else{
             self.noticeError("设备不支持拍照", autoClear: true, autoClearTime: 2);
         }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        let location = locations[0];
+        let latitude = location.coordinate.latitude;
+        let longtitude = location.coordinate.longitude;
+        manager.stopUpdatingLocation();
     }
     
     func setMainImage(equipkey: String, index: Int){

@@ -76,19 +76,28 @@ class DetailEquipViewController: UIViewController {
         }
     }
     
-    //点击QRCode图片
+    //点击QRCode图片 放大
     func qrCodeTap(_ sender:UITapGestureRecognizer) {
         print("qrCodeTap")
+        let clickImageView:UIImageView = sender.view as! UIImageView
+        XWScanImage.scanBigImage(with: clickImageView)
     }
     
+
     //获取equipImage里面显示的图片
     func getEquipImage()->UIImage?{
         return equipImage.image
     }
-    
+    //10.8
     //设置QRCodeImage
     func setQRCodeImage(){
-        QRCodeImage.image = (DetailEquipViewController.data_source!.xmlInfo.equipAttr.value(forKey: EquipmentAttrKey.codeKey.rawValue as String) as! String).qrImage
+//        QRCodeImage.image = (DetailEquipViewController.data_source!.xmlInfo.equipAttr.value(forKey: EquipmentAttrKey.codeKey.rawValue as String) as! String).qrImage
+        let infoKey:[String] = [EquipmentAttrKey.nameKey.rawValue,EquipmentAttrKey.codeKey.rawValue,EquipmentAttrKey.locationKey.rawValue]
+        let infoDict:[String:Any] = DetailEquipViewController.data_source!.xmlInfo.equipAttr.dictionaryWithValues(forKeys: infoKey)
+        
+        let info:String = infoDict.description
+
+        QRCodeImage.image = info.qrImageWithImage(getEquipImage())
         //生成二维码
     }
     //获取QRCodeImage里面的图片
@@ -121,24 +130,72 @@ class DetailEquipViewController: UIViewController {
     func menuPressed(){
         let menuAlertController:UIAlertController = UIAlertController(title:"设备信息操作",message:"选择一项操作",preferredStyle:UIAlertControllerStyle.alert)
         
-        menuAlertController.addAction(UIAlertAction(title: "修改信息", style: UIAlertActionStyle.default, handler: { (UIAlertAction) -> Void in
-            self.modifyEquipInfo()
+        menuAlertController.addAction(UIAlertAction(title: "复制设备", style: UIAlertActionStyle.default, handler: { (UIAlertAction) -> Void in
+            self.copyEquipInfo()
         }))
+        
         menuAlertController.addAction(UIAlertAction(title: "设备处理", style: UIAlertActionStyle.default, handler: { (UIAlertAction) -> Void in
             self.moreEquipManage()
         }))
+        
+        menuAlertController.addAction(UIAlertAction(title: "打印标签", style: UIAlertActionStyle.default, handler: { (UIAlertAction) -> Void in
+            self.printSelect()
+        }))
+        
         menuAlertController.addAction(UIAlertAction(title: "取消", style: UIAlertActionStyle.cancel, handler: { (UIAlertAction) -> Void in
             NSLog("cancel")
         }))
         
         self.present(menuAlertController, animated: true, completion: nil)
         
-        
     }
     
-    func modifyEquipInfo(){
-        //修改信息
-        //跳转到修改信息vc
+    func copyEquipInfo(){
+        func getRandomName() -> String {
+            let time = Date();
+            let timeFormatter = DateFormatter();
+            timeFormatter.dateFormat = "yyyyMMddHHmmss";
+            return "\(timeFormatter.string(from: time))";
+        }
+        let oldEquip: EquipXmlInfo = DetailEquipViewController.data_source!.xmlInfo
+        let newEquip: EquipXmlInfo = EquipXmlInfo(equipAttr: oldEquip.equipAttr)
+        
+        //_ = equip.updateToFile(); online
+        let rootId = EquipManager.sharedInstance().rootId;
+        let groupId = EquipManager.sharedInstance().defaultGroupId;
+        let foldName = getRandomName();
+        let xmlName = "equip.xml"
+        let uploadData = newEquip.xmlParser.doc.xmlData()!;
+        self.pleaseWait();
+        _ = NetworkOperation.sharedInstance().createDir(groupId, name: foldName, parentID: rootId){
+            (any) in
+            print(any);
+            let response = any as! NSDictionary
+            let parentId = response.value(forKey: NetworkOperation.NetConstant.DictKey.CreateDir.Response.id) as! Int
+            
+            _ = NetworkOperation.sharedInstance().uploadResourceReturnId(groupId, parentID: parentId, fileData: uploadData, fileName: xmlName){
+                (any) in
+                let response = any as! NSDictionary;
+                let file = (response.value(forKey: NetworkOperation.NetConstant.DictKey.UploadResourceReturnId.Response.file) as! NSArray).object(at: 0) as! NSDictionary;
+                let xmlId = file.value(forKey: NetworkOperation.NetConstant.DictKey.UploadResourceReturnId.Response.FileKey.id) as! Int;
+                _ = EquipFileControl.sharedInstance().addEquipInfoToFile(parentId, XMLID: xmlId, XMLName: xmlName, imageSet: NSMutableArray(), path: "\(parentId)", groupID: groupId, status: FileSystem.Status.download.rawValue);
+                newEquip.equipkey = "\(parentId)"
+                //复制的设备编号随机一个
+                newEquip.modifyXml(equipmentAttrKey: .codeKey, value: getRandomName())
+                
+                let success: Bool = newEquip.updateToFile()
+                GCDThread().async {
+                    self.clearAllNotice();
+                    if success{
+                        self.noticeSuccess("复制完成", autoClear: true, autoClearTime: 2)
+                    }else{
+                        self.noticeError("复制失败", autoClear: true, autoClearTime: 2)
+                    }
+                }
+                
+            }
+        }
+        
     }
     
     func moreEquipManage(){
@@ -176,14 +233,44 @@ class DetailEquipViewController: UIViewController {
         //设备报废
     }
     
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-     // Get the new view controller using segue.destinationViewController.
-     // Pass the selected object to the new view controller.
-     }
-     */
+    func printSelect() {
+        /**/
+        //打印信息 
+        self.pleaseWait();
+        
+        GCDThread().async{
+            
+            
+            var key: Array<String> = Array();
+            key.append(EquipmentAttrKey.managerKey.rawValue)
+            key.append(EquipmentAttrKey.nameKey.rawValue)
+            key.append(EquipmentAttrKey.codeKey.rawValue)
+            key.append(EquipmentAttrKey.locationKey.rawValue)
+            
+            let dict = DetailEquipViewController.data_source!.xmlInfo.equipAttr.dictionaryWithValues(forKeys: key);
+            
+            
+            //10.14 more 二维码内容 五字段
+            let infoKey:[String] = [EquipmentAttrKey.nameKey.rawValue,EquipmentAttrKey.managerKey.rawValue,EquipmentAttrKey.codeKey.rawValue,EquipmentAttrKey.locationKey.rawValue,EquipmentAttrKey.manufacturerKey.rawValue]
+            let infoDict:[String:Any] = DetailEquipViewController.data_source!.xmlInfo.equipAttr.dictionaryWithValues(forKeys: infoKey)
+            
+            let info:String = infoDict.description
+            
+            
+            let qrImage = info.qrImageWithImage (self.getEquipImage());
+            
+            let barImage = (DetailEquipViewController.data_source!.xmlInfo.equipAttr.value(forKey: EquipmentAttrKey.codeKey.rawValue as String) as! String).barCode;
+            
+            let logoImage = EquipLogo.sharedInstance().getLogo();
+            
+            let printImage = SwiftPrint.sharedInstance().labelCard(dict: dict as! [String : String], key: key, qrImage: qrImage, logoImage: logoImage, barImage: barImage);
+            let printImageData = UIImagePNGRepresentation(printImage)!;
+            //安装去除注释
+            //let _ = NetworkOperation.sharedInstance().uploadResource(EquipManager.sharedInstance().defaultGroupId, parentID: DetailEquipViewController.data_source!.xmlInfo.xmlFile.parentId, fileData: printImageData, fileName: "设备标签.png", handler: {(any) in});
+            let image = SwiftPrint.sharedInstance().singlePrint(image: printImage, row: 0);
+            self.clearAllNotice();
+            self.printImage(image: image);
+        }
+    }
     
 }

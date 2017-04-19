@@ -14,8 +14,12 @@ class EquipSimpleInfoTableViewController: UITableViewController {
     @IBOutlet weak var equipManagerLabel: UILabel!
     @IBOutlet weak var equipCodeLabel: UILabel!
     @IBOutlet weak var equipLocLabel: UILabel!
+    @IBOutlet weak var equipComLabel:UILabel!
+    
+    
     @IBOutlet weak var equipNameImage:UIImageView!
     @IBOutlet weak var equipManagerImage:UIImageView!
+    @IBOutlet weak var equipLocImage:UIImageView!
     
     static var data_source:EquipInfo?
     
@@ -25,10 +29,12 @@ class EquipSimpleInfoTableViewController: UITableViewController {
         tableView.estimatedRowHeight = tableView.rowHeight
         tableView.separatorStyle = .singleLine
         
-        equipNameImage.image = UIImage(named: "equipImage.png")
-        equipManagerImage.image = UIImage(named: "equipImage.png")
-
+        equipNameImage.image = UIImage(named: "right.png")
+        equipManagerImage.image = UIImage(named: "right.png")
+        equipLocImage.image = UIImage(named: "right.png")
+        
            }
+    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -36,7 +42,8 @@ class EquipSimpleInfoTableViewController: UITableViewController {
         equipNameLabel.text = DetailEquipViewController.data_source!.xmlInfo.equipAttr.value(forKey: EquipmentAttrKey.nameKey.rawValue as String) as? String
         equipManagerLabel.text = DetailEquipViewController.data_source!.xmlInfo.equipAttr.value(forKey: EquipmentAttrKey.managerKey.rawValue as String) as? String
         equipCodeLabel.text = DetailEquipViewController.data_source!.xmlInfo.equipAttr.value(forKey: EquipmentAttrKey.codeKey.rawValue as String) as? String
-        equipLocLabel.text = DetailEquipViewController.data_source!.xmlInfo.equipAttr.value(forKey: EquipmentAttrKey.roomKey.rawValue as String) as? String
+        equipLocLabel.text = DetailEquipViewController.data_source!.xmlInfo.equipAttr.value(forKey: EquipmentAttrKey.locationKey.rawValue as String) as? String
+        equipComLabel.text = DetailEquipViewController.data_source!.xmlInfo.equipAttr.value(forKey: EquipmentAttrKey.manufacturerKey.rawValue as String) as? String
         
         
         let equipNameImageTap:UITapGestureRecognizer = UITapGestureRecognizer(target: self
@@ -48,6 +55,12 @@ class EquipSimpleInfoTableViewController: UITableViewController {
             , action: #selector(EquipSimpleInfoTableViewController.equipManagerImageTap(_:)))
         equipManagerImage.addGestureRecognizer(equipManagerImageTap)
         equipManagerImage.isUserInteractionEnabled = true
+        
+        let equipLocImageTap:UITapGestureRecognizer = UITapGestureRecognizer(target: self
+            , action: #selector(EquipSimpleInfoTableViewController.equipLocImageTap(_:)))
+        equipLocImage.addGestureRecognizer(equipLocImageTap)
+        equipLocImage.isUserInteractionEnabled = true
+        
     }
 
     func equipNameImageTap(_ sender:UITapGestureRecognizer){
@@ -63,6 +76,12 @@ class EquipSimpleInfoTableViewController: UITableViewController {
         
     }
     
+    func equipLocImageTap(_ sender:UITapGestureRecognizer){
+        let locationView = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "MapInfo") as! MapViewController
+        
+        self.navigationController?.pushViewController(locationView, animated: true)
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         for i in equipNameImage.gestureRecognizers!{
@@ -70,6 +89,9 @@ class EquipSimpleInfoTableViewController: UITableViewController {
         }
         for i in equipManagerImage.gestureRecognizers!{
             equipManagerImage.removeGestureRecognizer(i)
+        }
+        for i in equipLocImage.gestureRecognizers!{
+            equipLocImage.removeGestureRecognizer(i)
         }
     }
     
@@ -87,7 +109,7 @@ class EquipSimpleInfoTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 4
+        return 5
     }
 
     /*

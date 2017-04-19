@@ -3,7 +3,7 @@
 //  EquipManager
 //
 //  Created by 李呱呱 on 16/7/31.
-//  Copyright © 2016年 LY. All rights reserved.
+//  Copyright © 2016年 liguagua. All rights reserved.
 //
 
 import UIKit
@@ -33,7 +33,7 @@ class EquipFileControl {
     let libPath:URL;
     let tmpPath:URL;
     
-    //初始化路径
+    
     fileprivate init(){
         docPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0];
         print(docPath);
@@ -43,37 +43,37 @@ class EquipFileControl {
         _ = self.checkForEquipAssociationFile();
     }
     
-    //返回单例模式
+ 
     class func sharedInstance()->EquipFileControl{
         return _sharedInstance;
     }
     
-    //获取当前帐号路径
+    
     func getAccountPath()->URL{
         return docPath.appendingPathComponent("Account");
     }
     
-    //获取当前帐号下的设备路径
+   
     func getEquipPath()->URL{
         return getAccountPath().appendingPathComponent("我的设备");
     }
     
-    //获取当前帐号下设备的相关信息路径
+  
     func getEquipAssociationPath()->URL{
         return getEquipPath().appendingPathComponent("Equip");
     }
     
-    //获取当前帐号下设备信息路径
+   
     func getEquipInfoPath()->URL{
         return getEquipAssociationPath().appendingPathComponent("Infos");
     }
     
-    //获取当前帐号下设备日志路径
+   
     func getEquipLogsPath()->URL{
         return getEquipAssociationPath().appendingPathComponent("Logs");
     }
     
-    //获取当前帐号下设备信息文件路径
+    
     func getEquipInfoDictFilePath()->URL{
         return getEquipInfoPath().appendingPathComponent(equipDictInfoName, isDirectory: false);
     }
@@ -82,7 +82,7 @@ class EquipFileControl {
         return getEquipInfoPath().appendingPathComponent(equipOrderInfoName, isDirectory: false);
     }
     
-    //创建空设备文件
+
     func createEmptyDictFile(_ url:URL)->Bool{
         let data:NSMutableDictionary = NSMutableDictionary();
         return data.write(toFile: url.path, atomically: true);
@@ -93,7 +93,7 @@ class EquipFileControl {
         return data.write(toFile: url.path, atomically: true);
     }
     
-    //从文件中读取信息
+  
     func readInfoFromFile()->FileSystem?{
         if(!FileManager.default.fileExists(atPath: self.getEquipInfoDictFilePath().path) || !FileManager.default.fileExists(atPath: self.getEquipInfoOrderFilePath().path)){
             return nil;
@@ -103,7 +103,7 @@ class EquipFileControl {
         return fs;
     }
     
-    //在文件中写入信息
+
     func writeInfoToFile(_ fs: FileSystem)->Bool{
         if(!FileManager.default.fileExists(atPath: self.getEquipInfoPath().path)){
             do{
@@ -116,7 +116,7 @@ class EquipFileControl {
         return fs.writeToFile(self.getEquipInfoDictFilePath(), orderurl: self.getEquipInfoOrderFilePath());
     }
     
-    //添加equip信息到本地文件
+
     func addEquipInfoToFile(_ parentID:Int, XMLID:Int, XMLName:String, imageSet:NSMutableArray, path:String, groupID:Int,status:Int = 0)->Bool{
         if(self.fs == nil){
             return false;
@@ -125,7 +125,7 @@ class EquipFileControl {
         fs!.addEquip(parentID, XMLID: XMLID, XMLName: XMLName, imageSet: imageSet, path: path,groupID: groupID, status: status);
         return self.writeInfoToFile(fs!);
     }
-    //添加图片信息到文件中
+ 
     func addImageInfoToFile(_ key:String, imageID:Int, imagePath:String, imageName:String, status:Int = 0)->Bool{
         if(self.fs == nil){
             return false;
@@ -152,7 +152,7 @@ class EquipFileControl {
         _ = fs!.deleteEquip(key);
         return self.writeInfoToFile(fs!);
     }
-    //在文件中修改图片名
+   
     func modifyImageNameInFile(_ equipkey:String, imageIndex:Int, name:String)->Bool{
         if(self.fs == nil){
             return false;
@@ -180,7 +180,7 @@ class EquipFileControl {
         return self.writeInfoToFile(fs!);
     }
     
-    //在文件中修改设备状态
+  
     func modifyEquipStatusInFile(_ key:String,status:Int) -> Bool {
         if(self.fs == nil){
             return false;
@@ -189,7 +189,7 @@ class EquipFileControl {
         fs!.modifyEquipStatus(key, status: status);
         return writeInfoToFile(fs!);
     }
-    //在文件中修改图片状态
+ 
     func modifyImageStatusInFile(_ equipkey:String, imageIndex:Int, status:Int) -> Bool{
         if(self.fs == nil){
             return false;
@@ -208,14 +208,14 @@ class EquipFileControl {
         return writeInfoToFile(fs!);
     }
     
-    //从文件中获取文件信息
+   
     func getFileSystemFromFile()->FileSystem?{
         return self.fs;
     }
     
     //MARK:-getEquip
     
-    //根据key和value获取设备的index
+    
     func getSpecKey(_ key:String,value:AnyObject)->String{
         if(self.fs == nil){
             return "";
@@ -230,7 +230,7 @@ class EquipFileControl {
         return self.fs!.getEquipStatus(key);
     }
     
-    //获取设备文件的路径
+  
     func getEquipFilePathFromFile(_ key:String) -> URL? {
         if(self.fs == nil){
             return nil;
@@ -239,7 +239,7 @@ class EquipFileControl {
         return url;
     }
     
-    //获取设备数组
+  
     func getEquipDict()->NSMutableDictionary?{
         if(self.fs == nil){
             return nil;
@@ -247,7 +247,7 @@ class EquipFileControl {
         return self.fs!.equipDict.subject.mutableCopy() as? NSMutableDictionary;
     }
     
-    //从文件中获取设备
+  
     func getEquipFromFile(_ key:String)->NSMutableDictionary?{
         if(self.fs == nil){
             return nil;
@@ -355,7 +355,7 @@ class EquipFileControl {
         return self.fs?.getImage(equipkey, imageIndex: imageIndex);
     }
     
-    //从文件中获取图片文件路径
+   
     func getImageFilePathFromFile(_ equipkey:String, imageIndex:Int) -> URL?{
         if(self.fs == nil){
             return nil;
@@ -384,7 +384,7 @@ class EquipFileControl {
         return Data();
     }
     
-    //检查设备相关路径是否存在，若不存在，则建立
+   
     func checkForEquipAssociationFile()->Bool{
         do{
             if(!FileManager.default.fileExists(atPath: getEquipInfoDictFilePath().path) || !FileManager.default.fileExists(atPath: getEquipInfoOrderFilePath().path)){
@@ -401,7 +401,7 @@ class EquipFileControl {
             return false;
         }
     }
-    //和网络端交互设备信息
+ 
     func interactEquipWithNet(){
         if(self.fs == nil){
             _ = self.checkForEquipAssociationFile();
@@ -427,7 +427,7 @@ class EquipFileControl {
                 _ = NetworkOperation.sharedInstance().deleteResource(self.getEquipXMLIDFromFile(keyString)){
                     (any) in
                     _ = NetworkOperation.sharedInstance().uploadResourceReturnId(self.getEquipGroupIdFromFile(keyString), parentID: self.getEquipParentIdFromFile(keyString), fileURL: self.getEquipFilePathFromFile(keyString)!, fileName: self.getEquipNameFromFile(keyString)){(any) in
-                        let newFile:NSDictionary = any.object(forKey: NetworkOperation.NetConstant.DictKey.UploadResourceReturnId.Response.file) as! NSDictionary;
+                        let newFile:NSDictionary = (any.object(forKey: NetworkOperation.NetConstant.DictKey.UploadResourceReturnId.Response.file) as! Array<NSDictionary>)[0];
                         let newid:Int = newFile.object(forKey: NetworkOperation.NetConstant.DictKey.UploadResourceReturnId.Response.FileKey.id) as! Int;
                         let oldPath = self.getEquipFilePathFromFile(keyString)!;
                         _ = self.modifyXMLIDInFile(keyString, id: newid);
@@ -444,7 +444,6 @@ class EquipFileControl {
             }
             if(self.getEquipStatusFromFile(keyString) & FileSystem.Status.delete.rawValue > 0){
                 _ = NetworkOperation.sharedInstance().deleteResource(self.getEquipXMLIDFromFile(keyString)){ (any) in
-                    print(any);
                     do{
                         try FileManager.default.removeItem(atPath: self.getEquipFilePathFromFile(keyString)!.deletingLastPathComponent().path);
                     }catch{
@@ -456,12 +455,10 @@ class EquipFileControl {
             }
             if(self.getEquipStatusFromFile(keyString) & FileSystem.Status.new.rawValue > 0){
                 _ = NetworkOperation.sharedInstance().createDir(self.getEquipGroupIdFromFile(keyString), name: (self.getEquipNameFromFile(keyString) as NSString).deletingPathExtension, parentID: EquipManager.sharedInstance().rootId){(any) in
-                    print(any);
                     let dirID = any.object(forKey: NetworkOperation.NetConstant.DictKey.CreateDir.Response.id) as! Int;
                     _ = self.modifyParentIDInFile(keyString, parentId: dirID);
                     keyString = "\(dirID)";
                     _ = NetworkOperation.sharedInstance().uploadResourceReturnId(self.getEquipGroupIdFromFile(keyString), parentID: self.getEquipParentIdFromFile(keyString), fileURL: self.getEquipFilePathFromFile(keyString)!, fileName: self.getEquipNameFromFile(keyString)){(any) in
-                        print(any);
                         let newFile:NSDictionary = (any.object(forKey: NetworkOperation.NetConstant.DictKey.UploadResourceReturnId.Response.file)! as AnyObject).firstObject as! NSDictionary;
                         let newid:Int = newFile.object(forKey: NetworkOperation.NetConstant.DictKey.UploadResourceReturnId.Response.FileKey.id) as! Int;
                         let oldPath = self.getEquipFilePathFromFile(keyString)!;
@@ -517,7 +514,9 @@ class EquipFileControl {
                 }
                 if(self.getImageStatusFromFile(keyString, imageIndex: imageIndex) & FileSystem.Status.new.rawValue > 0) {
                     _ = NetworkOperation.sharedInstance().uploadResourceReturnId(self.getEquipGroupIdFromFile(keyString), parentID: self.getEquipParentIdFromFile(keyString), fileURL: self.getImageFilePathFromFile(keyString, imageIndex: imageIndex)!, fileName: self.getImageNameFromFile(keyString, imageIndex: imageIndex)){(any) in
+                        print(any)
                         let newFile:NSDictionary = (any.object(forKey: NetworkOperation.NetConstant.DictKey.UploadResourceReturnId.Response.file) as! NSArray).firstObject as! NSDictionary;
+                        
                         let newid:Int = newFile.object(forKey: NetworkOperation.NetConstant.DictKey.UploadResourceReturnId.Response.FileKey.id) as! Int;
                         let oldPath = self.getImageFilePathFromFile(keyString, imageIndex: imageIndex)!;
                         _ = self.modifyImageIDFromFile(keyString, imageIndex: imageIndex, id: newid);
@@ -542,7 +541,7 @@ class EquipFileControl {
             _ = self.deleteEquipFromFile(tmp as! String);
         }
     }
-    //下载设备图片
+ 
     func downloadEquipImageFromNet(_ key:String) {
         if(fs == nil){
             return ;
@@ -573,7 +572,7 @@ class EquipFileControl {
             _ = i.lock();
         }
     }
-    //检查当前路径，若不存在，则建立
+ 
     func checkForPath(_ url:URL)->Bool{
         do{
             let folder = url.deletingLastPathComponent();

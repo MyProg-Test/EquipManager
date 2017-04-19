@@ -3,7 +3,7 @@
 //  EquipManager
 //
 //  Created by 李呱呱 on 16/8/11.
-//  Copyright © 2016年 LY. All rights reserved.
+//  Copyright © 2016年 liguagua. All rights reserved.
 //
 
 import UIKit
@@ -12,14 +12,19 @@ class EquipManager:NSObject{
     
     var rootId:Int = 0
     
-    var defaultGroupId:Int = 1069;
+    var defaultGroupId:Int = 1069
+    //回收站文件夹
+    var defaultTrashId:Int = 0
+    //系统Logo文件夹
+    var defaultLogoID:Int = 0
+    
     fileprivate static let _sharedInstance:EquipManager = EquipManager(rootId: 0);
-    //根据rootID初始化
+   
     init(rootId:Int){
         super.init();
         self.rootId = rootId;
     }
-    //单例模式
+  
     class func sharedInstance(_ rootId:Int) -> EquipManager{
         _sharedInstance.rootId = rootId;
         return _sharedInstance;
@@ -35,11 +40,11 @@ class EquipManager:NSObject{
         combine();
     }
     
-    //从本地更新
+  
     func initWithLocal(){
     }
     
-    //从网络端更新
+   
     func initWithNet(){
         EquipNetInfo.sharedInstance().readFromNet(rootId);
     }

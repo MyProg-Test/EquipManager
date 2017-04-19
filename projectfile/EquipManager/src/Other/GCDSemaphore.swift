@@ -2,10 +2,10 @@
 //  GCDSemaphore.swift
 //  GCD_test
 //
-//  Created by LY on 16/9/6.
-//  Copyright © 2016年 LY. All rights reserved.
+//  Created by 李呱呱 on 16/9/6.
+//  Copyright © 2016年 liguagua. All rights reserved.
 //
-
+//信号量
 import UIKit
 
 class GCDSemaphore: NSObject {

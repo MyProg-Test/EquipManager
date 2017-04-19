@@ -3,21 +3,28 @@
 //  EquipManager
 //
 //  Created by 李呱呱 on 16/8/4.
-//  Copyright © 2016年 LY. All rights reserved.
+//  Copyright © 2016年 liguagua. All rights reserved.
 //
 
 import UIKit
 import Alamofire
 
 class NetworkOperation {
-    //网络常数
+  
     internal struct NetConstant{
-        static let serverURL = "weblib.ccnl.scut.edu.cn/"
+        static var serverURL:String{
+            get{
+                return EquipServer.sharedInstance().getServer();
+            }
+        }
+        //static let serverURL = "weblib.scn.cn/"
+        //static let serverURL = "202.38.254.197:9090/"
+        
         static let serverProtocol = "http://"
         static let defaultQueue:GCDThread = GCDThread(label: "NetworkOperation", attr: .concurrent);
-        //网络接口使用的询问key和回答key
+     
         struct DictKey {
-            //登录时使用的key
+           
             struct Authenticate {
                 struct Query {
                     static let username     = "account"
@@ -28,13 +35,13 @@ class NetworkOperation {
                     static let memberId     = "id"
                 }
             }
-            //选择member
+           
             struct SelectMember{
                 struct Query {
                     static let memberId     = "memberId"
                 }
             }
-            //获取资源使用的key
+           
             struct GetResources{
                 struct Query {
                     static let parentId     = "parentId";
@@ -84,7 +91,7 @@ class NetworkOperation {
                     static let totalCount   = "totalCount";
                 }
             }
-            //获取资源信息的key
+        
             struct GetResourceInfo{
                 struct Query {
                     static let resourceId   = "resourceId";
@@ -104,7 +111,7 @@ class NetworkOperation {
                     static let type         = "type";
                 }
             }
-            //获取简单资源使用的key
+         
             struct GetSimpleResources{
                 struct Query {
                     static let parentId     = "parentId";
@@ -140,7 +147,7 @@ class NetworkOperation {
                     static let totalCount   = "totalCount";
                 }
             }
-            //新建文件夹使用的key
+         
             struct CreateDir{
                 struct Query{
                     static let groupId      = "groupId";
@@ -151,7 +158,7 @@ class NetworkOperation {
                     static let id           = "id";
                 }
             }
-            //下载资源使用的key
+          
             struct DownloadResource{
                 struct Query {
                     static let id       = "id";
@@ -160,7 +167,7 @@ class NetworkOperation {
                     
                 }
             }
-            //上传资源使用的key
+         
             struct UploadResource {
                 struct Query {
                     static let groupId      = "groupId";
@@ -190,7 +197,7 @@ class NetworkOperation {
                     static let total        = "total";
                 }
             }
-            //复制资源使用的key
+           
             struct CopyResource {
                 struct Query {
                     static let groupId      = "groupId";
@@ -201,7 +208,7 @@ class NetworkOperation {
                     
                 }
             }
-            //移动资源使用的key
+          
             struct MoveResource {
                 struct Query {
                     static let groupId      = "groupId";
@@ -212,7 +219,7 @@ class NetworkOperation {
                     
                 }
             }
-            //修改资源使用的key
+            //修改资源
             struct ModifyResource {
                 struct Query {
                     static let id           = "id";
@@ -223,7 +230,7 @@ class NetworkOperation {
                     
                 }
             }
-            //获取缩略图使用的key
+            
             struct GetThumbnail {
                 struct Query {
                     static let id           = "id";
@@ -233,6 +240,33 @@ class NetworkOperation {
                 struct Response {
                     static let id           = "id";
                     static let thumbUrl     = "thumbUrl"
+                }
+            }
+            //通讯录
+            struct GetAccounts {
+                struct Query {
+                    static let start        = "start"
+                    static let limit        = "limit"
+                }
+                struct Response {
+                    static let totalCount   = "totalCount"
+                    static let accounts     = "accounts"
+                    struct AccountsKey {
+                        static let account      = "account"
+                        static let name         = "name"
+                        static let department   = "department"
+                        static let position     = "position"
+                        static let email        = "email"
+                        static let im           = "im"
+                        static let phone        = "phone"
+                        static let mobile       = "mobile"
+                        static let status       = "status"
+                        static let members      = "members"
+                        struct MembersKey {
+                            static let id           = "id"
+                            static let name         = "name"
+                        }
+                    }
                 }
             }
             struct DeleteResource {
@@ -260,7 +294,7 @@ class NetworkOperation {
                 }
             }
         }
-        //网络端调用的application interface
+        
         struct API {
             static let Authenticate         = "login/authenticate.action"
             static let SelectMember         = "login/selectMember.action"
@@ -311,7 +345,7 @@ class NetworkOperation {
     fileprivate static let _sharedInstance = NetworkOperation()
     fileprivate init(){
     }
-    //单例模式
+   
     class func sharedInstance() -> NetworkOperation {
         return _sharedInstance
     }
@@ -405,13 +439,13 @@ class NetworkOperation {
         return rtn;
     }
     
-    // group/getResources.action  获取文件树节点信息
+   
     func getResources(_ parentID:Int,type:Int = 0,start:Int = 0,limit:Int = 1000,queue:GCDThread = NetConstant.defaultQueue,handler:@escaping (AnyObject)->Void) -> GCDSemaphore{
         let dict = [NetConstant.DictKey.GetResources.Query.parentId : parentID];
         return self.postRequest(url: NetworkOperation.NetConstant.API.GetResources.asURLConvertible, dict: dict, queue: queue,handler: handler);
     }
     
-    //group/getResourceInfo.action  获取资源信息
+    
     func getResourceInfo(_ resourceID:Int, queue:GCDThread = NetConstant.defaultQueue, handler:@escaping (AnyObject)->Void) -> GCDSemaphore{
         let dict = [NetConstant.DictKey.GetResourceInfo.Query.resourceId : resourceID];
         return self.postRequest(url: NetworkOperation.NetConstant.API.GetResourceInfo.asURLConvertible, dict: dict, queue: queue){ (responseDict) in
@@ -419,7 +453,7 @@ class NetworkOperation {
         }
     }
     
-    //group/getSimpleResources.action  获取文件树节点简要信息
+   
     func getSimpleResources(_ parentID:Int,type:Int,start:Int,limit:Int, queue:GCDThread = NetConstant.defaultQueue, handler:@escaping (AnyObject)->Void) -> GCDSemaphore{
         let dict = [NetConstant.DictKey.GetSimpleResources.Query.parentId : parentID];
         
@@ -436,8 +470,7 @@ class NetworkOperation {
             handler(responseDict);
         }
     }
-    
-    //group/createDir.action  新建文件夹
+   
     func createDir(_ groupID:Int,name:String,parentID:Int,queue:GCDThread = NetConstant.defaultQueue, handler:@escaping (AnyObject)->Void) -> GCDSemaphore{
         let dict = [NetConstant.DictKey.CreateDir.Query.groupId : "\(groupID)",
             NetConstant.DictKey.CreateDir.Query.name : name,
@@ -448,7 +481,7 @@ class NetworkOperation {
         }
     }
     
-    //group/downloadResource.action  下载文件或打包下载
+    
     func downloadResource(_ id:Int, url:URL, queue:GCDThread = NetConstant.defaultQueue, handler:@escaping (AnyObject)->Void) -> GCDSemaphore{
         let dict = [NetConstant.DictKey.DownloadResource.Query.id : "\(id)"];
         
@@ -457,13 +490,13 @@ class NetworkOperation {
         })
     }
     
-    //group/uploadResource.action   上传资源
+    
     func uploadResource(_ groupID:Int,parentID:Int,fileURL:URL,fileName:String,fileDataContentType:String = "multipart/form-data",documentType:String = "", queue:GCDThread = NetConstant.defaultQueue, handler:@escaping (AnyObject)->Void) -> GCDSemaphore{
         let data:Data = try! Data(contentsOf: URL(fileURLWithPath: fileURL.path));
         return self.uploadResource(groupID, parentID: parentID, fileData: data, fileName: fileName, fileDataContentType: fileDataContentType, documentType: documentType, queue: queue, handler: handler);
     }
     
-    //group/uploadResource.action   上传资源
+    
     func uploadResource(_ groupID:Int,parentID:Int,fileData:Data,fileName:String,fileDataContentType:String = "multipart/form-data",documentType:String = "", queue:GCDThread = NetConstant.defaultQueue, handler:@escaping (AnyObject)->Void) -> GCDSemaphore{
         let dict = [NetConstant.DictKey.UploadResource.Query.groupId : "\(groupID)",
             NetConstant.DictKey.UploadResource.Query.parentId : "\(parentID)"];
@@ -472,13 +505,13 @@ class NetworkOperation {
         
     }
     
-    //group/uploadResourceReturnId.action   上传资源并返回ID
+   
     func uploadResourceReturnId(_ groupID:Int,parentID:Int,fileURL:URL,fileName:String,fileDataContentType:String = "multipart/form-data",documentType:String = "", queue:GCDThread = NetConstant.defaultQueue, handler:@escaping (AnyObject)->Void) -> GCDSemaphore{
         let data:Data = try! Data(contentsOf: URL(fileURLWithPath: fileURL.path));
         return self.uploadResourceReturnId(groupID, parentID: parentID, fileData: data, fileName: fileName, fileDataContentType: fileDataContentType, documentType: documentType, queue: queue, handler: handler);
     }
     
-    //group/uploadResourceReturnId.action   上传资源并返回ID
+   
     func uploadResourceReturnId(_ groupID:Int,parentID:Int,fileData:Data,fileName:String,fileDataContentType:String = "multipart/form-data",documentType:String = "", queue:GCDThread = NetConstant.defaultQueue, handler:@escaping (AnyObject)->Void) -> GCDSemaphore{
         
         let dict = [NetConstant.DictKey.UploadResourceReturnId.Query.groupId : "\(groupID)",
@@ -487,7 +520,7 @@ class NetworkOperation {
         return self.upload(dict: dict, fileDict: fileDict, fileName: fileName, mimeType: fileDataContentType, url: NetConstant.API.UploadReturnId.asURLConvertible, queue: queue, handler: handler);
     }
     
-    //group/copyResource.action  复制资源
+  
     func copyResource(_ groupID:Int,parentID:Int,id:Int, queue:GCDThread = NetConstant.defaultQueue, handler:@escaping (AnyObject)->Void) -> GCDSemaphore{
         let dict = [NetConstant.DictKey.CopyResource.Query.groupId : "\(groupID)",
             NetConstant.DictKey.CopyResource.Query.parentId : "\(parentID)",
@@ -495,7 +528,7 @@ class NetworkOperation {
         return self.postRequest(url: NetConstant.API.CopyResource.asURLConvertible, dict: dict, queue: queue, handler: handler);
     }
     
-    //group/moveResource.action  移动资源
+  
     func moveResource(_ groupID:Int,parentID:Int,id:Int, queue:GCDThread = NetConstant.defaultQueue, handler:@escaping (AnyObject)->Void) -> GCDSemaphore{
         let dict = [NetConstant.DictKey.MoveResource.Query.groupId : "\(groupID)",
             NetConstant.DictKey.MoveResource.Query.parentId : "\(parentID)",
@@ -503,7 +536,7 @@ class NetworkOperation {
         return self.postRequest(url: NetConstant.API.MoveResource.asURLConvertible, dict: dict, queue: queue, handler: handler);
     }
     
-    //group/modifyResource.action 修改资源文件夹
+   
     func modifyResource(_ id:Int, name:String, desc:String = "", queue:GCDThread = NetConstant.defaultQueue, handler:@escaping (AnyObject)->Void) -> GCDSemaphore{
         let dict = [NetConstant.DictKey.ModifyResource.Query.id : "\(id)",
             NetConstant.DictKey.ModifyResource.Query.name : "\(name)",
@@ -511,7 +544,7 @@ class NetworkOperation {
         return self.postRequest(url: NetConstant.API.ModifyResource.asURLConvertible, dict: dict, queue: queue, handler: handler);
     }
     
-    //group/getThumbnail.action  缩略图
+  
     func getThumbnail(_ id:Int,width:Int = 100,height:Int = 100,queue:GCDThread = NetConstant.defaultQueue, handler:@escaping (AnyObject?)->Void) -> GCDSemaphore{
         
         let dict = [NetConstant.DictKey.GetThumbnail.Query.id : "\(id)",
@@ -526,6 +559,27 @@ class NetworkOperation {
             }
         }
     }
-    
+
+    func getAccounts_blocking(start:Int, limit:Int, queue:GCDThread = NetConstant.defaultQueue, handler:@escaping (AnyObject)->Void) -> NSDictionary{
+        let dict = [NetConstant.DictKey.GetAccounts.Query.start : "\(start)",
+            NetConstant.DictKey.GetAccounts.Query.limit : "\(limit)"]
+        var rtn:NSDictionary!
+        
+        let s = self.postRequest(url: NetConstant.API.GetAccounts.asURLConvertible, dict: dict, queue: queue){
+            (any) in
+            handler(any)
+            rtn = any as! NSDictionary
+        }
+       
+        let group: GCDGroup = GCDGroup()
+        group.async(thread: NetConstant.defaultQueue){
+            _ = s.lock()
+        }
+        //print(Thread.current)
+        _ = group.wait()
+        
+        return rtn
+    }
+
     
 }

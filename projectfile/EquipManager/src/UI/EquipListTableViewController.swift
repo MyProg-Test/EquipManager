@@ -13,14 +13,39 @@ public struct menuItem {
     var itemName: String
 }
 
-
-class EquipListTableViewController: UITableViewController,UIGestureRecognizerDelegate {
+class EquipListTableViewController: UITableViewController,UIGestureRecognizerDelegate,UISearchBarDelegate{
     
-    let searchSource:NSMutableArray = NSMutableArray()
-    
+    var doneItem: Array<String> = Array();
     var loadingSuccess:Bool = false
-    var mString:NSString = ""
+    //搜索设备
+    var mString:String = ""{
+        willSet{
+            if newValue == "" {
+                showArray.removeAllObjects();
+                showArray.addObjects(from: EquipFileControl.sharedInstance().getFileSystemFromFile()!.attrKey.subject.subarray(with: NSRange(location: 0, length: EquipFileControl.sharedInstance().count)) as! [String]);
+            }else{
+                showArray.removeAllObjects();
+                for i in stride(from: 0, to: EquipFileControl.sharedInstance().count, by: 1){
+                    let key:String = EquipFileControl.sharedInstance().getFileSystemFromFile()!.attrKey.subject.object(at: i) as! String;
+                    let equip: EquipInfo = EquipInfo(key: key);
+                    let name: String = equip.xmlInfo.equipAttr.object(forKey: EquipmentAttrKey.nameKey.rawValue) as! String;
+                    let code: String = equip.xmlInfo.equipAttr.object(forKey: EquipmentAttrKey.codeKey.rawValue) as! String;
+                    let location: String = equip.xmlInfo.equipAttr.object(forKey: EquipmentAttrKey.locationKey.rawValue) as! String;
+                    let manager: String = equip.xmlInfo.equipAttr.object(forKey: EquipmentAttrKey.managerKey.rawValue) as! String;
+                    let searchSource: String = name+code+location+manager;
+                    if searchSource.contains(newValue) {
+                        showArray.add(key);
+                    }
+                }
+            }
+        }
+        didSet{
+            
+            
+        }
+    }
     let selArray: NSMutableArray = NSMutableArray();
+    let showArray: NSMutableArray = NSMutableArray();
     var selected:Bool = false{
         didSet{
             if(!selected){
@@ -28,16 +53,15 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
             }
         }
     }
-
+    
     //toolbar的menuItems
     var actionMenuItems = [menuItem]()
     //其他
-    var dataSource:NSMutableArray = NSMutableArray()
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        mString = "";
         self.navigationItem.setHidesBackButton(true, animated: false)
         self.navigationController?.setToolbarHidden(false, animated: true)
         tableView.estimatedRowHeight = tableView.rowHeight
@@ -46,9 +70,9 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
         //下面的toolbar
         menuToolbar()
         
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(title: "编辑", style: .done, target: self, action: #selector(EquipListTableViewController.editEquipList))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(title: "操作", style: .done, target: self, action: #selector(EquipListTableViewController.editEquipList))
         self.pleaseWait()
-    
+        
         GCDThread(global: .utility).async {
             EquipManager.sharedInstance().update()
             GCDThread().async {
@@ -63,9 +87,10 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
-
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        mString = "";
         self.tableView.reloadData()
     }
     
@@ -81,12 +106,14 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
     }
     
     //下拉刷新
-
+    
     @IBAction func refresh(_ sender: UIRefreshControl?){
         
         GCDThread(global: .utility).async{
             
             GCDThread().async{
+                let searchString = self.mString;
+                self.mString = searchString;
                 self.tableView.reloadData()
                 sender!.endRefreshing()
             }
@@ -107,7 +134,7 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return EquipFileControl.sharedInstance().count
+        return showArray.count
     }
     
     
@@ -127,7 +154,7 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
         }
         //cell数据设置
         cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
-        let equip = EquipInfo(key: EquipFileControl.sharedInstance().getFileSystemFromFile()!.attrKey.subject.object(at: (indexPath as NSIndexPath).row) as! String)
+        let equip = EquipInfo(key: showArray.object(at: (indexPath as NSIndexPath).row) as! String)
         cell.equipName.text = equip.xmlInfo.equipAttr.value(forKey: EquipmentAttrKey.nameKey.rawValue as String) as? String
         cell.equipNumber.text = equip.xmlInfo.equipAttr.value(forKey: EquipmentAttrKey.codeKey.rawValue as String) as? String;
         cell.thumbnail?.image = equip.imageInfo.getMainImage()
@@ -138,36 +165,57 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
     //Select
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if(selected){
-            selArray.add(EquipFileControl.sharedInstance().getFileSystemFromFile()!.attrKey.subject.object(at: (indexPath as NSIndexPath).row) as! String);
+            selArray.add(showArray.object(at: (indexPath as NSIndexPath).row) as! String);
             return ;
         }
         let detailEquipView = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "DetailEquip") as! DetailEquipViewController;
-        DetailEquipViewController.data_source = EquipInfo(key: EquipFileControl.sharedInstance().getFileSystemFromFile()!.attrKey.subject.object(at: (indexPath as NSIndexPath).row) as! String);
+        DetailEquipViewController.data_source = EquipInfo(key: showArray.object(at: (indexPath as NSIndexPath).row) as! String);
         self.navigationController?.pushViewController(detailEquipView, animated: true);
     }
     
     //Deselect
     override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         if(selected){
-            selArray.remove(EquipFileControl.sharedInstance().getFileSystemFromFile()!.attrKey.subject.object(at: (indexPath as NSIndexPath).row) as! String);
+            selArray.remove(showArray.object(at: (indexPath as NSIndexPath).row) as! String);
             return ;
         }//to do
     }
     
-    
+    //允许编辑cell
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         // Return false if you do not want the specified item to be editable.
         return true
     }
     
-    //水平滑动cell，出现删除键
-    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        return nil
-    }
-    
+    //列表多选，变成这种模式，没能再左划拉出删除按钮了
     override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
         return UITableViewCellEditingStyle.init(rawValue: UITableViewCellEditingStyle.insert.rawValue | UITableViewCellEditingStyle.delete.rawValue)!;
+    }
+    
+    //搜索bar的delegate
+    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
+        searchBar.showsCancelButton = true;
+        return true;
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.showsCancelButton = false;
+        searchBar.returnKeyType = .done;
+        searchBar.resignFirstResponder();
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        mString = "";
+        searchBar.showsCancelButton = false;
+        searchBar.text = "";
+        searchBar.resignFirstResponder();
+        self.tableView.reloadData();
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        mString = searchText;
+        self.tableView.reloadData();
     }
     
     func menuToolbar(){
@@ -198,18 +246,24 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
         menuAlertController.addAction(UIAlertAction(title: "添加设备", style: UIAlertActionStyle.default, handler: { (UIAlertAction) -> Void in
             self.newEquip()
         }))
-//        menuAlertController.addAction(UIAlertAction(title: "扫一扫", style: UIAlertActionStyle.default, handler: { (UIAlertAction) -> Void in
-//            self.qrCodeScan()
-//        }))
-        menuAlertController.addAction(UIAlertAction(title: "打印标签", style: UIAlertActionStyle.default, handler: { (UIAlertAction) -> Void in
-            self.printTag()
+        menuAlertController.addAction(UIAlertAction(title: "扫一扫", style: UIAlertActionStyle.default, handler: { (UIAlertAction) -> Void in
+            self.qrCodeScan()
         }))
-        menuAlertController.addAction(UIAlertAction(title: "设备转移", style: UIAlertActionStyle.default, handler: { (UIAlertAction) -> Void in
-            self.transferEquip()
-        }))
+        //menuAlertController.addAction(UIAlertAction(title: "打印标签", style: UIAlertActionStyle.default, handler: { (UIAlertAction) -> Void in
+            //self.printTag()
+        //}))
+        
+        //menuAlertController.addAction(UIAlertAction(title: "设备转移", style: UIAlertActionStyle.default, handler: { (UIAlertAction) -> Void in
+            //self.transferSelect()
+        //}))
+        
         menuAlertController.addAction(UIAlertAction(title: "选择系统Logo", style: UIAlertActionStyle.default, handler: { (UIAlertAction)->Void in
             self.chooseLogo()
         }))
+        
+//        menuAlertController.addAction(UIAlertAction(title: "设备删除", style: UIAlertActionStyle.default, handler: { (UIAlertAction) -> Void in
+//            self.deleteEuipSelect()
+//        }))
         
         menuAlertController.addAction(UIAlertAction(title: "取消", style: UIAlertActionStyle.cancel, handler: { (UIAlertAction) -> Void in
             NSLog("cancel")
@@ -229,10 +283,31 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
     }
     //扫描二维码
     func qrCodeScan(){
-        //扫描到信息之后，有两个选择：1是查看该设备信息，2是将该设备信息添加到自己的设备列表。
-        //扫描ing
-        //扫描后的信息和两个选择的button，需要新建一个vc，在查看信息的时候，需要Nav的返回键
+//        let scan = QRCodeScanViewController()
+//        scan.scan(sender: self)
+        let vc = codeScanner()
         
+        self.navigationController?.pushViewController(vc, animated: true)
+//11.15看这里
+//        let barCode = NSArray(array: [AVMetadataObjectTypeEAN8Code,AVMetadataObjectTypeEAN13Code,AVMetadataObjectTypeCode128Code, AVMetadataObjectTypeCode39Code]);
+//        let qrCode = NSArray(array: [AVMetadataObjectTypeQRCode]);
+//        let CSV = codeScanner();
+//        let type = self.barCode;
+//        CSV.setWithType(type as [AnyObject]);
+//        let scanComplete:((AnyObject?)->Void) = {(metaObj:AnyObject?)->Void in
+//            let alert:ButtonSelectedAlert = ButtonSelectedAlert(title: "消息", message: "", delegate: nil, cancelButtonTitle: "取消", otherButtonTitles: "确定");//error???
+//            let alertButtonsolution:((Int)->Void) = {(buttonIndex:Int)->Void in
+//                if(buttonIndex == 1){
+//                    equip.setStringAttr((metaObj as! AVMetadataMachineReadableCodeObject).stringValue, key: equipmentAttrKey.codeKey);
+//                }
+//                CSV.navigationController?.popToViewController(self, animated: false);
+//            };
+//            alert.setWithButtonSolution(alertButtonsolution);
+//            alert.delegate = alert;
+//            alert.show();
+//        };
+//        CSV.setWithComplete(scanComplete);
+//        self.navigationController?.pushViewController(CSV, animated: false);
     }
     
     func chooseLogo(){
@@ -240,7 +315,7 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
         self.navigationController?.pushViewController(chooseLogoView, animated: true);
         
     }
-
+    
     //打印标签
     func printTag(){
         printSelect();
@@ -249,12 +324,32 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
     func printSelect() {
         /**/
         //打印信息
-        self.tableView.setEditing(true, animated: true);
-        selected = true;
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(EquipListTableViewController.printStart));
+        //11.5
+//        self.tableView.setEditing(true, animated: true);
+//        selected = true
+//        if selArray.count == 0 {
+//            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "取消", style: .done, target: self, action: #selector(EquipListTableViewController.cancel))
+//            
+//        }
+//            self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(EquipListTableViewController.printStart))
+//        self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self , action: #selector(EquipListTableViewController.cancel))
+        //self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(EquipListTableViewController.printStart))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "打印", style: .done, target: self, action: #selector(EquipListTableViewController.printStart))
+//        if(selected){
+//            self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(EquipListTableViewController.printStart))
+//        }
+
+    }
+    
+    func cancel(){
+        selected = false
+        self.tableView.setEditing(false, animated: true)
+        self.navigationItem.leftBarButtonItem = nil
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(title: "操作", style: .done, target: self, action: #selector(EquipListTableViewController.editEquipList))
     }
     
     func printStart() {
+        
         self.pleaseWait();
         
         GCDThread().async{
@@ -281,20 +376,48 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
             self.clearAllNotice();
             self.selected = false;
             self.tableView.setEditing(false, animated: true);
-            self.printImages(image);
+            self.navigationItem.leftBarButtonItem = nil;
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(title: "操作", style: .done, target: self, action: #selector(EquipListTableViewController.editEquipList))
+            self.printImage(image: image[0]);
         }
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(title: "编辑", style: .done, target: self, action: #selector(EquipListTableViewController.editEquipList))
+    }
+    
+    func transferSelect(){
+//        self.tableView.setEditing(true, animated: true);
+//        selected = true;
+        //self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self , action: #selector(EquipListTableViewController.cancel))
+        //self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(EquipListTableViewController.transferStart));
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "选择转移人", style: .done, target: self, action:  #selector(EquipListTableViewController.transferStart))
     }
     
     //设备转移
-    func transferEquip(){
+    func transferStart(){
+        transferEquip(equipKey: self.selArray.subarray(with: NSRange(location: 0, length: self.selArray.count)) as! [String]);
+        self.selected = false;
+        self.tableView.setEditing(false, animated: true);
+        self.navigationItem.leftBarButtonItem = nil;
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(title: "操作", style: .done, target: self, action: #selector(EquipListTableViewController.editEquipList))
+    }
+    
+    func transferEquip(equipKey:[String]){
+        //12.30
+        self.pleaseWait()
+        GCDThread(global:.default).async{ () -> Void in
+            ContactVC.shareInstance().equipKey = equipKey;
+            ContactVC.shareInstance().LoadContactView();
+            GCDThread().async {
+                self.clearAllNotice();
+                self.navigationController?.pushViewController(ContactVC.shareInstance(), animated: true)
+            }
+        }
         //reason.xml
         //出现设备list多选列表
         //从联系人列表选择
     }
+    
     //设备排序
     func sortEquipList(){
-        let sortAlertController:UIAlertController = UIAlertController(title: "排序", message: nil, preferredStyle: .actionSheet)
+        let sortAlertController:UIAlertController = UIAlertController(title: "排序", message: nil, preferredStyle: .alert)
         sortAlertController.addAction(UIAlertAction(title: "按添加时间排序", style: .default, handler: { (UIAlertAction) -> Void in self.sortByAddTime()}))
         sortAlertController.addAction(UIAlertAction(title: "按设备名排序", style: .default, handler: { (UIAlertAction) -> Void in self.sortByEquipName()}))
         sortAlertController.addAction(UIAlertAction(title: "按领用人排序", style: .default, handler: { (UIAlertAction) -> Void in self.sortByManager()}))
@@ -318,28 +441,87 @@ class EquipListTableViewController: UITableViewController,UIGestureRecognizerDel
     }
     
     //设备删除
-    func deleteEuip(){
+    func deleteEuipSelect(){
+//        self.tableView.setEditing(true, animated: true)
+//        selected = true
+//        self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self , action: #selector(EquipListTableViewController.cancel))
+        //self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "删除", style: UIBarButtonItemStyle.done, target: self, action: #selector(EquipListTableViewController.deleteStart))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "确定删除", style: .done, target: self, action: #selector(EquipListTableViewController.deleteStart))
+        //self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(EquipListTableViewController.deleteHelper))
         //移动到删除文件夹中
         //cell列表出现可多选按钮
     }
     
+    func deleteStart(){
+        deleteHelper(equipKey: self.selArray.subarray(with: NSRange(location: 0, length: self.selArray.count)) as! [String])
+        self.selected = false;
+        self.tableView.setEditing(false, animated: true);
+        self.navigationItem.leftBarButtonItem = nil;
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(title: "操作", style: .done, target: self, action: #selector(EquipListTableViewController.editEquipList))
+    }
+    
+    func deleteHelper(equipKey:[String]){
+        //12.30
+        self.pleaseWait()
+        GCDThread(global: .default).async { ()->Void in
+            for equipK in equipKey{
+                let oldParentID = (equipK as NSString).integerValue
+                
+                let reasonData = XmlParser();
+                //reasonData.doc.
+                _ = reasonData.setRootElement(GDataXMLElement.element(withName: "reason"));
+                _ = reasonData.addElementToRoot("code", value: "0")
+                _ = reasonData.addElementToRoot("detail", value: "删除")
+                _ = reasonData.addElementToRoot("transferToName", value: "nil")
+                
+                _ = NetworkOperation.sharedInstance().uploadResource(EquipManager.sharedInstance().defaultGroupId, parentID: oldParentID, fileData: reasonData.doc.xmlData(), fileName: "reason.xml") { (AnyObject) in }
+                _ = NetworkOperation.sharedInstance().moveResource(EquipManager.sharedInstance().defaultGroupId, parentID: EquipManager.sharedInstance().defaultTrashId, id: oldParentID, handler: { (AnyObject) in })
+                
+                _ = EquipFileControl.sharedInstance().deleteEquipFromFile(equipK)
+                //UI线程 main
+                GCDThread().async {
+                    self.tableView.reloadData()
+                }
+                
+                self.clearAllNotice()
+                
+            }
+    
+        }
+    }
+    
     func editEquipList(){
+       
+        self.tableView.setEditing(true, animated: true);
+        selected = true
         //右上角的编辑按钮
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self , action: #selector(EquipListTableViewController.cancel))
+        //menuPressed需要改成done
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "设备处理", style: .done, target: self, action: #selector(EquipListTableViewController.done))
+    }
+    
+    func done(){
+        doneItem = ["打印标签","设备转移","设备删除"];
+        self.zz_presentSheetController(doneItem,clickItemHandler: {(index) in
+            switch index{
+            case 0:
+                self.printStart()
+            case 1:
+                self.transferStart()
+            case 2:
+                self.deleteStart()
+            default:
+                print(index);
+            
+            }});
     }
     
     
     
-    /*
+    
      // Override to support editing the table view.
-     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-     if editingStyle == .Delete {
-     // Delete the row from the data source
-     tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-     } else if editingStyle == .Insert {
-     // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-     }
-     }
-     */
+    
+    
     
     /*
      // Override to support rearranging the table view.

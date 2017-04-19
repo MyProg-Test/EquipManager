@@ -2,8 +2,8 @@
 //  EquipInfo.swift
 //  EquipManager
 //
-//  Created by LY on 16/7/24.
-//  Copyright © 2016年 LY. All rights reserved.
+//  Created by 李呱呱 on 16/7/24.
+//  Copyright © 2016年 liguagua. All rights reserved.
 //
 
 import UIKit
@@ -20,7 +20,7 @@ import UIKit
 //设备信息
 class EquipInfo {
     var equipkey:String;
-    //xml就绪
+    
     var xmlReady:Bool{
         get{
             return FileManager.default.fileExists(atPath: EquipFileControl.sharedInstance().getEquipFilePathFromFile(self.equipkey)!.path);
@@ -28,7 +28,7 @@ class EquipInfo {
     };
     var imageInfo:EquipImageInfo
     var xmlInfo:EquipXmlInfo
-    //根据index从equipFileControl里初始化
+   
     init(key:String){
         self.equipkey = key;
         self.xmlInfo = EquipXmlInfo(key: self.equipkey);
@@ -36,7 +36,7 @@ class EquipInfo {
         self.imageInfo = EquipImageInfo(key: self.equipkey);
         _ = self.imageInfo.setDisplayedImageInfo();
     }
-    //根据index从equipFileControl里更新
+    
     func updateEquip(_ key:String){
         self.equipkey = key;
         self.xmlInfo = EquipXmlInfo(key: self.equipkey);
@@ -45,12 +45,11 @@ class EquipInfo {
         _ = self.imageInfo.setDisplayedImageInfo();
     }
     
-    //修改设备xml的信息
-    func modifyEquipXmlInfo(_ equipmentKey:EquipmentKey, equipmentAttrKey:EquipmentAttrKey, value:String){
-        self.xmlInfo.modifyXml(equipmentKey, equipmentAttrKey: equipmentAttrKey, value: value)
+
+    func modifyEquipXmlInfo(equipmentAttrKey:EquipmentAttrKey, value:String){
+        self.xmlInfo.modifyXml(equipmentAttrKey: equipmentAttrKey, value: value)
     }
     
-    //设置当前要显示的图片
     func setDisplayedImage() -> Bool {
         return self.imageInfo.setDisplayedImageInfo();
     }

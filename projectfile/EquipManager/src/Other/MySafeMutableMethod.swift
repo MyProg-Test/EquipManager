@@ -2,12 +2,13 @@
 //  MySafeMutableMethod.swift
 //  EquipManager
 //
-//  Created by LY on 16/9/13.
-//  Copyright © 2016年 LY. All rights reserved.
+//  Created by 李呱呱 on 16/9/13.
+//  Copyright © 2016年 liguagua. All rights reserved.
 //
 
 import UIKit
-
+//保护线程安全
+//写优先
 class MySafeMutableMethod<T> {
     var subject: T;
     var debugInfo:Bool{
@@ -47,7 +48,8 @@ class MySafeMutableMethod<T> {
             print(message);
         }
     }
-    
+    //读写之前先请求，读写完要End
+    //写者优先
     func writeRequest() {
         printDebugInfo("start writeRequest");
         lock(mutexWriter);

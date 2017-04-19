@@ -41,11 +41,42 @@
 		08B789D11D915C35009E0292 /* GCDSemaphore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B789CD1D915C35009E0292 /* GCDSemaphore.swift */; };
 		08B789D21D915C35009E0292 /* GCDThread.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B789CE1D915C35009E0292 /* GCDThread.swift */; };
 		08B789D31D915C35009E0292 /* MySafeMutableMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B789CF1D915C35009E0292 /* MySafeMutableMethod.swift */; };
+		1105ACE41DAD055800565412 /* ModifyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1105ACE31DAD055800565412 /* ModifyTableViewCell.swift */; };
+		1111602B1DC3054F00926B35 /* NewEquipTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1111602A1DC3054F00926B35 /* NewEquipTableViewCell.swift */; };
+		11186DFE1DB67DF5004F3B1F /* ScanImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11186DFD1DB67DF5004F3B1F /* ScanImage.swift */; };
+		11186E011DB682BF004F3B1F /* XWScanImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 11186E001DB682BF004F3B1F /* XWScanImage.m */; };
+		111AFA8A1DB87124008EF528 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 111AFA891DB87124008EF528 /* Images.xcassets */; };
+		111F4C041DDED8C0004AFD9C /* right.png in Resources */ = {isa = PBXBuildFile; fileRef = 111F4C031DDED8C0004AFD9C /* right.png */; };
+		1121D5B61EA08B9A00103790 /* white.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1121D5B51EA08B9A00103790 /* white.jpg */; };
 		1122C90D1DA61F30002E150D /* EquipSimpleInfoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1122C90A1DA61F30002E150D /* EquipSimpleInfoTableViewController.swift */; };
-		1122C90E1DA61F30002E150D /* LogoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1122C90B1DA61F30002E150D /* LogoTableViewController.swift */; };
 		1122C90F1DA61F30002E150D /* ManagerInfoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1122C90C1DA61F30002E150D /* ManagerInfoTableViewController.swift */; };
 		1122C9131DA65E16002E150D /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1122C9121DA65E16002E150D /* MobileCoreServices.framework */; };
+		112382811EA70BFB003E353F /* Contact_info_group.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1123827E1EA70BFB003E353F /* Contact_info_group.swift */; };
+		112382821EA70BFB003E353F /* Contact_info.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1123827F1EA70BFB003E353F /* Contact_info.swift */; };
+		112382831EA70BFB003E353F /* ContactVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 112382801EA70BFB003E353F /* ContactVC.swift */; };
+		112382861EA70C10003E353F /* String+QRCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 112382841EA70C10003E353F /* String+QRCode.swift */; };
+		112382871EA70C10003E353F /* UIImage+QRCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 112382851EA70C10003E353F /* UIImage+QRCode.swift */; };
+		1123828C1EA70C4D003E353F /* barrageAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 112382891EA70C4D003E353F /* barrageAlert.m */; };
+		1123828D1EA70C4D003E353F /* codeScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 1123828B1EA70C4D003E353F /* codeScanner.m */; };
+		1139AEB31DD8548D0020B718 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1139AEB21DD8548D0020B718 /* MapViewController.swift */; };
 		113DEE931DA0DF7600E0ADCF /* EquipLogo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113DEE921DA0DF7600E0ADCF /* EquipLogo.swift */; };
+		1146F89E1DB4B08600F3FB1C /* ChooseServerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1146F89D1DB4B08600F3FB1C /* ChooseServerTableViewController.swift */; };
+		118AFFCC1DD5BEF8002F6244 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 118AFFCB1DD5BEF8002F6244 /* CoreLocation.framework */; };
+		118B5AF31DCDD90400808671 /* CustomPresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 118B5AED1DCDD90400808671 /* CustomPresentationAnimator.swift */; };
+		118B5AF41DCDD90400808671 /* CustomPresntationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 118B5AEE1DCDD90400808671 /* CustomPresntationController.swift */; };
+		118B5AF51DCDD90400808671 /* PresentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 118B5AEF1DCDD90400808671 /* PresentCell.swift */; };
+		118B5AF61DCDD90400808671 /* ZZBlurView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 118B5AF01DCDD90400808671 /* ZZBlurView.swift */; };
+		118B5AF71DCDD90400808671 /* ZZPresentAnimatior.swift in Sources */ = {isa = PBXBuildFile; fileRef = 118B5AF11DCDD90400808671 /* ZZPresentAnimatior.swift */; };
+		118B5AF81DCDD90400808671 /* ZZPresentVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 118B5AF21DCDD90400808671 /* ZZPresentVC.swift */; };
+		119120BC1DAA399100BCABD5 /* ModifyTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 119120BB1DAA399100BCABD5 /* ModifyTableViewController.swift */; };
+		11914DB61DD2FB1500EA155F /* QRCodeScanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11914DB51DD2FB1500EA155F /* QRCodeScanViewController.swift */; };
+		11A44B4F1DEC18870012C9F9 /* isConnectWithNet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11A44B4E1DEC18870012C9F9 /* isConnectWithNet.swift */; };
+		11A44B511DEC18980012C9F9 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 11A44B501DEC18980012C9F9 /* SystemConfiguration.framework */; };
+		11DB76491DB4B638008FEF23 /* ServerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11DB76481DB4B638008FEF23 /* ServerTableViewCell.swift */; };
+		11DB764B1DB4B8C9008FEF23 /* EquipServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11DB764A1DB4B8C9008FEF23 /* EquipServer.swift */; };
+		11E1044D1DD02683002EC04F /* LogoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11E1044C1DD02683002EC04F /* LogoTableViewController.swift */; };
+		11E54B3E1E9905A900A95587 /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 11E54B3D1E9905A900A95587 /* Photos.framework */; };
+		11EE5E091DF16241001EC1A3 /* logoImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 11EE5E081DF16241001EC1A3 /* logoImage.png */; };
 		15B45BB1470E083856ED1BB0 /* Pods_EquipManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 392AE5FC64C0321836E419D5 /* Pods_EquipManager.framework */; };
 /* End PBXBuildFile section */
 
@@ -101,12 +132,47 @@
 		08B789CD1D915C35009E0292 /* GCDSemaphore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GCDSemaphore.swift; path = src/Other/GCDSemaphore.swift; sourceTree = "<group>"; };
 		08B789CE1D915C35009E0292 /* GCDThread.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GCDThread.swift; path = src/Other/GCDThread.swift; sourceTree = "<group>"; };
 		08B789CF1D915C35009E0292 /* MySafeMutableMethod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MySafeMutableMethod.swift; path = src/Other/MySafeMutableMethod.swift; sourceTree = "<group>"; };
+		1105ACE31DAD055800565412 /* ModifyTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModifyTableViewCell.swift; path = src/UI/ModifyTableViewCell.swift; sourceTree = "<group>"; };
+		1111602A1DC3054F00926B35 /* NewEquipTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NewEquipTableViewCell.swift; path = src/UI/NewEquipTableViewCell.swift; sourceTree = "<group>"; };
+		11186DFD1DB67DF5004F3B1F /* ScanImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ScanImage.swift; path = src/Other/ScanImage.swift; sourceTree = "<group>"; };
+		11186DFF1DB682BF004F3B1F /* XWScanImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XWScanImage.h; path = src/Other/XWScanImage.h; sourceTree = "<group>"; };
+		11186E001DB682BF004F3B1F /* XWScanImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XWScanImage.m; path = src/Other/XWScanImage.m; sourceTree = "<group>"; };
+		111AFA891DB87124008EF528 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		111F4C031DDED8C0004AFD9C /* right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = right.png; sourceTree = "<group>"; };
+		1121D5B51EA08B9A00103790 /* white.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = white.jpg; sourceTree = "<group>"; };
 		1122C90A1DA61F30002E150D /* EquipSimpleInfoTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EquipSimpleInfoTableViewController.swift; path = src/UI/EquipSimpleInfoTableViewController.swift; sourceTree = "<group>"; };
-		1122C90B1DA61F30002E150D /* LogoTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LogoTableViewController.swift; path = src/UI/LogoTableViewController.swift; sourceTree = "<group>"; };
 		1122C90C1DA61F30002E150D /* ManagerInfoTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ManagerInfoTableViewController.swift; path = src/UI/ManagerInfoTableViewController.swift; sourceTree = "<group>"; };
 		1122C9101DA65DAB002E150D /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
 		1122C9121DA65E16002E150D /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		1123827E1EA70BFB003E353F /* Contact_info_group.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Contact_info_group.swift; path = src/contact/Contact_info_group.swift; sourceTree = "<group>"; };
+		1123827F1EA70BFB003E353F /* Contact_info.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Contact_info.swift; path = src/contact/Contact_info.swift; sourceTree = "<group>"; };
+		112382801EA70BFB003E353F /* ContactVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContactVC.swift; path = src/contact/ContactVC.swift; sourceTree = "<group>"; };
+		112382841EA70C10003E353F /* String+QRCode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "String+QRCode.swift"; path = "src/QRCode/String+QRCode.swift"; sourceTree = "<group>"; };
+		112382851EA70C10003E353F /* UIImage+QRCode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIImage+QRCode.swift"; path = "src/QRCode/UIImage+QRCode.swift"; sourceTree = "<group>"; };
+		112382881EA70C4D003E353F /* barrageAlert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = barrageAlert.h; path = src/Other/barrageAlert.h; sourceTree = "<group>"; };
+		112382891EA70C4D003E353F /* barrageAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = barrageAlert.m; path = src/Other/barrageAlert.m; sourceTree = "<group>"; };
+		1123828A1EA70C4D003E353F /* codeScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = codeScanner.h; path = src/Other/codeScanner.h; sourceTree = "<group>"; };
+		1123828B1EA70C4D003E353F /* codeScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = codeScanner.m; path = src/Other/codeScanner.m; sourceTree = "<group>"; };
+		1139AEB21DD8548D0020B718 /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MapViewController.swift; path = src/UI/MapViewController.swift; sourceTree = "<group>"; };
 		113DEE921DA0DF7600E0ADCF /* EquipLogo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EquipLogo.swift; path = src/logo/EquipLogo.swift; sourceTree = "<group>"; };
+		1146F89D1DB4B08600F3FB1C /* ChooseServerTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChooseServerTableViewController.swift; path = src/UI/ChooseServerTableViewController.swift; sourceTree = "<group>"; };
+		118AFFCB1DD5BEF8002F6244 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		118B5AED1DCDD90400808671 /* CustomPresentationAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CustomPresentationAnimator.swift; path = src/Other/ZZPresentSheetView/CustomPresentationAnimator.swift; sourceTree = "<group>"; };
+		118B5AEE1DCDD90400808671 /* CustomPresntationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CustomPresntationController.swift; path = src/Other/ZZPresentSheetView/CustomPresntationController.swift; sourceTree = "<group>"; };
+		118B5AEF1DCDD90400808671 /* PresentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PresentCell.swift; path = src/Other/ZZPresentSheetView/PresentCell.swift; sourceTree = "<group>"; };
+		118B5AF01DCDD90400808671 /* ZZBlurView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ZZBlurView.swift; path = src/Other/ZZPresentSheetView/ZZBlurView.swift; sourceTree = "<group>"; };
+		118B5AF11DCDD90400808671 /* ZZPresentAnimatior.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ZZPresentAnimatior.swift; path = src/Other/ZZPresentSheetView/ZZPresentAnimatior.swift; sourceTree = "<group>"; };
+		118B5AF21DCDD90400808671 /* ZZPresentVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ZZPresentVC.swift; path = src/Other/ZZPresentSheetView/ZZPresentVC.swift; sourceTree = "<group>"; };
+		119120BB1DAA399100BCABD5 /* ModifyTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModifyTableViewController.swift; path = src/UI/ModifyTableViewController.swift; sourceTree = "<group>"; };
+		11914DB51DD2FB1500EA155F /* QRCodeScanViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = QRCodeScanViewController.swift; path = src/Other/QRCodeScanViewController.swift; sourceTree = "<group>"; };
+		11A44B4E1DEC18870012C9F9 /* isConnectWithNet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = isConnectWithNet.swift; path = src/Other/isConnectWithNet.swift; sourceTree = "<group>"; };
+		11A44B501DEC18980012C9F9 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		11DB76481DB4B638008FEF23 /* ServerTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ServerTableViewCell.swift; path = src/UI/ServerTableViewCell.swift; sourceTree = "<group>"; };
+		11DB764A1DB4B8C9008FEF23 /* EquipServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EquipServer.swift; path = src/logo/EquipServer.swift; sourceTree = "<group>"; };
+		11E1044C1DD02683002EC04F /* LogoTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LogoTableViewController.swift; path = src/UI/LogoTableViewController.swift; sourceTree = "<group>"; };
+		11E54B3B1E99041200A95587 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
+		11E54B3D1E9905A900A95587 /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
+		11EE5E081DF16241001EC1A3 /* logoImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logoImage.png; sourceTree = "<group>"; };
 		160C948A303F2F397711C21E /* Pods-EquipManager.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EquipManager.debug.xcconfig"; path = "Pods/Target Support Files/Pods-EquipManager/Pods-EquipManager.debug.xcconfig"; sourceTree = "<group>"; };
 		392AE5FC64C0321836E419D5 /* Pods_EquipManager.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_EquipManager.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9FE007BE3BD88FB64ED97C24 /* Pods-EquipManager.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EquipManager.release.xcconfig"; path = "Pods/Target Support Files/Pods-EquipManager/Pods-EquipManager.release.xcconfig"; sourceTree = "<group>"; };
@@ -117,6 +183,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				11E54B3E1E9905A900A95587 /* Photos.framework in Frameworks */,
+				11A44B511DEC18980012C9F9 /* SystemConfiguration.framework in Frameworks */,
+				118AFFCC1DD5BEF8002F6244 /* CoreLocation.framework in Frameworks */,
 				1122C9131DA65E16002E150D /* MobileCoreServices.framework in Frameworks */,
 				0806AB6E1D7EB3EC00D93D95 /* libxml2.2.tbd in Frameworks */,
 				15B45BB1470E083856ED1BB0 /* Pods_EquipManager.framework in Frameworks */,
@@ -129,12 +198,19 @@
 		08032BEB1D805194001AD72F /* Other */ = {
 			isa = PBXGroup;
 			children = (
+				116A510E1DDB0617000F9141 /* QRCode */,
+				11914DB71DD32F2000EA155F /* CodeScan */,
+				118B5AEC1DCDD8E000808671 /* menuOut */,
 				08B789CC1D915C35009E0292 /* GCDGroup.swift */,
 				08B789CD1D915C35009E0292 /* GCDSemaphore.swift */,
 				08B789CE1D915C35009E0292 /* GCDThread.swift */,
 				08B789CF1D915C35009E0292 /* MySafeMutableMethod.swift */,
-				08032BF01D806FC1001AD72F /* SwiftNotice.swift */,
 				08032BEC1D8051A8001AD72F /* SwiftPrint.swift */,
+				08032BF01D806FC1001AD72F /* SwiftNotice.swift */,
+				11186DFF1DB682BF004F3B1F /* XWScanImage.h */,
+				11186E001DB682BF004F3B1F /* XWScanImage.m */,
+				11186DFD1DB67DF5004F3B1F /* ScanImage.swift */,
+				11A44B4E1DEC18870012C9F9 /* isConnectWithNet.swift */,
 			);
 			name = Other;
 			sourceTree = "<group>";
@@ -165,14 +241,19 @@
 				0806AB491D7EB34D00D93D95 /* Equip */,
 				0806AB101D7EB2A000D93D95 /* UI */,
 				113DEE941DA0DF8000E0ADCF /* Logo */,
+				110DFAFB1DB8DDBF00C49AE9 /* Contact */,
 				08032BEB1D805194001AD72F /* Other */,
 				0806AAE91D7EB1AF00D93D95 /* Assets.xcassets */,
 				084358E81D85F4CE00B02F1A /* logo.png */,
+				1121D5B51EA08B9A00103790 /* white.jpg */,
 				0806ABDA1D7EBABF00D93D95 /* equipImage.png */,
 				0806ABDB1D7EBABF00D93D95 /* equipTwoCode.png */,
+				111F4C031DDED8C0004AFD9C /* right.png */,
+				11EE5E081DF16241001EC1A3 /* logoImage.png */,
 				0806ABD61D7EBA6B00D93D95 /* LaunchScreen.storyboard */,
 				0806ABD71D7EBA6B00D93D95 /* Main.storyboard */,
 				0806AAEE1D7EB1AF00D93D95 /* Info.plist */,
+				111AFA891DB87124008EF528 /* Images.xcassets */,
 			);
 			path = EquipManager;
 			sourceTree = "<group>";
@@ -181,18 +262,24 @@
 			isa = PBXGroup;
 			children = (
 				0806ABCB1D7EBA2100D93D95 /* ViewController.swift */,
+				0806ABC21D7EBA2100D93D95 /* AppDelegate.swift */,
 				0806ABC91D7EBA2100D93D95 /* EquipListTableViewController.swift */,
 				0806ABC81D7EBA2100D93D95 /* EquipListTableViewCell.swift */,
 				0806ABC51D7EBA2100D93D95 /* DetailEquipViewController.swift */,
+				1122C90A1DA61F30002E150D /* EquipSimpleInfoTableViewController.swift */,
 				0806ABC41D7EBA2100D93D95 /* DetailEquipTableViewController.swift */,
 				0806ABC31D7EBA2100D93D95 /* DetailEquipTableViewCell.swift */,
 				0806ABC61D7EBA2100D93D95 /* EquipImagePickerTableViewController.swift */,
 				0806ABC71D7EBA2100D93D95 /* EquipImageTableViewCell.swift */,
 				0806ABCA1D7EBA2100D93D95 /* NewEquipTableViewController.swift */,
-				1122C90A1DA61F30002E150D /* EquipSimpleInfoTableViewController.swift */,
-				1122C90B1DA61F30002E150D /* LogoTableViewController.swift */,
+				1111602A1DC3054F00926B35 /* NewEquipTableViewCell.swift */,
 				1122C90C1DA61F30002E150D /* ManagerInfoTableViewController.swift */,
-				0806ABC21D7EBA2100D93D95 /* AppDelegate.swift */,
+				119120BB1DAA399100BCABD5 /* ModifyTableViewController.swift */,
+				1105ACE31DAD055800565412 /* ModifyTableViewCell.swift */,
+				11E1044C1DD02683002EC04F /* LogoTableViewController.swift */,
+				1146F89D1DB4B08600F3FB1C /* ChooseServerTableViewController.swift */,
+				11DB76481DB4B638008FEF23 /* ServerTableViewCell.swift */,
+				1139AEB21DD8548D0020B718 /* MapViewController.swift */,
 			);
 			name = UI;
 			sourceTree = "<group>";
@@ -200,11 +287,11 @@
 		0806AB491D7EB34D00D93D95 /* Equip */ = {
 			isa = PBXGroup;
 			children = (
-				0806ABAC1D7EBA0600D93D95 /* EquipManager.swift */,
-				0806ABA91D7EBA0600D93D95 /* EquipFileControl.swift */,
-				0806ABB41D7EBA0600D93D95 /* NetworkOperation.swift */,
-				0806ABAD1D7EBA0600D93D95 /* EquipNetInfo.swift */,
 				0806ABB11D7EBA0600D93D95 /* FileSystem.swift */,
+				0806ABA91D7EBA0600D93D95 /* EquipFileControl.swift */,
+				0806ABAC1D7EBA0600D93D95 /* EquipManager.swift */,
+				0806ABAD1D7EBA0600D93D95 /* EquipNetInfo.swift */,
+				0806ABB41D7EBA0600D93D95 /* NetworkOperation.swift */,
 				0806ABAB1D7EBA0600D93D95 /* EquipInfo.swift */,
 				0806ABAE1D7EBA0600D93D95 /* EquipXmlInfo.swift */,
 				0806ABAA1D7EBA0600D93D95 /* EquipImageInfo.swift */,
@@ -216,12 +303,57 @@
 			name = Equip;
 			sourceTree = "<group>";
 		};
+		110DFAFB1DB8DDBF00C49AE9 /* Contact */ = {
+			isa = PBXGroup;
+			children = (
+				1123827E1EA70BFB003E353F /* Contact_info_group.swift */,
+				1123827F1EA70BFB003E353F /* Contact_info.swift */,
+				112382801EA70BFB003E353F /* ContactVC.swift */,
+			);
+			name = Contact;
+			sourceTree = "<group>";
+		};
 		113DEE941DA0DF8000E0ADCF /* Logo */ = {
 			isa = PBXGroup;
 			children = (
 				113DEE921DA0DF7600E0ADCF /* EquipLogo.swift */,
+				11DB764A1DB4B8C9008FEF23 /* EquipServer.swift */,
 			);
 			name = Logo;
+			sourceTree = "<group>";
+		};
+		116A510E1DDB0617000F9141 /* QRCode */ = {
+			isa = PBXGroup;
+			children = (
+				112382841EA70C10003E353F /* String+QRCode.swift */,
+				112382851EA70C10003E353F /* UIImage+QRCode.swift */,
+			);
+			name = QRCode;
+			sourceTree = "<group>";
+		};
+		118B5AEC1DCDD8E000808671 /* menuOut */ = {
+			isa = PBXGroup;
+			children = (
+				118B5AED1DCDD90400808671 /* CustomPresentationAnimator.swift */,
+				118B5AEE1DCDD90400808671 /* CustomPresntationController.swift */,
+				118B5AEF1DCDD90400808671 /* PresentCell.swift */,
+				118B5AF01DCDD90400808671 /* ZZBlurView.swift */,
+				118B5AF11DCDD90400808671 /* ZZPresentAnimatior.swift */,
+				118B5AF21DCDD90400808671 /* ZZPresentVC.swift */,
+			);
+			name = menuOut;
+			sourceTree = "<group>";
+		};
+		11914DB71DD32F2000EA155F /* CodeScan */ = {
+			isa = PBXGroup;
+			children = (
+				112382881EA70C4D003E353F /* barrageAlert.h */,
+				112382891EA70C4D003E353F /* barrageAlert.m */,
+				1123828A1EA70C4D003E353F /* codeScanner.h */,
+				1123828B1EA70C4D003E353F /* codeScanner.m */,
+				11914DB51DD2FB1500EA155F /* QRCodeScanViewController.swift */,
+			);
+			name = CodeScan;
 			sourceTree = "<group>";
 		};
 		20787623781988D518875B60 /* Pods */ = {
@@ -236,6 +368,10 @@
 		BD173C566F7356E5594DBBDE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				11E54B3D1E9905A900A95587 /* Photos.framework */,
+				11E54B3B1E99041200A95587 /* AssetsLibrary.framework */,
+				11A44B501DEC18980012C9F9 /* SystemConfiguration.framework */,
+				118AFFCB1DD5BEF8002F6244 /* CoreLocation.framework */,
 				1122C9121DA65E16002E150D /* MobileCoreServices.framework */,
 				1122C9101DA65DAB002E150D /* CoreImage.framework */,
 				392AE5FC64C0321836E419D5 /* Pods_EquipManager.framework */,
@@ -279,8 +415,9 @@
 				TargetAttributes = {
 					0806AADE1D7EB1AF00D93D95 = {
 						CreatedOnToolsVersion = 7.3.1;
-						DevelopmentTeam = QRKJGYSRZH;
+						DevelopmentTeam = W9589M3JD5;
 						LastSwiftMigration = 0800;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -308,10 +445,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				0806ABDD1D7EBABF00D93D95 /* equipTwoCode.png in Resources */,
+				111F4C041DDED8C0004AFD9C /* right.png in Resources */,
 				0806ABDC1D7EBABF00D93D95 /* equipImage.png in Resources */,
+				111AFA8A1DB87124008EF528 /* Images.xcassets in Resources */,
 				084358E91D85F4CE00B02F1A /* logo.png in Resources */,
+				11EE5E091DF16241001EC1A3 /* logoImage.png in Resources */,
 				0806ABD91D7EBA6B00D93D95 /* Main.storyboard in Resources */,
 				0806ABA41D7EB93000D93D95 /* Assets.xcassets in Resources */,
+				1121D5B61EA08B9A00103790 /* white.jpg in Resources */,
 				0806ABD81D7EBA6B00D93D95 /* LaunchScreen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -371,18 +512,36 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				11E1044D1DD02683002EC04F /* LogoTableViewController.swift in Sources */,
+				11DB76491DB4B638008FEF23 /* ServerTableViewCell.swift in Sources */,
 				0806ABCF1D7EBA2100D93D95 /* DetailEquipViewController.swift in Sources */,
+				112382821EA70BFB003E353F /* Contact_info.swift in Sources */,
+				118B5AF41DCDD90400808671 /* CustomPresntationController.swift in Sources */,
 				0806ABBE1D7EBA0600D93D95 /* FileSystem.swift in Sources */,
 				0806ABD41D7EBA2100D93D95 /* NewEquipTableViewController.swift in Sources */,
 				113DEE931DA0DF7600E0ADCF /* EquipLogo.swift in Sources */,
 				08032BF11D806FC1001AD72F /* SwiftNotice.swift in Sources */,
+				118B5AF61DCDD90400808671 /* ZZBlurView.swift in Sources */,
+				1146F89E1DB4B08600F3FB1C /* ChooseServerTableViewController.swift in Sources */,
 				0806ABB61D7EBA0600D93D95 /* EquipFileControl.swift in Sources */,
-				1122C90E1DA61F30002E150D /* LogoTableViewController.swift in Sources */,
+				11186DFE1DB67DF5004F3B1F /* ScanImage.swift in Sources */,
 				0806ABD51D7EBA2100D93D95 /* ViewController.swift in Sources */,
+				118B5AF31DCDD90400808671 /* CustomPresentationAnimator.swift in Sources */,
+				1123828D1EA70C4D003E353F /* codeScanner.m in Sources */,
 				0806ABB91D7EBA0600D93D95 /* EquipManager.swift in Sources */,
+				118B5AF51DCDD90400808671 /* PresentCell.swift in Sources */,
+				119120BC1DAA399100BCABD5 /* ModifyTableViewController.swift in Sources */,
+				1139AEB31DD8548D0020B718 /* MapViewController.swift in Sources */,
 				0806ABBC1D7EBA0600D93D95 /* Extention.swift in Sources */,
+				112382861EA70C10003E353F /* String+QRCode.swift in Sources */,
+				112382811EA70BFB003E353F /* Contact_info_group.swift in Sources */,
+				1111602B1DC3054F00926B35 /* NewEquipTableViewCell.swift in Sources */,
+				1105ACE41DAD055800565412 /* ModifyTableViewCell.swift in Sources */,
+				11A44B4F1DEC18870012C9F9 /* isConnectWithNet.swift in Sources */,
 				0806ABC01D7EBA0600D93D95 /* NetworkOperation.swift in Sources */,
 				08B789D21D915C35009E0292 /* GCDThread.swift in Sources */,
+				112382831EA70BFB003E353F /* ContactVC.swift in Sources */,
+				1123828C1EA70C4D003E353F /* barrageAlert.m in Sources */,
 				0806ABD11D7EBA2100D93D95 /* EquipImageTableViewCell.swift in Sources */,
 				0806ABB71D7EBA0600D93D95 /* EquipImageInfo.swift in Sources */,
 				0806ABD31D7EBA2100D93D95 /* EquipListTableViewController.swift in Sources */,
@@ -397,11 +556,17 @@
 				0806ABD21D7EBA2100D93D95 /* EquipListTableViewCell.swift in Sources */,
 				0806ABC11D7EBA0600D93D95 /* XmlParser.swift in Sources */,
 				0806ABCE1D7EBA2100D93D95 /* DetailEquipTableViewController.swift in Sources */,
+				11914DB61DD2FB1500EA155F /* QRCodeScanViewController.swift in Sources */,
 				0806ABBF1D7EBA0600D93D95 /* GDataXMLNode.m in Sources */,
 				0806ABBB1D7EBA0600D93D95 /* EquipXmlInfo.swift in Sources */,
 				08B789D11D915C35009E0292 /* GCDSemaphore.swift in Sources */,
+				118B5AF71DCDD90400808671 /* ZZPresentAnimatior.swift in Sources */,
+				118B5AF81DCDD90400808671 /* ZZPresentVC.swift in Sources */,
+				112382871EA70C10003E353F /* UIImage+QRCode.swift in Sources */,
 				0806ABBA1D7EBA0600D93D95 /* EquipNetInfo.swift in Sources */,
+				11DB764B1DB4B8C9008FEF23 /* EquipServer.swift in Sources */,
 				0806ABD01D7EBA2100D93D95 /* EquipImagePickerTableViewController.swift in Sources */,
+				11186E011DB682BF004F3B1F /* XWScanImage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -447,7 +612,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -488,7 +653,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -502,9 +667,11 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = NO;
-				DEVELOPMENT_TEAM = QRKJGYSRZH;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = W9589M3JD5;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/library",
@@ -512,10 +679,12 @@
 				);
 				HEADER_SEARCH_PATHS = "$(SDK_DIR)/usr/include/libxml2";
 				INFOPLIST_FILE = "$(SRCROOT)/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = test.EquipManager;
+				PRODUCT_BUNDLE_IDENTIFIER = test.EquipManager.inHouse;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/EquipManager/src/bridge-header/EquipManager-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
@@ -528,9 +697,11 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = NO;
-				DEVELOPMENT_TEAM = QRKJGYSRZH;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = W9589M3JD5;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/library",
@@ -538,10 +709,12 @@
 				);
 				HEADER_SEARCH_PATHS = "$(SDK_DIR)/usr/include/libxml2";
 				INFOPLIST_FILE = "$(SRCROOT)/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = test.EquipManager;
+				PRODUCT_BUNDLE_IDENTIFIER = test.EquipManager.inHouse;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/EquipManager/src/bridge-header/EquipManager-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 			};

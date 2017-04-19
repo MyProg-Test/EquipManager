@@ -2,8 +2,8 @@
 //  Equip.swift
 //  EquipManager
 //
-//  Created by LY on 16/7/24.
-//  Copyright © 2016年 LY. All rights reserved.
+//  Created by 李呱呱 on 16/7/24.
+//  Copyright © 2016年 liguagua. All rights reserved.
 //
 
 import UIKit
@@ -13,7 +13,7 @@ class EquipNetInfo {
     fileprivate static let _sharedInstance = EquipNetInfo();
     let fs:FileSystem = FileSystem();
     
-    //返回当前文件数
+    
     var count:Int{
         get{
             return fs.count;
@@ -23,17 +23,17 @@ class EquipNetInfo {
     fileprivate init(){
         
     }
-    //单例模式
+
     class func sharedInstance()->EquipNetInfo{
         return _sharedInstance;
     }
-    //检查ID是否存在
+  
     func checkForID(_ id:Int, handler:@escaping (Bool)->Void){
         _ = NetworkOperation.sharedInstance().getResourceInfo(id) { (any) in
             handler(any.object(forKey: NetworkOperation.NetConstant.DictKey.GetResourceInfo.Response.displayName) != nil);
         }
     }
-    //从网络端添加设备
+    
     func addEquipFromNet(_ parentID:Int, parentName:String) -> GCDSemaphore{
         let rtn = NetworkOperation.sharedInstance().getResources(parentID) { (any) in
             if let resArray = any.object(forKey: NetworkOperation.NetConstant.DictKey.GetResources.Response.resources){
@@ -83,7 +83,7 @@ class EquipNetInfo {
         return rtn;
         
     }
-    //从网络端读取
+  
     func readFromNet(_ rootID:Int){
         var waitList = Array<GCDSemaphore>();
         fs.attrKey.writeRequest();
@@ -108,7 +108,7 @@ class EquipNetInfo {
         }
     }
     
-    //判断当前是否为图片
+   
     func isImage(_ Name:String)->Bool{
         let ext = (Name as NSString).pathExtension.lowercased()
         let imageType = ["jpg","png"];
@@ -119,7 +119,7 @@ class EquipNetInfo {
         }
         return false;
     }
-    //判断是否为xml
+   
     func isXml(_ Name:String)->Bool{
         let ext = (Name as NSString).pathExtension.lowercased()
         let imageType = ["xml"];

@@ -2,23 +2,26 @@
 //  File.swift
 //  GCD_test
 //
-//  Created by LY on 16/9/5.
-//  Copyright © 2016年 LY. All rights reserved.
+//  Created by 李呱呱 on 16/9/5.
+//  Copyright © 2016年 liguagua. All rights reserved.
 //
 
+//swift老改，只要改这里的。
 import UIKit
 
+//队列种类
 enum Global {
+    //后台
     case background
-    
+    //工具
     case utility
-    
+    //默认
     case `default`
-    
+    //用户初始
     case userInitiated
-    
+    //用户交互
     case userInteractive
-    
+    //没定义的 自创
     case unspecified
 }
 
@@ -77,7 +80,7 @@ class GCDThread: NSObject {
             print(message);
         }
     }
-    
+    //以下是给dispatchqueue重写的接口
     func async(message:String = "", group: GCDGroup = GCDGroup(), block:@escaping ()->Void) {
         self.queue.async(group: group.group){
             self.printDebugInfo(message: "当前队列:\(self.queueInfo)\n异步消息(async):\(message)");

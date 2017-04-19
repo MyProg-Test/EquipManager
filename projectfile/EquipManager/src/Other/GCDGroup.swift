@@ -2,8 +2,8 @@
 //  GCDGroup.swift
 //  GCD_test
 //
-//  Created by LY on 16/9/5.
-//  Copyright © 2016年 LY. All rights reserved.
+//  Created by 李呱呱 on 16/9/5.
+//  Copyright © 2016年 liguagua. All rights reserved.
 //
 
 import UIKit

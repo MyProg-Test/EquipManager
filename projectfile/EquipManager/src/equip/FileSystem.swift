@@ -18,7 +18,7 @@ class FileSystem {
         case new        = 0b0010;
         case modifty    = 0b0001;
     }
-    //设备key
+    
     internal struct equipKey{
         static let parentID: String     = "1";
         static let XMLID: String        = "2";
@@ -32,7 +32,7 @@ class FileSystem {
         //c 0,1 new
         //d 0,1 modify
     }
-    //图片组key
+    
     internal struct imageSetKey{
         static let imageID: String      = "1";
         static let imagePath: String    = "2";
@@ -46,7 +46,7 @@ class FileSystem {
     
     let equipDict: MySafeMutableMethod<NSMutableDictionary>;
     let attrKey:MySafeMutableMethod<NSMutableArray>;
-    //返回当前设备数量
+    
     var count:Int{
         get{
             attrKey.readRequest();
@@ -109,7 +109,7 @@ class FileSystem {
         newImage.setValue(status, forKey: imageSetKey.status);
         self.addImage(key, image: newImage);
     }
-    //添加图片数组
+    
     func addImageArray(_ key:String, imageArray:NSMutableArray){
         equipDict.readRequest()
         if(equipDict.subject.allKeys.contains(where: {return key.isEqual($0)})){
@@ -179,7 +179,7 @@ class FileSystem {
         }
     }
     
-    //修改设备状态
+ 
     func modifyEquipStatus(_ key:String,status:Int){
         equipDict.readRequest()
         if(equipDict.subject.allKeys.contains(where: {return key.isEqual($0)})){
@@ -192,7 +192,7 @@ class FileSystem {
         }
     }
     
-    //修改图片名
+  
     func modifyImageName(_ equipkey: String, imageIndex: Int, name:String){
         equipDict.readRequest()
         if(equipDict.subject.allKeys.contains(where: {return equipkey.isEqual($0)})){
@@ -217,7 +217,7 @@ class FileSystem {
         }
     }
     
-    //修改图片状态
+   
     func modifyImageStatus(_ equipkey:String, imageIndex:Int, status:Int){
         equipDict.readRequest()
         if(equipDict.subject.allKeys.contains(where: {return equipkey.isEqual($0)})){
@@ -229,7 +229,7 @@ class FileSystem {
             equipDict.readEnd();
         }
     }
-    //获取设备
+   
     func getEquip(_ key:String)->NSMutableDictionary?{
         equipDict.readRequest()
         if(equipDict.subject.allKeys.contains(where: {return key.isEqual($0)})){
@@ -241,7 +241,7 @@ class FileSystem {
             return nil;
         }
     }
-    //获取图片
+    
     func getImage(_ equipkey:String, imageIndex:Int)->NSMutableDictionary?{
         equipDict.readRequest()
         if(equipDict.subject.allKeys.contains(where: {return equipkey.isEqual($0)})){
@@ -256,7 +256,7 @@ class FileSystem {
             return nil;
         }
     }
-    //根据key和value获取key
+    
     func getSpecKey(_ key:String,value:AnyObject)->String{
         equipDict.readRequest();
         for (keyTmp, valueTmp) in equipDict.subject{
@@ -268,37 +268,38 @@ class FileSystem {
         equipDict.readEnd();
         return "";
     }
-    //获取设备路径
+ 
     func getEquipPath(_ key:String)->URL{
         let url: URL = URL(fileURLWithPath: self.getEquip(key)!.object(forKey: equipKey.path) as! String).appendingPathComponent("\(self.getEquipXMLID(key)).xml");
         return url;
     }
-    //获取设备xmlID
+  
     func getEquipXMLID(_ key:String)->Int{
         let xmlID = self.getEquip(key)!.object(forKey: equipKey.XMLID) as! Int;
         return xmlID;
     }
-    //获取设备PID
+    
     func getEquipParentID(_ key:String) -> Int {
         let parentID = getEquip(key)!.object(forKey: equipKey.parentID) as! Int;
         return parentID;
     }
-    //获取设备名称
+    
     func getEquipName(_ key:String) -> String {
         let equipName = getEquip(key)!.object(forKey: equipKey.XMLName) as! String;
         return equipName;
     }
-    //获取设备的ImageSet
+    
     func getEquipImageSet(_ key:String) -> NSMutableArray {
         let imageSet = getEquip(key)!.object(forKey: equipKey.imageSet) as! NSMutableArray;
         return imageSet;
     }
-    //获取设备的groupID
+    
     func getEquipGroupID(_ key:String) -> Int {
-        let groupID = getEquip(key)!.object(forKey: equipKey.groupID) as! Int;
-        return groupID;
+        //print(getEquip(key));
+        //let groupID = getEquip(key)!.object(forKey: equipKey.groupID) as! Int;
+        return EquipManager.sharedInstance().defaultGroupId;
     }
-    //获取设备状态
+   
     func getEquipStatus(_ key:String) -> Int {
         let equipStatus = getEquip(key)!.object(forKey: equipKey.status) as! Int;
         return equipStatus;
@@ -309,7 +310,7 @@ class FileSystem {
         return count;
     }
     
-    //获取图片路径
+   
     func getImagePath(_ equipkey:String, imageIndex:Int) -> URL? {
         if(self.getImage(equipkey, imageIndex: imageIndex) == nil){
             return nil;
@@ -319,22 +320,22 @@ class FileSystem {
         let url = URL(fileURLWithPath: (self.getImage(equipkey, imageIndex: imageIndex)!.object(forKey: imageSetKey.imagePath) as! String)).appendingPathComponent("\(self.getImage(equipkey, imageIndex: imageIndex)!.object(forKey: imageSetKey.imageID) as! Int).\(fileExt)");
         return url;
     }
-    //获取图片ID
+
     func getImageID(_ equipkey:String, imageIndex:Int) -> Int {
         let imageID = getImage(equipkey, imageIndex: imageIndex)!.object(forKey: imageSetKey.imageID) as! Int
         return imageID;
     }
-    //获取图片名称
+
     func getImageName(_ equipkey:String, imageIndex:Int) -> String {
         let imageName = getImage(equipkey, imageIndex: imageIndex)!.object(forKey: imageSetKey.imageName) as! String;
         return imageName;
     }
-    //获取图片状态
+
     func getImageStatus(_ equipkey:String, imageIndex:Int) -> Int {
         let imageStatus = getImage(equipkey, imageIndex: imageIndex)!.object(forKey: imageSetKey.status) as! Int;
         return imageStatus;
     }
-    //判断是否主图片
+   
     func isMainImage(_ equipkey:String, imageIndex:Int) -> Bool{
         let name = getImageName(equipkey, imageIndex: imageIndex);
         let parentID = getEquipParentID(equipkey);
@@ -362,7 +363,7 @@ class FileSystem {
         modifyImageStatus(equipkey, imageIndex: imageIndex, status: getImageStatus(equipkey, imageIndex: imageIndex) | FileSystem.Status.modifty.rawValue);
         return true;
     }
-    //从文件中读取
+   
     func readFromFile(_ dicturl:URL, orderurl: URL)->Bool{
         equipDict.writeRequest();
         self.equipDict.subject = NSMutableDictionary(contentsOf: dicturl)!;
@@ -372,7 +373,7 @@ class FileSystem {
         attrKey.writeEnd();
         return true;
     }
-    //写入文件
+  
     func writeToFile(_ dicturl:URL, orderurl: URL)->Bool{
         equipDict.readRequest();
         let dictWrite = self.equipDict.subject.write(toFile: dicturl.path, atomically: true);

@@ -3,7 +3,7 @@
 //  EquipManager
 //
 //  Created by 李呱呱 on 16/9/21.
-//  Copyright © 2016年 LY. All rights reserved.
+//  Copyright © 2016年 liguagua. All rights reserved.
 //
 
 import UIKit
@@ -15,7 +15,7 @@ class LogoTableViewController: UITableViewController, UIImagePickerControllerDel
             return EquipLogo.sharedInstance().getLogoList();
         }
     }
-        
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.setHidesBackButton(true, animated: false)
@@ -25,7 +25,7 @@ class LogoTableViewController: UITableViewController, UIImagePickerControllerDel
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
-
+        
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
@@ -41,7 +41,7 @@ class LogoTableViewController: UITableViewController, UIImagePickerControllerDel
         (cell!.subviews[0].subviews[0] as! UIImageView).image = logoArray[indexPath.row]
         return cell!
     }
-
+    
     
     func menuToolbar(){
         let backButton = UIBarButtonItem(image: UIImage.init(named:"back"), style: .plain, target: self, action: #selector(EquipListTableViewController.backPressed))
@@ -63,7 +63,7 @@ class LogoTableViewController: UITableViewController, UIImagePickerControllerDel
         _ = self.navigationController?.popToRootViewController(animated: true)
         //        CurrentInfo.sharedInstance.backToHome()
     }
-
+    
     func menuPressed(){
         let menuAlertController:UIAlertController = UIAlertController(title:"选择Logo",message:"",preferredStyle:UIAlertControllerStyle.alert)
         
@@ -74,12 +74,12 @@ class LogoTableViewController: UITableViewController, UIImagePickerControllerDel
         menuAlertController.addAction(UIAlertAction(title: "取消", style: UIAlertActionStyle.cancel, handler: { (UIAlertAction) -> Void in
             NSLog("cancel")
         }))
-
+        
         
         self.present(menuAlertController, animated: true, completion: nil)
         
     }
-  
+    
     func newLogo(){
         let uploadImageAlertController:UIAlertController = UIAlertController(title: "设置Logo", message: "选择来源", preferredStyle: UIAlertControllerStyle.alert)
         
@@ -102,24 +102,24 @@ class LogoTableViewController: UITableViewController, UIImagePickerControllerDel
         self.takePic();
         //拍照上传图片
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
+    
     // MARK: - Table view data source
-
+    
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 1
     }
-
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         return logoArray.count
     }
-
+    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         func getRandomID() -> String {
             let time = Date();
@@ -129,7 +129,7 @@ class LogoTableViewController: UITableViewController, UIImagePickerControllerDel
         }
         let lastChosen = NSDictionary(dictionary: info);
         if((lastChosen.object(forKey: UIImagePickerControllerMediaType) as! NSString) == (kUTTypeImage as NSString)){
-            let chosenImage:UIImage = lastChosen.object(forKey: UIImagePickerControllerEditedImage) as! UIImage;
+            let chosenImage:UIImage = lastChosen.object(forKey: UIImagePickerControllerOriginalImage) as! UIImage;
             let name = EquipLogo.sharedInstance().addLogo(image: chosenImage);
             EquipLogo.sharedInstance().setLogo(name: name);
             self.tableView.reloadData();
@@ -158,7 +158,7 @@ class LogoTableViewController: UITableViewController, UIImagePickerControllerDel
             let picker:UIImagePickerController = UIImagePickerController();
             picker.mediaTypes = mediatypes as [AnyObject] as! [String];
             picker.delegate = self;
-            picker.allowsEditing = true;
+            picker.allowsEditing = false;
             picker.sourceType = sourceType;
             let requiredmediatypes:NSString = kUTTypeImage as NSString;
             let arrmediatype:NSArray = NSArray(object: requiredmediatypes);
@@ -168,5 +168,5 @@ class LogoTableViewController: UITableViewController, UIImagePickerControllerDel
             self.noticeError("设备不支持拍照", autoClear: true, autoClearTime: 2);
         }
     }
-
+    
 }
